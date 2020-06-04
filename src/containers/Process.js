@@ -1,5 +1,5 @@
 import React from 'react';
-import TaskPackage from './TaskPackage'
+import Task from './Task'
 
 class Process extends React.Component {
 
@@ -15,7 +15,7 @@ class Process extends React.Component {
 			'pname': props.pname,
 			'entrypoint': props.entrypoint,
 			'unsafe': props.unsafe,
-			'tasks': new TaskPackage(props.tasks)
+			'tasks': props.tasks.map((task) => new Task(task))
 		};
 	}
 

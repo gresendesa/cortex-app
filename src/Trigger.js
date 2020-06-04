@@ -1,6 +1,6 @@
 import React from 'react';
 
-class TaskPackage extends React.Component {
+class TriggerEditor extends React.Component {
 
 
 	constructor(){
@@ -21,4 +21,4 @@ class TaskPackage extends React.Component {
 
 }
 
-export default TaskPackage;
+export default TriggerEditor;
