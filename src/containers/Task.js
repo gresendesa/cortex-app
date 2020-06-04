@@ -1,21 +1,21 @@
 import React from 'react';
+import { Task as TaskUI } from '../components/Task';
+
 
 class Task extends React.Component {
 
 
-	constructor(){
+	constructor({ task }){
 		super();
+		this.task = task;
+		console.log(task);
 	}
 
 	render(){
 
 		return (
-
-			<div>
-				<h3>opa</h3>
-			</div>
-
-		)
+			<Task task={this.task} />
+		);
 
 	}
 

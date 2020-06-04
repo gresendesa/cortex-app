@@ -20,8 +20,11 @@ class Process extends React.Component {
 			'pname': proc.pname,
 			'entrypoint': proc.entrypoint,
 			'unsafe': proc.unsafe,
-			'tasks': proc.tasks.map((task) => {return new Task(task)})
+			'tasks': proc.tasks
 		};
+
+		setTimeout(() => { this.setState({'name':'oie'}); }, 3000);
+
 	}
 
 	render(){
@@ -29,6 +32,7 @@ class Process extends React.Component {
 		return (
 			<React.Fragment>
 				<h2>Process <small>{this.state.name}</small> </h2>
+				<TaskList tasks={this.state.tasks} />
 			</React.Fragment>
 		)
 
