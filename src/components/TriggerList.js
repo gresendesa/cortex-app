@@ -11,7 +11,8 @@ import CodeIcon from '@material-ui/icons/Code';
 import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
-import TaskListDrag from './TaskListDrag'
+import TaskListDrag from './TaskListDrag';
+import { Link, useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,11 +24,13 @@ const useStyles = makeStyles((theme) => ({
 export default function FolderList({ triggers }) {
   const classes = useStyles();
 
+  const history = useHistory();
+
   var uiTriggers = triggers.map((trigger, indice) => {
 
     return (
 
-      <ListItem button key={indice}>
+      <ListItem button key={indice} onClick={(a) => {history.push('/trigger/' + trigger.name)}}>
         <ListItemAvatar>
           <Avatar>
             <CodeIcon />

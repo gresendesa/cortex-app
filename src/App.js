@@ -27,7 +27,7 @@ function App() {
 						
 					</Route>
 
-					<Route exact path="/trigger">
+					<Route path="/trigger/">
 
 					  	<h2>Trigger </h2>
 					    <TriggerEditor />
