@@ -4,11 +4,14 @@ import ButtonAppBar from './components/NavBar';
 import { Container } from '@material-ui/core';
 import { foo } from './mock/processes'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
-import TriggerEditor from './Trigger'
+import Trigger from './containers/Trigger'
+import Process from './containers/Process'
 
 function App() {
 
-	var tasks = foo.macro.tasks;
+	var tasks = foo.tasks;
+
+	var process = new Process(foo);
 
 	return (
 
@@ -30,7 +33,7 @@ function App() {
 					<Route path="/trigger/">
 
 					  	<h2>Trigger </h2>
-					    <TriggerEditor />
+					    <Trigger />
 						
 					</Route>
 
