@@ -1,32 +1,35 @@
 import React from 'react';
-import Task from './Task'
+import Task from './Task';
+import TaskList from '../components/TaskList';
+import { foo } from '../mock/processes';
+
 
 class Process extends React.Component {
 
-	constructor(props){
+	constructor(){
 		super();
+		var proc = foo;
+		console.log(proc);
 		this.state = {
-			'name': props.name,
-			'description': props.description,
-			'debug': props.debug,
-			'production': props.production,
-			'inner_protocol': props.inner_protocol,
-			'protocol': props.protocol,
-			'pname': props.pname,
-			'entrypoint': props.entrypoint,
-			'unsafe': props.unsafe,
-			'tasks': props.tasks.map((task) => new Task(task))
+			'name': proc.name,
+			'description': proc.description,
+			'debug': proc.debug,
+			'production': proc.production,
+			'inner_protocol': proc.inner_protocol,
+			'protocol': proc.protocol,
+			'pname': proc.pname,
+			'entrypoint': proc.entrypoint,
+			'unsafe': proc.unsafe,
+			'tasks': proc.tasks.map((task) => {return new Task(task)})
 		};
 	}
 
 	render(){
 
 		return (
-
-			<div>
-				<h3>opa</h3>
-			</div>
-
+			<React.Fragment>
+				<h2>Process <small>{this.state.name}</small> </h2>
+			</React.Fragment>
 		)
 
 	}
