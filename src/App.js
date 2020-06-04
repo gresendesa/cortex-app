@@ -3,26 +3,36 @@ import TaskList from './components/TaskList';
 import ButtonAppBar from './components/NavBar';
 import { Container } from '@material-ui/core';
 import { foo } from './mock/processes'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 
 function App() {
 
 	var tasks = foo.macro.tasks;
 
 	return (
+		
+		<Router>
+			
+			<Route exact path="/">
 
-		<React.Fragment>
+				<React.Fragment>
 
-		  	<ButtonAppBar />
+				  	<ButtonAppBar />
 
-		  	<Container maxWidth="sm">
+				  	<Container maxWidth="sm">
 
-		  		<h2>Process <small>{ foo.name }</small> </h2>
+				  		<h2>Process <small>{ foo.name }</small> </h2>
 
-		      	<TaskList tasks={tasks} />
+				      	<TaskList tasks={tasks} />
 
-		  	</Container>
+				  	</Container>
 
-		</React.Fragment>
+				</React.Fragment>
+			</Route>
+
+		</Router>
+			
+		
 
 	);
 }

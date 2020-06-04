@@ -11,6 +11,7 @@ import CodeIcon from '@material-ui/icons/Code';
 import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
+import TaskListDrag from './TaskListDrag'
 
 const useStyles = makeStyles((theme) => ({
   root: {
