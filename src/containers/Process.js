@@ -22,9 +22,6 @@ class Process extends React.Component {
 			'unsafe': proc.unsafe,
 			'tasks': proc.tasks
 		};
-
-		setTimeout(() => { this.setState({'name':'oie'}); }, 3000);
-
 	}
 
 	render(){
