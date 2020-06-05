@@ -5,14 +5,12 @@ import uuid from 'uuid';
 
 export default function TasksSection({ tasks }) {
 
-	const [tasksList, setTasks] = useState(tasks);
-
 	return (
 
 		<Box>
 		{
-			tasks.map((task, key) => {
-				return ( <TaskPanel task={task} key={key} />)
+			tasks.map((task) => {
+				return ( <TaskPanel task={task} key={task.id} />)
 			})
 		}
 		</Box>

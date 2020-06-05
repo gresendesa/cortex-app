@@ -13,11 +13,11 @@ export var foo = {
 		"macrosoft.traps>=2.0"
 	],
 	"tasks": [
-		{"name": "trt"},
-		{"name": "qw"},
-		{"name": "wer"},
-		{"name": "fdsf"},
-		{"name": "hui"},
+		{"name": "trt", "id":"123a"},
+		{"name": "qw", "id":"123b"},
+		{"name": "wer", "id":"123c"},
+		{"name": "fdsf", "id":"123d"},
+		{"name": "hui", "id":"123e"},
 	]
 };
 
