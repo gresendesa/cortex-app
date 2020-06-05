@@ -13,6 +13,18 @@ import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
 import TaskListDrag from './TaskListDrag';
 import { Link, useHistory } from 'react-router-dom'
+import styled from 'styled-components';
+
+
+const StyledLink = styled(Link)`
+    text-decoration: none;
+    color: inherit;
+
+    &:focus, &:hover, &:visited, &:link, &:active {
+        text-decoration: none;
+        color: inherit;
+    }
+`;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,15 +42,25 @@ export default function FolderList({ triggers }) {
 
     return (
 
-      <ListItem button key={indice} onClick={(a) => {history.push('/trigger/' + trigger.name)}}>
-        <ListItemAvatar>
-          <Avatar>
-            <CodeIcon />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText primary={trigger.name} secondary="trigger" />
-      </ListItem>
-    )
+      <StyledLink to={{
+        'pathname':"/trigger/78",
+        'state': trigger
+      }} key={indice} style={{ textDecoration: 'none' }}>
+
+        <ListItem button>
+          <ListItemAvatar>
+            <Avatar>
+              <CodeIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary={trigger.name} secondary="trigger" />
+        </ListItem>
+      </StyledLink>
+
+    ) 
+
+
+    //onClick={(a) => {history.push('/trigger/' + trigger.name)}}
 
   });
 

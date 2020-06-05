@@ -13,6 +13,30 @@ export var foo = {
 		"macrosoft.traps>=2.0"
 	],
 	"tasks": [
+		{"name": "trt"},
+		{"name": "qw"},
+		{"name": "wer"},
+		{"name": "fdsf"},
+		{"name": "hui"},
+	]
+};
+
+
+var fooi = {
+
+	"name": "Foo",
+	"description": "Foo process",
+	"debug": false,
+	"production": false,
+	"inner-protocol": "TASK",
+	"protocol": "CTRL",
+	"pname": "guiga",
+	"entrypoint": "main",
+	"unsafe": null,
+	"dependencies": [
+		"macrosoft.traps>=2.0"
+	],
+	"tasks": [
 		{
 			"name": "main",
 			"delay": 1,

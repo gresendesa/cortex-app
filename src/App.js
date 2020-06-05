@@ -1,9 +1,12 @@
 import React from 'react';
 import Routes from './routes'
+import DataContextProvider from './contexts/DataContext'
 
 function App() {
 	return (
-		<Routes />	
+		<DataContextProvider>
+			<Routes />	
+		</DataContextProvider>
 	);
 }
 

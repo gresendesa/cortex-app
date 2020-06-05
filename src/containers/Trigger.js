@@ -9,6 +9,8 @@ class TriggerEditor extends React.Component {
 
 	render(){
 
+		console.log(this.props.location);
+
 		return (
 
 			<div>

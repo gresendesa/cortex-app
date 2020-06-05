@@ -8,18 +8,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ScrollableTabsButtonAuto from './TriggerPackage';
 import Options from './Options';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
-  },
-}));
+
 
 export default function TaskList({ tasks }) {
-  const classes = useStyles();
+  
 
   var uiTasks = tasks.map((task, key) => {
 
@@ -30,13 +22,12 @@ export default function TaskList({ tasks }) {
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header">
-          <Typography className={classes.heading}>
+          <Typography>
           <strong>{ task.name }</strong>
           </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <ScrollableTabsButtonAuto opening={task.triggers.opening} main={task.triggers.main} ending={task.triggers.ending} />
-          
         </ExpansionPanelDetails>
       </ExpansionPanel>
 
@@ -45,7 +36,7 @@ export default function TaskList({ tasks }) {
   });
 
   return (
-    <div className={classes.root}>
+    <div >
 
       {uiTasks}
       

@@ -9,6 +9,8 @@ class TriggerPackage extends React.Component {
 
 	render(){
 
+		const { data } = this.props.location;
+
 		return (
 
 			<div>

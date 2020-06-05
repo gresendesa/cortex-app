@@ -12,7 +12,7 @@ class TriggerEditor extends React.Component {
 		return (
 
 			<div>
-				<h3>opa</h3>
+				<h3>Trigger {data.name}</h3>
 			</div>
 
 		)

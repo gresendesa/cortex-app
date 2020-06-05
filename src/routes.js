@@ -1,19 +1,18 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import history from './history';
 import TaskList from './components/TaskList';
 import ButtonAppBar from './components/NavBar';
 import { Container } from '@material-ui/core';
-import Trigger from './containers/Trigger';
-import Process from './containers/Process';
+import Macro from './Macro';
 
 export default function Routes() {
 	return(
 		<Router history={history}>
  			<ButtonAppBar />
 			<Container maxWidth="sm">
-				<Route exact path="/" component={Process} />
-				<Route path="/trigger/" component={Trigger} />
+				<Route exact path="/" component={Macro} />
+				
 			</Container>
 		</Router>
 	);
