@@ -31,7 +31,7 @@ export default function TaskCreateDialog({ hookNewTask }) {
         <DialogTitle id="form-dialog-title">Create new task</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Write a unique word, without spaces, as a name for the task
+            Write an unique alphanumeric word, without spaces, as a name for the task
           </DialogContentText>
           <TextField
             autoFocus
@@ -39,7 +39,7 @@ export default function TaskCreateDialog({ hookNewTask }) {
             id="name"
             label="Task name"
             type="text"
-            onChange={(e) => {value = e.target.value; console.log(value)}}
+            onChange={(e) => {value = e.target.value;}}
             fullWidth
           />
         </DialogContent>

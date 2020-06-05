@@ -5,7 +5,8 @@ import TaskCreateDialog from './uis/TaskCreateDialog';
 import { DataContext } from './contexts/DataContext';
 import { Typography, Box, Grid, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import { foo } from './mock/processes'
+import { foo } from './mock/processes';
+import Snackbar from '@material-ui/core/Snackbar';
 
 class Macro extends React.Component {
 
