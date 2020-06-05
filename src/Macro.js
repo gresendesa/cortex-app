@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TaskPanel from './uis/TaskPanel';
+import TasksSection from './uis/TasksSection';
 import { DataContext } from './contexts/DataContext';
 import { Typography, Box, Grid, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -14,6 +15,7 @@ class Macro extends React.Component {
 
 		return (
 			<DataContext.Consumer>{(data) => {
+
 				return (
 
 					<React.Fragment>
@@ -43,13 +45,7 @@ class Macro extends React.Component {
 
 						</Grid>
 
-						<Box>
-						{
-							data.tasks.map((task, key) => {
-								return <TaskPanel task={task} key={key} />
-							})
-						}
-						</Box>
+						<TasksSection tasks={data.tasks} />
 
 					</React.Fragment>
 
