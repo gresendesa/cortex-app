@@ -11,7 +11,6 @@ import CodeIcon from '@material-ui/icons/Code';
 import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
-import TaskListDrag from './TaskListDrag';
 import { Link, useHistory } from 'react-router-dom'
 import styled from 'styled-components';
 
@@ -33,36 +32,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function FolderList({ triggers }) {
+export default function TriggerList({ triggers }) {
   const classes = useStyles();
 
   const history = useHistory();
-
-  var uiTriggers = triggers.map((trigger) => {
-
-    return (
-
-      <StyledLink to={{
-        'pathname':"/trigger/78",
-        'state': trigger
-      }} key={trigger.id} style={{ textDecoration: 'none' }}>
-
-        <ListItem button>
-          <ListItemAvatar>
-            <Avatar>
-              <CodeIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary={trigger.name} secondary="trigger" />
-        </ListItem>
-      </StyledLink>
-
-    ) 
-
-
-    //onClick={(a) => {history.push('/trigger/' + trigger.name)}}
-
-  });
 
   return (
     <Grid
@@ -74,7 +47,25 @@ export default function FolderList({ triggers }) {
       <Grid item>
         <List className={classes.root}>
           
-          {uiTriggers}
+          {
+
+            triggers.map((trigger, indice) => {
+
+              return (
+
+                <ListItem button key={indice}>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <CodeIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={trigger.name} secondary="trigger" />
+                </ListItem>
+
+              ) 
+            })
+
+          }
 
           <ListItem button>
             <ListItemAvatar>

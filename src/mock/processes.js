@@ -13,11 +13,52 @@ export var foo = {
 		"macrosoft.traps>=2.0"
 	],
 	"tasks": [
-		{"name": "trt", "id":"123a"},
-		{"name": "qw", "id":"123b"},
-		{"name": "wer", "id":"123c"},
-		{"name": "fdsf", "id":"123d"},
-		{"name": "hui", "id":"123e"},
+		{
+			"name": "trt", 
+			"id":"123a",
+			"delay": 1,
+			"unsafe": 100,
+			"triggers": {
+				"opening":[
+					{"name":"oba0", "id":"abc0", "content":"tey0"},
+					{"name":"oba1", "id":"abc1", "content":"tey1"},
+				],
+				"main":[
+					{"name":"oba2", "id":"abc2", "content":"tey2"},
+					{"name":"oba3", "id":"abc3", "content":"tey3"},
+					{"name":"oba4", "id":"abc4", "content":"tey4"},
+				],
+				"ending":[
+					{"name":"oba5", "id":"abc5", "content":"tey5"},
+					{"name":"oba6", "id":"abc6", "content":"tey6"},
+					{"name":"oba7", "id":"abc7", "content":"tey7"},
+					{"name":"oba8", "id":"abc8", "content":"tey8"},
+				]
+			}
+		},
+		{
+			"name": "bro", 
+			"id":"123b",
+			"delay": 2,
+			"unsafe": 200,
+			"triggers": {
+				"opening":[
+					{"name":"oba0", "id":"abc0", "content":"tey0"},
+					{"name":"oba1", "id":"abc1", "content":"tey1"},
+				],
+				"main":[
+					{"name":"oba2", "id":"abc2", "content":"tey2"},
+					{"name":"oba3", "id":"abc3", "content":"tey3"},
+					{"name":"oba4", "id":"abc4", "content":"tey4"},
+				],
+				"ending":[
+					{"name":"oba5", "id":"abc5", "content":"tey5"},
+					{"name":"oba6", "id":"abc6", "content":"tey6"},
+					{"name":"oba7", "id":"abc7", "content":"tey7"},
+					{"name":"oba8", "id":"abc8", "content":"tey8"},
+				]
+			}
+		},
 	]
 };
 

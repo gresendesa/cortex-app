@@ -5,6 +5,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import TriggersSection from './TriggersSection'
 
 export default function TaskPanel({ task }) {
 
@@ -20,6 +21,8 @@ export default function TaskPanel({ task }) {
 			</ExpansionPanelSummary>
 			<ExpansionPanelDetails>
 			
+				<TriggersSection opening={task.triggers.opening} main={task.triggers.main} ending={task.triggers.ending} />
+
 			</ExpansionPanelDetails>
 		</ExpansionPanel>
 	);
