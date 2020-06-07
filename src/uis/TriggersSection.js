@@ -37,6 +37,7 @@ function a11yProps(index) {
 }
 
 export default function TriggersSection({ opening, main, ending }) {
+
   const [value, setValue] = React.useState(1);
 
   const handleChange = (event, newValue) => {

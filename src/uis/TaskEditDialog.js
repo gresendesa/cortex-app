@@ -8,7 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { v1 as uuidv1 }  from 'uuid';
 
-export default function TaskEditDialog({ task, edit, setEdit, editTask }) {
+export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask, alert }) {
 
   const [tempTask, setTempTask] = useState(task);
 
@@ -17,8 +17,14 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask }) {
   };
 
   const handleSave = () => { 
-    setEdit(false);
-    editTask(tempTask);
+
+    if(!hasTask(tempTask, true)){
+      editTask(tempTask)
+      setEdit(false);
+    } else {
+      alert("This name is already taken from other task!");
+    }
+
   }
 
   return (

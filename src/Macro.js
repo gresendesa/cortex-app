@@ -36,8 +36,13 @@ class Macro extends React.Component {
 		this.setState({'tasks': [...this.state.tasks, task]})
 	}
 
-	hasTask = (task) => {
-		var result = (this.state.tasks.some(e => e.name == task.name) || this.state.tasks.some(e => e.id == task.id))
+	hasTask = (task, except=false) => {
+		if (except) {
+			var filtered_tasks = this.state.tasks.filter(t => t.id !== task.id);
+			var result = (filtered_tasks.some(e => e.name == task.name) || filtered_tasks.some(e => e.id == task.id))
+		} else {
+			var result = (this.state.tasks.some(e => e.name == task.name) || this.state.tasks.some(e => e.id == task.id))
+		}
 		return result;
 	}
 
@@ -69,7 +74,7 @@ class Macro extends React.Component {
 			'toggleEditDialog': () => { this.setState({'openEditDialog': !this.state.openEditDialog }); }, //toggleDialog
 			'togglePopUpAlert': () => { this.setState({'popUpAlert': !this.state.popUpAlert }); },
 			'pushTask': (task) => { this.pushTask(task) },
-			'hasTask': (task) => { return this.hasTask(task) },
+			'hasTask': (task, except=false) => { return this.hasTask(task, except) },
 			'deleteTask': (id) => { this.deleteTask(id) },
 			'editTask': (task) => { this.editTask(task) },
 			'alert': (message) => { this.showAlert(message) }
