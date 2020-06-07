@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -8,37 +8,23 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { v1 as uuidv1 }  from 'uuid';
 
-export default function TaskCreateDialog({ hookTask }) {
+export default function TaskEditDialog({ task, edit, setEdit, editTask }) {
 
-  var [open, toggleCreateDialog, toggleEditDialog, pushTask, hasTask, deleteTask, editTask] = hookTask();
-  var value = '';
+  const [tempTask, setTempTask] = useState(task);
 
   const handleClose = () => {
-    toggleCreateDialog();
+    setEdit(false);
   };
 
-  const handleSave = (e) => { 
-    var task = {
-      'name': value, 
-      'id':uuidv1(),
-      'delay':1, 
-      'unsafe':100,
-      'triggers': {
-        'opening': [],
-        'main': [],
-        'ending': []
-      }
-    }
-    if(!hasTask(task)){
-      pushTask(task)
-      toggleCreateDialog();
-    }
+  const handleSave = () => { 
+    setEdit(false);
+    editTask(tempTask);
   }
 
   return (
     <div>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Create new task</DialogTitle>
+      <Dialog open={edit} onClose={handleClose} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Edit the task</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Write an unique alphanumeric word, without spaces, as a name for the task
@@ -49,9 +35,9 @@ export default function TaskCreateDialog({ hookTask }) {
             id="name"
             label="Task name"
             type="text"
-            onChange={(e) => {value = e.target.value;}}
+            value={tempTask.name}
+            onChange={(e) => { setTempTask({...tempTask, 'name': e.target.value }) }}
             fullWidth
-            draggable
           />
         </DialogContent>
         <DialogActions>
@@ -59,7 +45,7 @@ export default function TaskCreateDialog({ hookTask }) {
             Cancel
           </Button>
           <Button onClick={handleSave} color="primary">
-            Create
+            Save
           </Button>
         </DialogActions>
       </Dialog>

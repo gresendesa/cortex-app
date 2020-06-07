@@ -3,14 +3,18 @@ import { Box } from '@material-ui/core';
 import TaskPanel from './TaskPanel';
 import uuid from 'uuid';
 
-export default function TasksSection({ tasks, deleteTask }) {
+export default function TasksSection({ tasks, hookTask }) {
 
 	return (
 
 		<Box>
 		{
 			tasks.map((task) => {
-				return ( <TaskPanel task={task} key={task.id} deleteTask={deleteTask} />)
+				return (
+					<Box>
+						<TaskPanel task={task} key={task.id} hookTask={hookTask} />
+					</Box>
+				)
 			})
 		}
 		</Box>

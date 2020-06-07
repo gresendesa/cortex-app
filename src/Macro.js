@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import TaskPanel from './uis/TaskPanel';
 import TasksSection from './uis/TasksSection';
 import TaskCreateDialog from './uis/TaskCreateDialog';
+import TaskEditDialog from './uis/TaskEditDialog';
 import { DataContext } from './contexts/DataContext';
 import { Typography, Box, Grid, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -12,7 +13,7 @@ class Macro extends React.Component {
 
 	state = {
 		...foo,
-		'openDialog': false
+		'openCreateDialog': false,
 	}
 
 	constructor(){
@@ -34,26 +35,35 @@ class Macro extends React.Component {
 		return (this.state.tasks.some(e => e.name == task.name) || this.state.tasks.some(e => e.id == task.id))
 	}
 
-	deleteTask = (id) => {
+	deleteTask = (id, callback) => {
 		var tasks = this.state.tasks.filter(task => {
-			return task.id !== id;
+			return task.id != id;
 		});
-		this.setState({'tasks':tasks});
+		this.setState({'tasks':tasks}, callback);
 	}
 
-	hookNewTask = () => {
+	editTask = (task) => {
+		this.deleteTask(task.id, () => {
+			this.setState({'tasks': [task, ...this.state.tasks]})
+		});
+		
+	}
+
+	hookTask = () => {
 		return [ 
-			this.state.openDialog, //open flag
-			() => { this.setState({'openDialog': !this.state.openDialog }); }, //toggleDialog
+			this.state.openCreateDialog, //open flag
+			() => { this.setState({'openCreateDialog': !this.state.openCreateDialog }); }, //toggleDialog
+			() => { this.setState({'openEditDialog': !this.state.openEditDialog }); }, //toggleDialog
 			(task) => { this.pushTask(task) },
 			(task) => { this.hasTask(task) },
-			(id) => { this.deleteTask(id) }	
+			(id) => { this.deleteTask(id) },
+			(task) => { this.editTask(task) },
 		]
 	}
 
 	render(){
 
-		var [open, toogleDialog, pushTask, hasTask, deleteTask] = this.hookNewTask();
+		var [open, toggleCreateDialog, toggleEditDialog, pushTask, hasTask, deleteTask] = this.hookTask();
 
 		return (
 
@@ -75,19 +85,19 @@ class Macro extends React.Component {
 					<Grid item>
 						<Box component="span" m={1}>
 							<Typography>
-								<IconButton aria-label="add task" onClick={toogleDialog}>
+								<IconButton aria-label="add task" onClick={toggleCreateDialog}>
 									<AddIcon />
 								</IconButton>
 							</Typography>
 						</Box>
 
-						<TaskCreateDialog hookNewTask={this.hookNewTask}/>
+						<TaskCreateDialog hookTask={this.hookTask}/>
 
 					</Grid>
 
 				</Grid>
 
-				<TasksSection tasks={this.state.tasks} deleteTask={deleteTask} />
+				<TasksSection tasks={this.state.tasks} hookTask={this.hookTask} />
 
 			</React.Fragment>
 

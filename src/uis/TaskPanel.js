@@ -1,5 +1,5 @@
-import React from 'react';
-import { Typography, Grid } from '@material-ui/core';
+import React, { useState } from 'react';
+import { Typography, Grid, Box } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -11,39 +11,52 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import TaskEditDialog from './TaskEditDialog';
 
-export default function TaskPanel({ task, deleteTask }) {
+export default function TaskPanel({ task, hookTask }) {
+
+	var [open, toggleCreateDialog, toggleEditDialog, pushTask, hasTask, deleteTask, editTask] = hookTask();
+
+	var [edit, setEdit] = useState(false);
+
+	const activeEditPanel = () => {
+		setEdit(true);
+	}
 
 	return (
-		<ExpansionPanel>
+		<Box>
+			<ExpansionPanel>
 
-			<ExpansionPanelSummary
-				expandIcon={<ExpandMoreIcon />}
-				aria-controls="panel1a-content"
-				id="panel1a-header">
-				<Typography >
-					<strong>{ task.name }</strong>
-				</Typography>
-			</ExpansionPanelSummary>
-			<ExpansionPanelDetails>
-				
-				<Grid
-					container
-					direction="column"
-					justify="center"
-					alignItems="stretch"
-				>
-					<Grid item>
-						<TriggersSection opening={task.triggers.opening} main={task.triggers.main} ending={task.triggers.ending} />
+				<ExpansionPanelSummary
+					expandIcon={<ExpandMoreIcon />}
+					aria-controls="panel1a-content"
+					id="panel1a-header">
+					<Typography >
+						<strong>{ task.name }</strong>
+					</Typography>
+				</ExpansionPanelSummary>
+				<ExpansionPanelDetails>
+					
+					<Grid
+						container
+						direction="column"
+						justify="center"
+						alignItems="stretch"
+					>
+						<Grid item>
+							<TriggersSection opening={task.triggers.opening} main={task.triggers.main} ending={task.triggers.ending} />
+						</Grid>
+						<Grid item>
+							<BottomNavigation >
+								<BottomNavigationAction label="Nearby" value="nearby" icon={<EditIcon onClick={activeEditPanel} />} />
+								<BottomNavigationAction label="Folder" value="folder" icon={<DeleteIcon onClick={() => {deleteTask(task.id)}} />} />
+							</BottomNavigation>
+						</Grid>
 					</Grid>
-					<Grid item>
-						<BottomNavigation >
-							<BottomNavigationAction label="Nearby" value="nearby" icon={<EditIcon />} />
-							<BottomNavigationAction label="Folder" value="folder" icon={<DeleteIcon onClick={() => {deleteTask(task.id)}} />} />
-						</BottomNavigation>
-					</Grid>
-				</Grid>
-			</ExpansionPanelDetails>
-		</ExpansionPanel>
+				</ExpansionPanelDetails>
+			</ExpansionPanel>
+			<TaskEditDialog task={task} editTask={editTask} edit={edit} setEdit={setEdit} />
+		</Box>
 	);
+
 }
