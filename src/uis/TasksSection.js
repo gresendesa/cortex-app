@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Box } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
+import { Alert, AlertTitle } from '@material-ui/lab';
 import TaskPanel from './TaskPanel';
 import uuid from 'uuid';
 
@@ -9,6 +10,7 @@ export default function TasksSection({ tasks, hookTask }) {
 
 		<Box>
 		{
+			tasks.length > 0 ?
 			tasks.map((task) => {
 				return (
 					<Box>
@@ -16,6 +18,11 @@ export default function TasksSection({ tasks, hookTask }) {
 					</Box>
 				)
 			})
+			:
+			<Alert severity="info">
+				<AlertTitle>No tasks yet</AlertTitle>
+				Use the <strong> button above!</strong>
+			</Alert>
 		}
 		</Box>
 	);

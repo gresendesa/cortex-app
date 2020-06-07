@@ -23,6 +23,10 @@ export default function TaskPanel({ task, hookTask }) {
 		setEdit(true);
 	}
 
+	const handleDeleteClick = () => {
+		deleteTask(task.id);
+	}
+
 	return (
 		<Box>
 			<ExpansionPanel>
@@ -49,7 +53,7 @@ export default function TaskPanel({ task, hookTask }) {
 						<Grid item>
 							<BottomNavigation >
 								<BottomNavigationAction label="Nearby" value="nearby" icon={<EditIcon onClick={activeEditPanel} />} />
-								<BottomNavigationAction label="Folder" value="folder" icon={<DeleteIcon onClick={() => {deleteTask(task.id)}} />} />
+								<BottomNavigationAction label="Folder" value="folder" icon={<DeleteIcon onClick={handleDeleteClick} />} />
 							</BottomNavigation>
 						</Grid>
 					</Grid>
