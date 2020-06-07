@@ -18,7 +18,17 @@ export default function TaskCreateDialog({ hookNewTask }) {
   };
 
   const handleSave = (e) => { 
-    var task = {'name': value, 'id':uuidv1()}
+    var task = {
+      'name': value, 
+      'id':uuidv1(),
+      'delay':1, 
+      'unsafe':100,
+      'triggers': {
+        'opening': [],
+        'main': [],
+        'ending': []
+      }
+    }
     if(!hasTask(task)){
       pushTask(task)
       toogleDialog();

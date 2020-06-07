@@ -19,24 +19,41 @@ class Macro extends React.Component {
 		super();
 	}
 
+	deleteTask = (id) => {
+		var tasks = this.state.tasks.filter(task => {
+			return task.id !== id;
+		});
+		this.setState({'tasks':tasks});
+	}
+
+	pushTask = (task) => {
+		this.setState({'tasks': [...this.state.tasks, task]})
+	}
+
+	hasTask = (task) => {
+		return (this.state.tasks.some(e => e.name == task.name) || this.state.tasks.some(e => e.id == task.id))
+	}
+
+	deleteTask = (id) => {
+		var tasks = this.state.tasks.filter(task => {
+			return task.id !== id;
+		});
+		this.setState({'tasks':tasks});
+	}
+
+	hookNewTask = () => {
+		return [ 
+			this.state.openDialog, //open flag
+			() => { this.setState({'openDialog': !this.state.openDialog }); }, //toggleDialog
+			(task) => { this.pushTask(task) },
+			(task) => { this.hasTask(task) },
+			(id) => { this.deleteTask(id) }	
+		]
+	}
+
 	render(){
 
-		const hookNewTask = () => {
-			return [ 
-				//open flag
-				this.state.openDialog,
-				//toggleDialog
-				() => { this.setState({'openDialog': !this.state.openDialog }); },
-				//pushTask
-				(task) => { this.setState({'tasks': [...this.state.tasks, task]}) },
-				//hasTask
-				(task) => { return ( this.state.tasks.some(e => e.name == task.name) || this.state.tasks.some(e => e.id == task.id) ) }
-			]
-		}
-
-		//this.setState({'tasks': this.state.tasks.push(task)}
-
-		var [open, toogleDialog, pushTask, hasTask] = hookNewTask();
+		var [open, toogleDialog, pushTask, hasTask, deleteTask] = this.hookNewTask();
 
 		return (
 
@@ -64,13 +81,13 @@ class Macro extends React.Component {
 							</Typography>
 						</Box>
 
-						<TaskCreateDialog hookNewTask={hookNewTask}/>
+						<TaskCreateDialog hookNewTask={this.hookNewTask}/>
 
 					</Grid>
 
 				</Grid>
 
-				<TasksSection tasks={this.state.tasks} />
+				<TasksSection tasks={this.state.tasks} deleteTask={deleteTask} />
 
 			</React.Fragment>
 
