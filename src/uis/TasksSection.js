@@ -13,9 +13,7 @@ export default function TasksSection({ tasks, hookTask }) {
 			tasks.length > 0 ?
 			tasks.map((task) => {
 				return (
-					<Box>
-						<TaskPanel task={task} key={task.id} hookTask={hookTask} />
-					</Box>
+					<TaskPanel task={task} key={task.id} hookTask={hookTask} />
 				)
 			})
 			:

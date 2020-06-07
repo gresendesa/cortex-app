@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Box from '@material-ui/core/Box';
 import TriggerList from './TriggerList'
 
 function TabPanel(props) {
@@ -35,16 +36,7 @@ function a11yProps(index) {
   };
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
-
 export default function TriggersSection({ opening, main, ending }) {
-  const classes = useStyles();
   const [value, setValue] = React.useState(1);
 
   const handleChange = (event, newValue) => {
@@ -52,7 +44,7 @@ export default function TriggersSection({ opening, main, ending }) {
   };
 
   return (
-    <div className={classes.root}>
+    <Box>
       <AppBar position="static" color="default">
         <Tabs
           value={value}
@@ -77,6 +69,6 @@ export default function TriggersSection({ opening, main, ending }) {
       <TabPanel value={value} index={2}>
         <TriggerList triggers={ending} />
       </TabPanel>
-    </div>
+    </Box>
   );
 }

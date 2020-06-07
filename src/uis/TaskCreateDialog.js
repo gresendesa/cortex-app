@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -10,8 +10,8 @@ import { v1 as uuidv1 }  from 'uuid';
 
 export default function TaskCreateDialog({ hookTask }) {
 
-  var [open, toggleCreateDialog, toggleEditDialog, pushTask, hasTask, deleteTask, editTask] = hookTask();
-  var value = '';
+  var { open, toggleCreateDialog, pushTask, hasTask, alert } = hookTask();
+  var [value, setValue] = useState('');
 
   const handleClose = () => {
     toggleCreateDialog();
@@ -29,10 +29,14 @@ export default function TaskCreateDialog({ hookTask }) {
         'ending': []
       }
     }
+
     if(!hasTask(task)){
       pushTask(task)
       toggleCreateDialog();
+    } else {
+      alert("This name is already taken from other task!");
     }
+
   }
 
   return (
@@ -49,7 +53,7 @@ export default function TaskCreateDialog({ hookTask }) {
             id="name"
             label="Task name"
             type="text"
-            onChange={(e) => {value = e.target.value;}}
+            onChange={(e) => {setValue(e.target.value)}}
             fullWidth
             draggable
           />

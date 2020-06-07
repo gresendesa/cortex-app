@@ -7,13 +7,18 @@ import { DataContext } from './contexts/DataContext';
 import { Typography, Box, Grid, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { foo } from './mock/processes';
-import Snackbar from '@material-ui/core/Snackbar';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 
 class Macro extends React.Component {
+
+
 
 	state = {
 		...foo,
 		'openCreateDialog': false,
+		'popUpAlert': false,
+		'alertMessage': ''
 	}
 
 	constructor(){
@@ -32,7 +37,8 @@ class Macro extends React.Component {
 	}
 
 	hasTask = (task) => {
-		return (this.state.tasks.some(e => e.name == task.name) || this.state.tasks.some(e => e.id == task.id))
+		var result = (this.state.tasks.some(e => e.name == task.name) || this.state.tasks.some(e => e.id == task.id))
+		return result;
 	}
 
 	deleteTask = (id, callback) => {
@@ -49,21 +55,30 @@ class Macro extends React.Component {
 		
 	}
 
+	showAlert = (message) => {
+		this.setState({'alertMessage': message}, () => {
+			this.setState({'popUpAlert':true});
+		});
+	}
+
 	hookTask = () => {
-		return [ 
-			this.state.openCreateDialog, //open flag
-			() => { this.setState({'openCreateDialog': !this.state.openCreateDialog }); }, //toggleDialog
-			() => { this.setState({'openEditDialog': !this.state.openEditDialog }); }, //toggleDialog
-			(task) => { this.pushTask(task) },
-			(task) => { this.hasTask(task) },
-			(id) => { this.deleteTask(id) },
-			(task) => { this.editTask(task) },
-		]
+		return {
+			'open': this.state.openCreateDialog, //open flag
+			'popUpAlert': this.state.popUpAlert, //open alert toast
+			'toggleCreateDialog': () => { this.setState({'openCreateDialog': !this.state.openCreateDialog }); }, //toggleDialog
+			'toggleEditDialog': () => { this.setState({'openEditDialog': !this.state.openEditDialog }); }, //toggleDialog
+			'togglePopUpAlert': () => { this.setState({'popUpAlert': !this.state.popUpAlert }); },
+			'pushTask': (task) => { this.pushTask(task) },
+			'hasTask': (task) => { return this.hasTask(task) },
+			'deleteTask': (id) => { this.deleteTask(id) },
+			'editTask': (task) => { this.editTask(task) },
+			'alert': (message) => { this.showAlert(message) }
+		}
 	}
 
 	render(){
 
-		var [open, toggleCreateDialog, toggleEditDialog, pushTask, hasTask, deleteTask] = this.hookTask();
+		var { open, toggleCreateDialog, togglePopUpAlert, toggleEditDialog, pushTask, hasTask, deleteTask, popUpAlert} = this.hookTask();
 
 		return (
 
@@ -98,6 +113,12 @@ class Macro extends React.Component {
 				</Grid>
 
 				<TasksSection tasks={this.state.tasks} hookTask={this.hookTask} />
+
+				<Snackbar open={popUpAlert} autoHideDuration={2000} onClose={togglePopUpAlert} >
+					<MuiAlert elevation={6} variant="filled" severity="warning">
+						{this.state.alertMessage}
+					</MuiAlert>
+				</Snackbar>
 
 			</React.Fragment>
 

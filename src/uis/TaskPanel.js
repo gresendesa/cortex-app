@@ -15,7 +15,7 @@ import TaskEditDialog from './TaskEditDialog';
 
 export default function TaskPanel({ task, hookTask }) {
 
-	var [open, toggleCreateDialog, toggleEditDialog, pushTask, hasTask, deleteTask, editTask] = hookTask();
+	var { deleteTask, editTask } = hookTask();
 
 	var [edit, setEdit] = useState(false);
 
@@ -48,7 +48,7 @@ export default function TaskPanel({ task, hookTask }) {
 						alignItems="stretch"
 					>
 						<Grid item>
-							<TriggersSection opening={task.triggers.opening} main={task.triggers.main} ending={task.triggers.ending} />
+							<TriggersSection ing={task.triggers.opening} main={task.triggers.main} ending={task.triggers.ending} />
 						</Grid>
 						<Grid item>
 							<BottomNavigation >

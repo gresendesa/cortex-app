@@ -13,6 +13,7 @@ import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
 import { Link, useHistory } from 'react-router-dom'
 import styled from 'styled-components';
+import { deepOrange, deepPurple } from '@material-ui/core/colors';
 
 
 const StyledLink = styled(Link)`
@@ -30,6 +31,12 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     backgroundColor: theme.palette.background.paper,
   },
+
+  orange: {
+    color: theme.palette.getContrastText(deepOrange[500]),
+    backgroundColor: deepOrange[500],
+  },
+
 }));
 
 export default function TriggerList({ triggers }) {
@@ -67,10 +74,10 @@ export default function TriggerList({ triggers }) {
 
           }
 
-          <ListItem button>
+          <ListItem button onClick={()=>{console.log("falafeu")}}>
             <ListItemAvatar>
-              <Avatar>
-                <AddIcon color="primary"/>
+              <Avatar className={classes.orange}>
+                <AddIcon />
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary="Create" secondary="new trigger" />
