@@ -14,7 +14,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { Link, useHistory } from 'react-router-dom'
 import styled from 'styled-components';
 import { deepOrange, deepPurple } from '@material-ui/core/colors';
-
+import Trigger from '../Trigger';
 
 const StyledLink = styled(Link)`
     text-decoration: none;
@@ -57,18 +57,8 @@ export default function TriggerList({ triggers }) {
           {
 
             triggers.map((trigger, indice) => {
-
               return (
-
-                <ListItem button key={indice}>
-                  <ListItemAvatar>
-                    <Avatar>
-                      <CodeIcon />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText primary={trigger.name} secondary="trigger" />
-                </ListItem>
-
+                <Trigger trigger={trigger} key={indice} />
               ) 
             })
 
@@ -87,3 +77,5 @@ export default function TriggerList({ triggers }) {
     </Grid>
   );
 }
+
+//<TriggerForm />
