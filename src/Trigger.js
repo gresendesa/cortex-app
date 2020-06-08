@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { makeStyles } from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -11,20 +11,29 @@ class Trigger extends React.Component {
 
 	state = {
 		...this.props,
-		...this.props.trigger
+		...this.props.trigger,
+		'openEditor': false
+	}
+
+	toggleEditor = () => { 
+		this.setState({'openEditor': !this.state.openEditor});
+	}
+
+	handleClick = (e) => {
+		this.toggleEditor();
 	}
 
 	render(){
 
 		return (
-			<ListItem button>
+			<ListItem button onClick={this.handleClick} >
               <ListItemAvatar>
                 <Avatar>
                   <CodeIcon />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText primary={this.state.name} secondary="trigger" />
-              
+              <TriggerForm trigger={this.state.trigger} open={this.state.openEditor} />
             </ListItem>
 		);
 
