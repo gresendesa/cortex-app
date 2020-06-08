@@ -12,8 +12,6 @@ import MuiAlert from '@material-ui/lab/Alert';
 
 class Macro extends React.Component {
 
-
-
 	state = {
 		...foo,
 		'openCreateDialog': false,

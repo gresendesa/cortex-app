@@ -20,21 +20,23 @@ class Trigger extends React.Component {
 	}
 
 	handleClick = (e) => {
-		this.toggleEditor();
+		this.setState({'openEditor': true});
 	}
 
 	render(){
 
 		return (
-			<ListItem button onClick={this.handleClick} >
-              <ListItemAvatar>
-                <Avatar>
-                  <CodeIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary={this.state.name} secondary="trigger" />
-              <TriggerForm trigger={this.state.trigger} open={this.state.openEditor} />
-            </ListItem>
+			<React.Fragment>
+				<ListItem button onClick={this.handleClick} >
+	              <ListItemAvatar>
+	                <Avatar>
+	                  <CodeIcon />
+	                </Avatar>
+	              </ListItemAvatar>
+	              <ListItemText primary={this.state.name} secondary="trigger" />
+	            </ListItem>
+	            <TriggerForm trigger={this.state.trigger} open={this.state.openEditor} toggleEditor={this.toggleEditor} />
+			</React.Fragment>
 		);
 
 	}

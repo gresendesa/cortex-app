@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -16,6 +16,13 @@ import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 
+import AceEditor from "react-ace";
+
+import "ace-builds/src-noconflict/mode-java";
+import "ace-builds/src-noconflict/theme-github";
+
+
+
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: 'relative',
@@ -30,12 +37,23 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TriggerForm({ trigger, open }) {
+export default function TriggerForm({ trigger, open, toggleEditor }) {
   const classes = useStyles();
 
+  const [content, setContent] = useState(trigger.content);
+
   const handleClose = () => {
-    
+    toggleEditor();
   };
+
+  const onChange = (newValue) =>  {
+    setContent(newValue);
+  }
+
+  const onSave = () => {
+    console.log("saved", content);
+    toggleEditor();
+  }
 
   return (
     <div>
@@ -48,7 +66,7 @@ export default function TriggerForm({ trigger, open }) {
             <Typography variant="h6" className={classes.title}>
               { trigger.name }
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
+            <Button autoFocus color="inherit" onClick={onSave}>
               save
             </Button>
           </Toolbar>
@@ -56,6 +74,15 @@ export default function TriggerForm({ trigger, open }) {
         <Container>
           <Box>
             { trigger.content }
+            <AceEditor
+              mode="javascript"
+              theme="github"
+              value={content}
+              onChange={onChange}
+              name="UNIQUE_ID_OF_DIV"
+              editorProps={{ $blockScrolling: true }}
+              fontSize={20}
+            />,
           </Box>
         </Container>
         

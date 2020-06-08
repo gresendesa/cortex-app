@@ -52,8 +52,8 @@ export default function TaskPanel({ task, hookTask }) {
 						</Grid>
 						<Grid item>
 							<BottomNavigation >
-								<BottomNavigationAction label="Nearby" value="nearby" icon={<EditIcon onClick={activeEditPanel} />} />
-								<BottomNavigationAction label="Folder" value="folder" icon={<DeleteIcon onClick={handleDeleteClick} />} />
+								<BottomNavigationAction onClick={activeEditPanel} label="Nearby" value="nearby" icon={<EditIcon />} />
+								<BottomNavigationAction onClick={handleDeleteClick} label="Folder" value="folder" icon={<DeleteIcon />} />
 							</BottomNavigation>
 						</Grid>
 					</Grid>
