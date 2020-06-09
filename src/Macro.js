@@ -24,6 +24,14 @@ class Macro extends React.Component {
 		this.listRef = React.createRef();
 	}
 
+	getSnapshotBeforeUpdate(prevProps, prevState) {
+		console.log("before", window.pageYOffset);
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log("didUpdate", window.pageYOffset);
+	}
+
 	deleteTask = (id) => {
 		var tasks = this.state.tasks.filter(task => {
 			return task.id !== id;
@@ -87,17 +95,13 @@ class Macro extends React.Component {
 		}
 	}
 
-	getSnapshotBeforeUpdate(prevProps, prevState){
-		console.log(prevProps, prevState);
-	}
-
 	render(){
 
 		var { open, toggleCreateDialog, togglePopUpAlert, toggleEditDialog, pushTask, hasTask, deleteTask, popUpAlert} = this.hookTask();
 
 		return (
 
-			<div ref={this.listRef}>
+			<React.Fragment>
 
 				<Grid container
 				  direction="row"
@@ -135,7 +139,7 @@ class Macro extends React.Component {
 					</MuiAlert>
 				</Snackbar>
 
-			</div>
+			</React.Fragment>
 
 		);
 

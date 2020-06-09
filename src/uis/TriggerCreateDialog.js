@@ -33,7 +33,6 @@ export default function TriggerCreateDialog({ open, setOpen, group, hookTrigger,
     } else {
       alert("This trigger name is already taken");
     }
-
     
   }
 
