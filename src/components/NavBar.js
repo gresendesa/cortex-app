@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -22,11 +22,20 @@ const useStyles = makeStyles((theme) => ({
 export default function ButtonAppBar() {
   const classes = useStyles();
 
+  var [cor, setCor] = useState("primary");
+  const mudarCor = () => {
+    if (cor=="primary"){
+      setCor("secondary");
+    } else {
+      setCor("primary");
+    }
+  }
+
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" color={cor}>
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton onClick={mudarCor} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>

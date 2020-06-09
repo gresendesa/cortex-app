@@ -37,7 +37,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TriggerForm({ trigger, open, toggleEditor }) {
+export default function TriggerForm({ taskName, trigger, open, toggleEditor }) {
   const classes = useStyles();
 
   const [content, setContent] = useState(trigger.content);
@@ -64,7 +64,7 @@ export default function TriggerForm({ trigger, open, toggleEditor }) {
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              { trigger.name }
+              {taskName} • section • {trigger.name}
             </Typography>
             <Button autoFocus color="inherit" onClick={onSave}>
               save

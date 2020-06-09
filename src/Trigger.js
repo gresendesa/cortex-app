@@ -35,7 +35,7 @@ class Trigger extends React.Component {
 	              </ListItemAvatar>
 	              <ListItemText primary={this.state.name} secondary="trigger" />
 	            </ListItem>
-	            <TriggerForm trigger={this.state.trigger} open={this.state.openEditor} toggleEditor={this.toggleEditor} />
+	            <TriggerForm taskName={this.props.task.name} trigger={this.state.trigger} open={this.state.openEditor} toggleEditor={this.toggleEditor} />
 			</React.Fragment>
 		);
 

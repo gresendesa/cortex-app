@@ -36,7 +36,7 @@ function a11yProps(index) {
   };
 }
 
-export default function TriggersSection({ opening, main, ending }) {
+export default function TriggersSection({ task }) {
 
   const [value, setValue] = React.useState(1);
 
@@ -62,13 +62,13 @@ export default function TriggersSection({ opening, main, ending }) {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <TriggerList triggers={opening} />
+        <TriggerList section="opening" task={task} triggers={task.triggers.opening} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <TriggerList triggers={main} />
+        <TriggerList section="main" task={task} triggers={task.triggers.main} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <TriggerList triggers={ending} />
+        <TriggerList section="ending" task={task} triggers={task.triggers.ending} />
       </TabPanel>
     </Box>
   );

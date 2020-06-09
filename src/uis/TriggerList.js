@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default function TriggerList({ triggers }) {
+export default function TriggerList({ task, triggers }) {
   const classes = useStyles();
 
   const history = useHistory();
@@ -58,7 +58,7 @@ export default function TriggerList({ triggers }) {
 
             triggers.map((trigger, indice) => {
               return (
-                <Trigger trigger={trigger} key={indice} />
+                <Trigger task={task} trigger={trigger} key={indice} />
               ) 
             })
 

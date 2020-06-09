@@ -36,7 +36,7 @@ export default function TaskPanel({ task, hookTask }) {
 					aria-controls="panel1a-content"
 					id="panel1a-header">
 					<Typography >
-						<strong>{ task.name }</strong>
+						<strong>{task.name}</strong>
 					</Typography>
 				</ExpansionPanelSummary>
 				<ExpansionPanelDetails>
@@ -48,7 +48,7 @@ export default function TaskPanel({ task, hookTask }) {
 						alignItems="stretch"
 					>
 						<Grid item>
-							<TriggersSection opening={task.triggers.opening} main={task.triggers.main} ending={task.triggers.ending} />
+							<TriggersSection task={task} opening={task.triggers.opening} main={task.triggers.main} ending={task.triggers.ending} />
 						</Grid>
 						<Grid item>
 							<BottomNavigation >
