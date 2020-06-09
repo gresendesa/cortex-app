@@ -39,10 +39,11 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default function TriggerList({ task, triggers }) {
-  const classes = useStyles();
+export default function TriggerList({ task, group, hookTask }) {
 
+  const classes = useStyles();
   const history = useHistory();
+  const triggers = task.triggers[group];
 
   return (
     <Grid
@@ -58,7 +59,7 @@ export default function TriggerList({ task, triggers }) {
 
             triggers.map((trigger, indice) => {
               return (
-                <Trigger task={task} trigger={trigger} key={indice} />
+                <Trigger group={group} task={task} trigger={trigger} key={indice} hookTask={hookTask} />
               ) 
             })
 
@@ -77,5 +78,3 @@ export default function TriggerList({ task, triggers }) {
     </Grid>
   );
 }
-
-//<TriggerForm />

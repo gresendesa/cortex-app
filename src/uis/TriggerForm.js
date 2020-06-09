@@ -37,7 +37,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TriggerForm({ taskName, trigger, open, toggleEditor }) {
+export default function TriggerForm({ taskName, trigger, open, toggleEditor, group }) {
   const classes = useStyles();
 
   const [content, setContent] = useState(trigger.content);
@@ -55,6 +55,8 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor }) {
     toggleEditor();
   }
 
+  const section_name = group=="opening" ? "before" : (group=="main" ? "loop" : "after");
+
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -64,7 +66,7 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor }) {
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              {taskName} • section • {trigger.name}
+              {taskName} • {section_name} • {trigger.name}
             </Typography>
             <Button autoFocus color="inherit" onClick={onSave}>
               save

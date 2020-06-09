@@ -48,7 +48,7 @@ export default function TaskPanel({ task, hookTask }) {
 						alignItems="stretch"
 					>
 						<Grid item>
-							<TriggersSection task={task} opening={task.triggers.opening} main={task.triggers.main} ending={task.triggers.ending} />
+							<TriggersSection task={task} hookTask={hookTask} />
 						</Grid>
 						<Grid item>
 							<BottomNavigation >

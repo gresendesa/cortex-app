@@ -15,6 +15,10 @@ class Trigger extends React.Component {
 		'openEditor': false
 	}
 
+	group = this.props.group;
+
+	setMacroState = this.props.hookTask.setMacroState;
+
 	toggleEditor = () => { 
 		this.setState({'openEditor': !this.state.openEditor});
 	}
@@ -35,7 +39,7 @@ class Trigger extends React.Component {
 	              </ListItemAvatar>
 	              <ListItemText primary={this.state.name} secondary="trigger" />
 	            </ListItem>
-	            <TriggerForm taskName={this.props.task.name} trigger={this.state.trigger} open={this.state.openEditor} toggleEditor={this.toggleEditor} />
+	            <TriggerForm taskName={this.props.task.name} trigger={this.state.trigger} open={this.state.openEditor} toggleEditor={this.toggleEditor} group={this.group} />
 			</React.Fragment>
 		);
 

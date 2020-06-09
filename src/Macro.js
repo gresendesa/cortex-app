@@ -81,7 +81,8 @@ class Macro extends React.Component {
 			'hasTask': (task, except=false) => { return this.hasTask(task, except) },
 			'deleteTask': (id) => { this.deleteTask(id) },
 			'editTask': (task) => { this.editTask(task) },
-			'alert': (message) => { this.showAlert(message) }
+			'alert': (message) => { this.showAlert(message) },
+			'setMacroState': (state) => {this.setState(state)}
 		}
 	}
 
