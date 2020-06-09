@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Typography, Grid, Box } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -12,12 +12,18 @@ import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import TaskEditDialog from './TaskEditDialog';
+import usePrevious from './utils'
+
+
 
 export default function TaskPanel({ task, hookTask }) {
 
 	var { deleteTask, editTask, hasTask, alert } = hookTask();
 
 	var [edit, setEdit] = useState(false);
+
+	var lastEdit = usePrevious(edit);
+	console.log("last", lastEdit);
 
 	const activeEditPanel = () => {
 		setEdit(true);
@@ -29,7 +35,7 @@ export default function TaskPanel({ task, hookTask }) {
 
 	return (
 		<Box>
-			<ExpansionPanel>
+			<ExpansionPanel expanded={true}>
 
 				<ExpansionPanelSummary
 					expandIcon={<ExpandMoreIcon />}

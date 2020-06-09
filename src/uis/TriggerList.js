@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -15,6 +15,7 @@ import { Link, useHistory } from 'react-router-dom'
 import styled from 'styled-components';
 import { deepOrange, deepPurple } from '@material-ui/core/colors';
 import Trigger from '../Trigger';
+import TriggerCreateDialog from './TriggerCreateDialog';
 
 const StyledLink = styled(Link)`
     text-decoration: none;
@@ -45,6 +46,34 @@ export default function TriggerList({ task, group, hookTask }) {
   const history = useHistory();
   const triggers = task.triggers[group];
 
+  const { editTask, alert } = hookTask();
+
+  const [open, setOpen] = useState(false);
+
+  const handleCreateClick = () => {
+    setOpen(true);
+  }
+
+  const hasTrigger = (trigger) => {
+    const tempTask = Object.assign({}, task);
+    return tempTask.triggers[group].some(t => {
+      return t.name == trigger.name
+    })
+  }
+
+  const pushTrigger = (trigger) => {
+    const tempTask = Object.assign({}, task);
+    tempTask.triggers[group].push(trigger);
+    editTask(tempTask);
+  }
+
+  const hookTrigger = () => {
+    return {
+      hasTrigger,
+      pushTrigger
+    }
+  }
+
   return (
     <Grid
         container
@@ -65,7 +94,7 @@ export default function TriggerList({ task, group, hookTask }) {
 
           }
 
-          <ListItem button onClick={()=>{console.log("falafeu")}}>
+          <ListItem button onClick={handleCreateClick}>
             <ListItemAvatar>
               <Avatar className={classes.orange}>
                 <AddIcon />
@@ -73,6 +102,7 @@ export default function TriggerList({ task, group, hookTask }) {
             </ListItemAvatar>
             <ListItemText primary="Create" secondary="new trigger" />
           </ListItem>
+          <TriggerCreateDialog open={open} setOpen={setOpen} group={group} hookTrigger={hookTrigger} alert={alert} />
         </List>
       </Grid>
     </Grid>

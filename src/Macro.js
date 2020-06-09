@@ -21,6 +21,7 @@ class Macro extends React.Component {
 
 	constructor(){
 		super();
+		this.listRef = React.createRef();
 	}
 
 	deleteTask = (id) => {
@@ -86,13 +87,17 @@ class Macro extends React.Component {
 		}
 	}
 
+	getSnapshotBeforeUpdate(prevProps, prevState){
+		console.log(prevProps, prevState);
+	}
+
 	render(){
 
 		var { open, toggleCreateDialog, togglePopUpAlert, toggleEditDialog, pushTask, hasTask, deleteTask, popUpAlert} = this.hookTask();
 
 		return (
 
-			<React.Fragment>
+			<div ref={this.listRef}>
 
 				<Grid container
 				  direction="row"
@@ -130,7 +135,7 @@ class Macro extends React.Component {
 					</MuiAlert>
 				</Snackbar>
 
-			</React.Fragment>
+			</div>
 
 		);
 

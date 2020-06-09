@@ -30,7 +30,9 @@ export default function TaskCreateDialog({ hookTask }) {
       }
     }
 
-    if(!hasTask(task)){
+    if(task.name.length==0){
+      alert("Name is empty!");
+    } else if(!hasTask(task)){
       pushTask(task)
       toggleCreateDialog();
     } else {
@@ -63,7 +65,7 @@ export default function TaskCreateDialog({ hookTask }) {
             Cancel
           </Button>
           <Button onClick={handleSave} color="primary">
-            Create
+            Create task
           </Button>
         </DialogActions>
       </Dialog>

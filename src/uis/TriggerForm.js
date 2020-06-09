@@ -15,12 +15,10 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
-
+import translateTriggerGroup from './utils';
 import AceEditor from "react-ace";
-
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/theme-github";
-
 
 
 const useStyles = makeStyles((theme) => ({
@@ -55,18 +53,16 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor, gro
     toggleEditor();
   }
 
-  const section_name = group=="opening" ? "before" : (group=="main" ? "loop" : "after");
-
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
-        <AppBar className={classes.appBar}>
+        <AppBar className={classes.appBar} color="secondary">
           <Toolbar>
             <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              {taskName} • {section_name} • {trigger.name}
+              {taskName} • {translateTriggerGroup(group)} • {trigger.name}
             </Typography>
             <Button autoFocus color="inherit" onClick={onSave}>
               save
@@ -75,7 +71,6 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor, gro
         </AppBar>
         <Container>
           <Box>
-            { trigger.content }
             <AceEditor
               mode="javascript"
               theme="github"

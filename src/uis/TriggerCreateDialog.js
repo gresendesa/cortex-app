@@ -7,43 +7,53 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { v1 as uuidv1 }  from 'uuid';
+import translateTriggerGroup from './utils';
 
-export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask, alert }) {
+export default function TriggerCreateDialog({ open, setOpen, group, hookTrigger, alert }) {
 
-  const [tempTask, setTempTask] = useState(task);
+  var [value, setValue] = useState('');
+
+  const { hasTrigger, pushTrigger } = hookTrigger();
 
   const handleClose = () => {
-    setEdit(false);
+    setOpen(false);
   };
 
-  const handleSave = () => { 
+  const handleSave = (e) => { 
 
-    if(!hasTask(tempTask, true)){
-      editTask(tempTask)
-      setEdit(false);
-    } else {
-      alert("This name is already taken from other task!");
+    let trigger = {
+      'name': value,
+      'content': '',
+      'id': uuidv1()
     }
 
+    if(!hasTrigger(trigger)){
+      setOpen(false);
+      pushTrigger(trigger);
+    } else {
+      alert("This trigger name is already taken");
+    }
+
+    
   }
 
   return (
     <div>
-      <Dialog open={edit} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Edit the task</DialogTitle>
+      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Create new trigger</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Write an unique alphanumeric word, without spaces, as a name for the task
+            Write an unique name, into the {translateTriggerGroup(group)} group, as an identificator for the trigger
           </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="Task name"
+            label="Trigger name"
             type="text"
-            value={tempTask.name}
-            onChange={(e) => { setTempTask({...tempTask, 'name': e.target.value }) }}
+            onChange={(e) => {setValue(e.target.value)}}
             fullWidth
+            draggable
           />
         </DialogContent>
         <DialogActions>
@@ -51,7 +61,7 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
             Cancel
           </Button>
           <Button onClick={handleSave} color="primary">
-            Save changes
+            Create Trigger
           </Button>
         </DialogActions>
       </Dialog>
