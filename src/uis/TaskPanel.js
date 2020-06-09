@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Typography, Grid, Box } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -14,16 +14,12 @@ import EditIcon from '@material-ui/icons/Edit';
 import TaskEditDialog from './TaskEditDialog';
 import usePrevious from './utils'
 
+export default function TasksPanel({ task, hookTask }) {
 
+	const { deleteTask, editTask, hasTask, alert, focus, setFocus, hasFocus } = hookTask();
 
-export default function TaskPanel({ task, hookTask }) {
-
-	var { deleteTask, editTask, hasTask, alert } = hookTask();
-
-	var [edit, setEdit] = useState(false);
-
-	var lastEdit = usePrevious(edit);
-	console.log("last", lastEdit);
+	const [edit, setEdit] = useState(false);
+	const [expand, setExpand] = useState(hasFocus({task}) ? true : false);
 
 	const activeEditPanel = () => {
 		setEdit(true);
@@ -33,11 +29,20 @@ export default function TaskPanel({ task, hookTask }) {
 		deleteTask(task.id);
 	}
 
-	return (
-		<Box>
-			<ExpansionPanel expanded={true}>
+	const handleExpandClick = () => {
+		if(!expand){
+			setFocus({task});
+		}
+		setExpand(!expand);
+	}	
 
-				<ExpansionPanelSummary
+	return (
+
+		<Box>
+			<ExpansionPanel expanded={expand} >
+
+				<ExpansionPanelSummary 
+					onClick={handleExpandClick}
 					expandIcon={<ExpandMoreIcon />}
 					aria-controls="panel1a-content"
 					id="panel1a-header">

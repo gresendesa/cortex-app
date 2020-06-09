@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import TaskPanel from './uis/TaskPanel';
 import TasksSection from './uis/TasksSection';
 import TaskCreateDialog from './uis/TaskCreateDialog';
 import TaskEditDialog from './uis/TaskEditDialog';
@@ -16,20 +15,25 @@ class Macro extends React.Component {
 		...foo,
 		'openCreateDialog': false,
 		'popUpAlert': false,
-		'alertMessage': ''
+		'alertMessage': '',
+		'focus': {'task':null, 'group':null, 'trigger':null}
 	}
 
 	constructor(){
 		super();
 		this.listRef = React.createRef();
+		this.pageYOffset = null;
 	}
 
 	getSnapshotBeforeUpdate(prevProps, prevState) {
-		console.log("before", window.pageYOffset);
+		if(this.pageYOffset==null){
+			this.pageYOffset = window.pageYOffset;
+		}
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log("didUpdate", window.pageYOffset);
+		window.pageYOffset = this.pageYOffset;
+		window.scrollBy(0, this.pageYOffset);
 	}
 
 	deleteTask = (id) => {
@@ -37,6 +41,29 @@ class Macro extends React.Component {
 			return task.id !== id;
 		});
 		this.setState({'tasks':tasks});
+	}
+
+	setFocus = ({ task=null, group=null, trigger=null}) => {
+		this.setState({'focus': {task, group, trigger}});
+	}
+
+	hasFocus = ({ task=null, group=null, trigger=null }) => {
+
+		let { task_focus, group_focus, trigger_focus } = { 'task_focus': this.state.focus.task, 
+														   'group_focus': this.state.focus.group, 
+														   'trigger_focus': this.state.focus.trigger };
+		//console.log("in", task, group, trigger);
+		//console.log("store", task_focus, group_focus, trigger_focus);
+
+
+		if((task!==null) && (task_focus!==null) && (task.id==task_focus.id)){
+			if(group==group_focus){
+				if(((trigger==trigger_focus) && (trigger==null)) || ((trigger!==null) && (trigger_focus!==null) && (trigger.name==trigger_focus.name))){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	pushTask = (task) => {
@@ -83,6 +110,7 @@ class Macro extends React.Component {
 		return {
 			'open': this.state.openCreateDialog, //open flag
 			'popUpAlert': this.state.popUpAlert, //open alert toast
+			'focus': this.state.focus,
 			'toggleCreateDialog': () => { this.setState({'openCreateDialog': !this.state.openCreateDialog }); }, //toggleDialog
 			'toggleEditDialog': () => { this.setState({'openEditDialog': !this.state.openEditDialog }); }, //toggleDialog
 			'togglePopUpAlert': () => { this.setState({'popUpAlert': !this.state.popUpAlert }); },
@@ -91,7 +119,9 @@ class Macro extends React.Component {
 			'deleteTask': (id) => { this.deleteTask(id) },
 			'editTask': (task) => { this.editTask(task) },
 			'alert': (message) => { this.showAlert(message) },
-			'setMacroState': (state) => {this.setState(state)}
+			'setMacroState': (state) => {this.setState(state)},
+			'setFocus': this.setFocus,
+			'hasFocus': this.hasFocus
 		}
 	}
 
