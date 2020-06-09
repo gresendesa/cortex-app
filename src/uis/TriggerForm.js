@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
+import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -69,18 +70,34 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor, gro
             </Button>
           </Toolbar>
         </AppBar>
-        <Container>
-          <Box>
-            <AceEditor
-              mode="javascript"
-              theme="github"
-              value={content}
-              onChange={onChange}
-              name="UNIQUE_ID_OF_DIV"
-              editorProps={{ $blockScrolling: true }}
-              fontSize={20}
-            />,
-          </Box>
+        <Container mt={4}>
+
+          <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="stretch"
+            >
+
+            <Grid item xs={3} >
+              
+            </Grid>
+
+            <Grid item xs={9}>
+              <AceEditor
+                mode="javascript"
+                theme="github"
+                value={content}
+                onChange={onChange}
+                name="UNIQUE_ID_OF_DIV"
+                editorProps={{ $blockScrolling: true }}
+                fontSize={20}
+              />,
+            </Grid>
+
+          </Grid>
+
+          
         </Container>
         
       </Dialog>

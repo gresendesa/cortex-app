@@ -8,6 +8,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { v1 as uuidv1 }  from 'uuid';
 import translateTriggerGroup from './utils';
+import { triggerModel } from '../mock/models';
+
 
 export default function TriggerCreateDialog({ open, setOpen, group, hookTrigger, alert }) {
 
@@ -21,11 +23,7 @@ export default function TriggerCreateDialog({ open, setOpen, group, hookTrigger,
 
   const handleSave = (e) => { 
 
-    let trigger = {
-      'name': value,
-      'content': '',
-      'id': uuidv1()
-    }
+    let trigger = triggerModel({ 'name':value });
 
     if(!hasTrigger(trigger)){
       setOpen(false);

@@ -7,6 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { v1 as uuidv1 }  from 'uuid';
+import { taskModel } from '../mock/models';
 
 export default function TaskCreateDialog({ hookTask }) {
 
@@ -18,17 +19,7 @@ export default function TaskCreateDialog({ hookTask }) {
   };
 
   const handleSave = (e) => { 
-    var task = {
-      'name': value, 
-      'id':uuidv1(),
-      'delay':1, 
-      'unsafe':100,
-      'triggers': {
-        'opening': [],
-        'main': [],
-        'ending': []
-      }
-    }
+    var task = taskModel({ 'name': value })
 
     if(task.name.length==0){
       alert("Name is empty!");

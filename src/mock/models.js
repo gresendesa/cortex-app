@@ -1,0 +1,35 @@
+import { v1 as uuidv1 }  from 'uuid';
+
+
+export function taskModel({ name, delay=1, unsafe=100 }){
+	return {
+		'name': name, 
+		'id':uuidv1(),
+		'delay':delay, 
+		'unsafe':unsafe,
+		'triggers': {
+			'opening': [],
+			'main': [],
+			'ending': []
+		}
+	}
+}
+
+export function triggerModel({ name, blocking=false, action='' }){
+	return {
+		"name": name,
+		"id":uuidv1(),
+		"blocking": blocking,
+		"events": [],
+		"action": action
+	}
+}
+
+export function eventModel({ argument="", rule=1, match=false }){
+	return {
+		"id": uuidv1(),
+		"argument": argument,
+		"rule": rule,
+		"match": match,
+	}
+}
