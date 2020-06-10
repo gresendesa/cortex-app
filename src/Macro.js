@@ -26,9 +26,7 @@ class Macro extends React.Component {
 	}
 
 	getSnapshotBeforeUpdate(prevProps, prevState) {
-		if(this.pageYOffset==null){
-			this.pageYOffset = window.pageYOffset;
-		}
+		this.pageYOffset = window.pageYOffset;
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -47,23 +45,8 @@ class Macro extends React.Component {
 		this.setState({'focus': {task, group, trigger}});
 	}
 
-	hasFocus = ({ task=null, group=null, trigger=null }) => {
-
-		let { task_focus, group_focus, trigger_focus } = { 'task_focus': this.state.focus.task, 
-														   'group_focus': this.state.focus.group, 
-														   'trigger_focus': this.state.focus.trigger };
-		//console.log("in", task, group, trigger);
-		//console.log("store", task_focus, group_focus, trigger_focus);
-
-
-		if((task!==null) && (task_focus!==null) && (task.id==task_focus.id)){
-			if(group==group_focus){
-				if(((trigger==trigger_focus) && (trigger==null)) || ((trigger!==null) && (trigger_focus!==null) && (trigger.name==trigger_focus.name))){
-					return true;
-				}
-			}
-		}
-		return false;
+	getFocus = () => {
+		return this.state.focus;
 	}
 
 	pushTask = (task) => {
@@ -121,7 +104,8 @@ class Macro extends React.Component {
 			'alert': (message) => { this.showAlert(message) },
 			'setMacroState': (state) => {this.setState(state)},
 			'setFocus': this.setFocus,
-			'hasFocus': this.hasFocus
+			'hasFocus': this.hasFocus,
+			'getFocus': this.getFocus,
 		}
 	}
 

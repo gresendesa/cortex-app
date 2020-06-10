@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -6,6 +6,8 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 import TriggerList from './TriggerList'
+
+import { translateGroupsToIntegers, translateIntegersToGroups } from './utils'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -38,10 +40,20 @@ function a11yProps(index) {
 
 export default function TriggersSection({ task, hookTask }) {
 
-  const [value, setValue] = React.useState(1);
+  const { setFocus, hasFocus, focus, getFocus } = hookTask();
+
+  let initial_value = 1;
+  if((getFocus().task!=null) && (getFocus().task.id==task.id)){
+    if(getFocus().group!=null){
+      initial_value=translateGroupsToIntegers(getFocus().group);
+    }
+  }
+
+  const [value, setValue] = React.useState(initial_value);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    setFocus({task, 'group': translateIntegersToGroups(newValue)});
   };
 
   return (

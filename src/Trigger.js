@@ -27,6 +27,11 @@ class Trigger extends React.Component {
 		this.setState({'openEditor': true});
 	}
 
+	saveTrigger = (trigger) => {
+		console.log(trigger);
+		this.props.hookTask().alert("saved");
+	}
+
 	render(){
 
 		return (
@@ -39,7 +44,7 @@ class Trigger extends React.Component {
 	              </ListItemAvatar>
 	              <ListItemText primary={this.state.name} secondary="trigger" />
 	            </ListItem>
-	            <TriggerForm taskName={this.props.task.name} trigger={this.state.trigger} open={this.state.openEditor} toggleEditor={this.toggleEditor} group={this.group} />
+	            <TriggerForm taskName={this.props.task.name} saveTrigger={this.saveTrigger} trigger={this.state.trigger} open={this.state.openEditor} toggleEditor={this.toggleEditor} group={this.group} />
 			</React.Fragment>
 		);
 

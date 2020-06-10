@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, Grid, Box } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -16,10 +16,15 @@ import usePrevious from './utils'
 
 export default function TasksPanel({ task, hookTask }) {
 
-	const { deleteTask, editTask, hasTask, alert, focus, setFocus, hasFocus } = hookTask();
+	const { deleteTask, editTask, hasTask, alert, focus, setFocus, getFocus } = hookTask();
+
+	var initial_expand = false;
+	if((getFocus().task!=null) && (getFocus().task.id==task.id)){
+    	initial_expand = true;
+  	}
 
 	const [edit, setEdit] = useState(false);
-	const [expand, setExpand] = useState(hasFocus({task}) ? true : false);
+	const [expand, setExpand] = useState(initial_expand);
 
 	const activeEditPanel = () => {
 		setEdit(true);

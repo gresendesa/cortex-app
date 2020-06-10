@@ -17,9 +17,17 @@ import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import translateTriggerGroup from './utils';
+import { triggerModel } from '../mock/models'
 import AceEditor from "react-ace";
-import "ace-builds/src-noconflict/mode-java";
-import "ace-builds/src-noconflict/theme-github";
+import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/theme-monokai";
+
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import InboxIcon from '@material-ui/icons/Inbox';
+import DraftsIcon from '@material-ui/icons/Drafts';
+
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -30,16 +38,25 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(2),
     flex: 1,
   },
+  editor: {
+    backgroundColor: 'green',
+  },
+  events: {
+    backgroundColor: 'inherit',
+  },
+  toolBar: {
+    backgroundColor: 'gray',
+  },
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TriggerForm({ taskName, trigger, open, toggleEditor, group }) {
+export default function TriggerForm({ taskName, trigger, open, toggleEditor, group, saveTrigger }) {
   const classes = useStyles();
 
-  const [content, setContent] = useState(trigger.content);
+  const [content, setContent] = useState(trigger.action);
 
   const handleClose = () => {
     toggleEditor();
@@ -50,9 +67,13 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor, gro
   }
 
   const onSave = () => {
-    console.log("saved", content);
-    toggleEditor();
+    saveTrigger(triggerModel({ 'name':trigger.name, 'action':content, 'id':trigger.id }));
+    //toggleEditor();
   }
+
+  var fooFunc = () => {
+    console.log("ok");
+  };
 
   return (
     <div>
@@ -63,42 +84,71 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor, gro
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              {taskName} • {translateTriggerGroup(group)} • {trigger.name}
+              {taskName} • {translateTriggerGroup(group)}  <TextField value={trigger.name} />
             </Typography>
             <Button autoFocus color="inherit" onClick={onSave}>
               save
             </Button>
           </Toolbar>
         </AppBar>
-        <Container mt={4}>
 
-          <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="stretch"
-            >
-
-            <Grid item xs={3} >
-              
-            </Grid>
-
-            <Grid item xs={9}>
-              <AceEditor
-                mode="javascript"
-                theme="github"
-                value={content}
-                onChange={onChange}
-                name="UNIQUE_ID_OF_DIV"
-                editorProps={{ $blockScrolling: true }}
-                fontSize={20}
-              />,
-            </Grid>
+        <Grid container className={classes.toolBar}>
+          <Grid sm={12}> 
+            
+            toolbar
 
           </Grid>
+        </Grid>
 
+        <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="stretch"
+          >
+
+          <Grid item md={3} xs={4} className={classes.events}>
           
-        </Container>
+
+            <List aria-label="main mailbox folders">
+              <ListItem>
+                <TextField small="small" fullWidth label="Subject" variant="outlined" />
+              </ListItem>
+              <ListItem>
+                <TextField small="small" fullWidth label="Rule" variant="filled" />
+              </ListItem>
+              <ListItem>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={fooFunc}
+                      onChange={fooFunc}
+                      name="checkedB"
+                      color="primary"
+                    />
+                  }
+                  label="Regex"
+                />
+              </ListItem>
+            </List>
+            <Divider />
+          
+          </Grid>
+
+          <Grid item md={9} xs={8} className={classes.editor}>
+            <AceEditor 
+              mode="javascript"
+              theme="monokai"
+              value={content}
+              onChange={onChange}
+              name="UNIQUE_ID_OF_DIV"
+              editorProps={{ $blockScrolling: true }}
+              fontSize={20}
+              width="100%"
+            />,
+          </Grid>
+
+        </Grid>
         
       </Dialog>
     </div>

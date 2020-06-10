@@ -25,9 +25,9 @@ export function triggerModel({ name, blocking=false, action='' }){
 	}
 }
 
-export function eventModel({ argument="", rule=1, match=false }){
+export function eventModel({ argument="", rule=1, match=false, id=uuidv1() }){
 	return {
-		"id": uuidv1(),
+		"id": id,
 		"argument": argument,
 		"rule": rule,
 		"match": match,
