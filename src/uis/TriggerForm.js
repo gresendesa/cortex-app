@@ -84,7 +84,7 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor, gro
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              {taskName} • {translateTriggerGroup(group)}  <TextField value={trigger.name} />
+               <TextField value={trigger.name} variant="outlined" />  
             </Typography>
             <Button autoFocus color="inherit" onClick={onSave}>
               save
@@ -95,7 +95,7 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor, gro
         <Grid container className={classes.toolBar}>
           <Grid sm={12}> 
             
-            toolbar
+            {taskName} • {translateTriggerGroup(group)}
 
           </Grid>
         </Grid>
