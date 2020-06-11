@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -33,6 +33,8 @@ import Drawer from '@material-ui/core/Drawer';
 
 import Event from './Event';
 
+import { eventModel } from '../mock/models';
+
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -65,19 +67,26 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor, gro
 
   const [events, setEvents] = useState(Object.assign([], trigger.events));
 
-  const [content, setContent] = useState(trigger.action);
   const [openEvents, setOpenEvents] = useState(false);
+
+  const [name, setName] = useState(trigger.name);
+  const [action, setAction] = useState(trigger.action);
+  const [blocking, setBlocking] = useState(trigger.blocking);
 
   const handleClose = () => {
     toggleEditor();
   };
 
-  const onChange = (newValue) =>  {
-    setContent(newValue);
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  }
+
+  const handleActionChange = (newValue) =>  {
+    setAction(newValue);
   }
 
   const onSave = () => {
-    saveTrigger(triggerModel({ 'name':trigger.name, 'action':content, 'id':trigger.id }));
+    saveTrigger(triggerModel({ 'name':name, 'action':action, 'id':trigger.id, 'blocking':blocking, 'events':events }));
   }
 
   const fooFunc = () => {
@@ -92,8 +101,25 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor, gro
     setOpenEvents(true);
   }
 
-  const pushEvent = () => {
+  const pushBlankEvent = () => {
+    console.log("tey");
+    setEvents([...events, eventModel({})])
+  }
 
+  const deleteEvent = (id) => {
+    const eventsFiltered = events.filter(e => {
+      return e.id !== id; 
+    });
+    setEvents(eventsFiltered);
+  }
+
+  const updateEvent = (event) => {
+    const eventIndex = events.findIndex(e => {
+      return e.id == event.id;
+    });
+    const copyEvents = Object.assign([], events);
+    copyEvents[eventIndex]=event;
+    setEvents(copyEvents);
   }
 
   return (
@@ -105,7 +131,7 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor, gro
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-               <TextField value={trigger.name} variant="outlined" />  
+               <TextField value={name} onChange={handleNameChange} variant="outlined" />  
             </Typography>
             <Button autoFocus color="inherit" onClick={onSave}>
               save
@@ -147,8 +173,8 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor, gro
             <AceEditor 
               mode="javascript"
               theme="monokai"
-              value={content}
-              onChange={onChange}
+              value={action}
+              onChange={handleActionChange}
               name="UNIQUE_ID_OF_DIV"
               editorProps={{ $blockScrolling: true }}
               fontSize={20}
@@ -161,13 +187,13 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor, gro
 
                 events.map(e => {
                   return (
-                    <Event event={e} />
+                    <Event event={e} deleteEvent={deleteEvent} updateEvent={updateEvent} />
                   )
                 })
 
               }
 
-              <IconButton aria-label="add event">
+              <IconButton aria-label="add event" onClick={pushBlankEvent}>
                 <Add />
               </IconButton>
 

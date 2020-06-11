@@ -12,11 +12,9 @@ class Task extends React.Component {
 	}
 
 	render(){
-
 		return (
 			<Task task={this.task} />
 		);
-
 	}
 
 }

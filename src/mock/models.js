@@ -15,17 +15,17 @@ export function taskModel({ name, delay=1, unsafe=100 }){
 	}
 }
 
-export function triggerModel({ name, blocking=false, action='' }){
+export function triggerModel({ name, blocking=false, action='', events=[] }){
 	return {
 		"name": name,
 		"id":uuidv1(),
 		"blocking": blocking,
-		"events": [],
+		"events": events,
 		"action": action
 	}
 }
 
-export function eventModel({ argument="", rule=1, match=false, id=uuidv1() }){
+export function eventModel({ argument="", rule="", match=false, id=uuidv1() }){
 	return {
 		"id": id,
 		"argument": argument,
