@@ -25,9 +25,13 @@ import "ace-builds/src-noconflict/theme-monokai";
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
+import Add from '@material-ui/icons/Add';
 
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import Drawer from '@material-ui/core/Drawer';
+
+import Event from './Event';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -47,6 +51,9 @@ const useStyles = makeStyles((theme) => ({
   toolBar: {
     backgroundColor: 'gray',
   },
+  breadCrumb: {
+    marginRight: theme.spacing(1),
+  }
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -56,7 +63,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function TriggerForm({ taskName, trigger, open, toggleEditor, group, saveTrigger }) {
   const classes = useStyles();
 
+  const [events, setEvents] = useState(Object.assign([], trigger.events));
+
   const [content, setContent] = useState(trigger.action);
+  const [openEvents, setOpenEvents] = useState(false);
 
   const handleClose = () => {
     toggleEditor();
@@ -68,12 +78,23 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor, gro
 
   const onSave = () => {
     saveTrigger(triggerModel({ 'name':trigger.name, 'action':content, 'id':trigger.id }));
-    //toggleEditor();
   }
 
-  var fooFunc = () => {
+  const fooFunc = () => {
     console.log("ok");
   };
+
+  const onEventsClose = () => {
+    setOpenEvents(false);
+  }
+
+  const handleOpenEvents = () => {
+    setOpenEvents(true);
+  }
+
+  const pushEvent = () => {
+
+  }
 
   return (
     <div>
@@ -92,10 +113,25 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor, gro
           </Toolbar>
         </AppBar>
 
-        <Grid container className={classes.toolBar}>
-          <Grid sm={12}> 
+        <Grid container>
+          <Grid 
+            item container
+            direction="row"
+            justify="space-between"
+            alignItems="center"
+            sm={12}> 
             
-            {taskName} • {translateTriggerGroup(group)}
+            <Grid item>
+              <Button color="primary" onClick={handleOpenEvents}>
+                Required events
+              </Button>
+            </Grid>
+
+            <Grid item>
+              <Box className={classes.breadCrumb}>
+              {taskName} • {translateTriggerGroup(group)}
+              </Box>
+            </Grid>
 
           </Grid>
         </Grid>
@@ -107,35 +143,7 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor, gro
             alignItems="stretch"
           >
 
-          <Grid item md={3} xs={4} className={classes.events}>
-          
-
-            <List aria-label="main mailbox folders">
-              <ListItem>
-                <TextField small="small" fullWidth label="Subject" variant="outlined" />
-              </ListItem>
-              <ListItem>
-                <TextField small="small" fullWidth label="Rule" variant="filled" />
-              </ListItem>
-              <ListItem>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={fooFunc}
-                      onChange={fooFunc}
-                      name="checkedB"
-                      color="primary"
-                    />
-                  }
-                  label="Regex"
-                />
-              </ListItem>
-            </List>
-            <Divider />
-          
-          </Grid>
-
-          <Grid item md={9} xs={8} className={classes.editor}>
+          <Grid item xs={12} className={classes.editor}>
             <AceEditor 
               mode="javascript"
               theme="monokai"
@@ -145,7 +153,26 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor, gro
               editorProps={{ $blockScrolling: true }}
               fontSize={20}
               width="100%"
-            />,
+            />
+
+            <Drawer anchor="left" open={openEvents} onClose={onEventsClose}>
+              
+              {
+
+                events.map(e => {
+                  return (
+                    <Event event={e} />
+                  )
+                })
+
+              }
+
+              <IconButton aria-label="add event">
+                <Add />
+              </IconButton>
+
+            </Drawer>
+
           </Grid>
 
         </Grid>

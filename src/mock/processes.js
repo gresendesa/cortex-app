@@ -48,7 +48,7 @@ export const foo = {
 								"argument": "PITCH",
 								"rule": ">60",
 								"match": false
-							}
+							},
 						],
 						"action": "LOG(\"OK (%&args__[1]%), teste1 %#loop__%\");\nSET(&foo,\"foo\");SET(&transition_,\"jump baz(abc,001,coisas,a,b,c,d,e,f,g,h,i,j)\");SET(interrupt_);"
 					}
@@ -90,6 +90,12 @@ export const foo = {
 								"argument": "",
 								"rule": 1,
 								"match": false
+							},
+							{
+								"id":uuidv1(),
+								"argument": "PLAYER",
+								"rule": "^Federal$",
+								"match": true
 							}
 						],
 						"action": "LOG(\"%&task__%\");"
