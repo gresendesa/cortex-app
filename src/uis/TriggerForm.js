@@ -62,7 +62,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TriggerForm({ taskName, trigger, open, toggleEditor, group, saveTrigger }) {
+export default function TriggerForm({ task, trigger, open, toggleEditor, group, saveTrigger }) {
   const classes = useStyles();
 
   const [events, setEvents] = useState(Object.assign([], trigger.events));
@@ -155,7 +155,7 @@ export default function TriggerForm({ taskName, trigger, open, toggleEditor, gro
 
             <Grid item>
               <Box className={classes.breadCrumb}>
-              {taskName} • {translateTriggerGroup(group)}
+              {task.name} • {translateTriggerGroup(group)}
               </Box>
             </Grid>
 

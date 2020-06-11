@@ -72,11 +72,15 @@ class Macro extends React.Component {
 
 	editTask = (task) => {
 
-		const tasks = Object.assign([], this.state.tasks);
-		const indice = tasks.findIndex(t => {
+		const copyTasks = Object.assign([], this.state.tasks);
+		/*const indice = copyTasks.findIndex(t => {
 			return t.id == task.id
+		})*/
+		const filteredTasks = copyTasks.filter(t => {
+			return t.id !== task.id
 		})
-		tasks[indice] = task;
+		const tasks = [task, ...filteredTasks];
+		//tasks[indice] = task;
 		this.deleteTask(task.id, () => {
 			this.setState({tasks})
 		});

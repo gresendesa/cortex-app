@@ -17,19 +17,34 @@ class Trigger extends React.Component {
 
 	group = this.props.group;
 
-	setMacroState = this.props.hookTask.setMacroState;
-
 	toggleEditor = () => { 
 		this.setState({'openEditor': !this.state.openEditor});
 	}
 
 	handleClick = (e) => {
 		this.setState({'openEditor': true});
+		const { setFocus, getFocus } = this.props.hookTask();
+		const { task, group, trigger } = this.props;
+		setFocus({ task, group, trigger });
 	}
 
 	saveTrigger = (trigger) => {
-		console.log(trigger);
-		this.props.hookTask().alert("saved");
+		
+		const task = Object.assign({}, this.props.task);
+		const group = this.props.group;
+		const editTask = this.props.hookTask().editTask;
+		const indexTrigger = task.triggers[group].findIndex(t => {
+			return t.id == trigger.id;
+		});
+		if(indexTrigger>=0){
+			task.triggers[group][indexTrigger] = trigger;
+			editTask(task);
+			this.props.hookTask().alert("saved");
+		} else {
+			this.props.hookTask().alert("issue");
+		}
+		
+		
 	}
 
 	render(){
@@ -44,7 +59,7 @@ class Trigger extends React.Component {
 	              </ListItemAvatar>
 	              <ListItemText primary={this.state.name} secondary="trigger" />
 	            </ListItem>
-	            <TriggerForm taskName={this.props.task.name} saveTrigger={this.saveTrigger} trigger={this.state.trigger} open={this.state.openEditor} toggleEditor={this.toggleEditor} group={this.group} />
+	            <TriggerForm task={this.props.task} saveTrigger={this.saveTrigger} trigger={this.state.trigger} open={this.state.openEditor} toggleEditor={this.toggleEditor} group={this.group} />
 			</React.Fragment>
 		);
 

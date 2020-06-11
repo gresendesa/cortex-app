@@ -1,10 +1,10 @@
 import { v1 as uuidv1 }  from 'uuid';
 
 
-export function taskModel({ name, delay=1, unsafe=100 }){
+export function taskModel({ name, id=uuidv1(), delay=1, unsafe=100 }){
 	return {
 		'name': name, 
-		'id':uuidv1(),
+		'id':id,
 		'delay':delay, 
 		'unsafe':unsafe,
 		'triggers': {
@@ -15,10 +15,10 @@ export function taskModel({ name, delay=1, unsafe=100 }){
 	}
 }
 
-export function triggerModel({ name, blocking=false, action='', events=[] }){
+export function triggerModel({ name, id=uuidv1(), blocking=false, action='', events=[] }){
 	return {
 		"name": name,
-		"id":uuidv1(),
+		"id":id,
 		"blocking": blocking,
 		"events": events,
 		"action": action
