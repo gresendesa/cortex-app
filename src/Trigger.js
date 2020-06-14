@@ -39,7 +39,7 @@ class Trigger extends React.Component {
 		if(indexTrigger>=0){
 			task.triggers[group][indexTrigger] = trigger;
 			editTask(task);
-			this.props.hookTask().alert("saved");
+			this.props.hookTask().alert("saved", "success");
 		} else {
 			this.props.hookTask().alert("issue");
 		}

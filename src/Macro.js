@@ -8,6 +8,8 @@ import AddIcon from '@material-ui/icons/Add';
 import { foo } from './mock/processes';
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
+import SettingsIcon from '@material-ui/icons/Settings';
+import MacroSettings from './uis/MacroSettings';
 
 class Macro extends React.Component {
 
@@ -16,7 +18,8 @@ class Macro extends React.Component {
 		'openCreateDialog': false,
 		'popUpAlert': false,
 		'alertMessage': '',
-		'focus': {'task':null, 'group':null, 'trigger':null}
+		'focus': {'task':null, 'group':null, 'trigger':null},
+		'openConfig': false,
 	}
 
 	constructor(){
@@ -25,14 +28,13 @@ class Macro extends React.Component {
 		this.pageYOffset = null;
 	}
 
-	getSnapshotBeforeUpdate(prevProps, prevState) {
+	/*getSnapshotBeforeUpdate(prevProps, prevState) {
 		this.pageYOffset = window.pageYOffset;
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		window.pageYOffset = this.pageYOffset;
 		window.scrollBy(0, this.pageYOffset);
-	}
+	}*/
 
 	deleteTask = (id) => {
 		var tasks = this.state.tasks.filter(task => {
@@ -45,8 +47,28 @@ class Macro extends React.Component {
 		this.setState({'focus': {task, group, trigger}});
 	}
 
+	setOpenConfig = (bool) => { 
+		this.setState({'openConfig': bool }); 
+	}
+
 	getFocus = () => {
 		return this.state.focus;
+	}
+
+	handleNameChange = (e) => {
+		this.setState({'name': e.target.value});
+	}
+
+	handlePNameChange = (e) => {
+		this.setState({'pname': e.target.value});
+	}
+
+	handleDescriptionChange = (e) => {
+		this.setState({'description': e.target.value});
+	}
+
+	handleEntrypointChange = (e) => {
+		this.setState({'entrypoint': e.target.value});
 	}
 
 	pushTask = (task) => {
@@ -87,8 +109,8 @@ class Macro extends React.Component {
 		
 	}
 
-	showAlert = (message) => {
-		this.setState({'alertMessage': message}, () => {
+	showAlert = (message, severity) => {
+		this.setState({'alertMessage': message, 'alertSeverity': severity}, () => {
 			this.setState({'popUpAlert':true});
 		});
 	}
@@ -101,11 +123,12 @@ class Macro extends React.Component {
 			'toggleCreateDialog': () => { this.setState({'openCreateDialog': !this.state.openCreateDialog }); }, //toggleDialog
 			'toggleEditDialog': () => { this.setState({'openEditDialog': !this.state.openEditDialog }); }, //toggleDialog
 			'togglePopUpAlert': () => { this.setState({'popUpAlert': !this.state.popUpAlert }); },
+			'setOpenConfig': (bool) => { this.setOpenConfig(bool) },
 			'pushTask': (task) => { this.pushTask(task) },
 			'hasTask': (task, except=false) => { return this.hasTask(task, except) },
 			'deleteTask': (id) => { this.deleteTask(id) },
 			'editTask': (task) => { this.editTask(task) },
-			'alert': (message) => { this.showAlert(message) },
+			'alert': (message, severity="warning") => { this.showAlert(message, severity) },
 			'setMacroState': (state) => {this.setState(state)},
 			'setFocus': this.setFocus,
 			'hasFocus': this.hasFocus,
@@ -113,9 +136,20 @@ class Macro extends React.Component {
 		}
 	}
 
+	onConfigClose = () => {
+		this.setState({'openConfig': false});
+	}
+
 	render(){
 
 		var { open, toggleCreateDialog, togglePopUpAlert, toggleEditDialog, pushTask, hasTask, deleteTask, popUpAlert} = this.hookTask();
+
+		const settings = {
+			'name': this.state.name,
+			'description': this.state.description,
+			'pname': this.state.pname,
+			'entrypoint': this.state.entrypoint,
+		}
 
 		return (
 
@@ -128,8 +162,14 @@ class Macro extends React.Component {
 					
 					<Grid item>
 						<Box component="span" m={1}>
-							<Typography variant="h5">Tasks 
-								<Typography color="textSecondary"> Macro {this.state.name}</Typography> 
+							<Typography color="textSecondary">
+								Macro {this.state.name} 
+								<IconButton aria-label="add task" onClick={() => {this.setOpenConfig(true)}}>
+									<SettingsIcon fontSize="small" />
+								</IconButton>
+							</Typography> 
+							<Typography variant="h5">
+								Tasks
 							</Typography>
 						</Box>
 					</Grid>
@@ -138,7 +178,7 @@ class Macro extends React.Component {
 						<Box component="span" m={1}>
 							<Typography>
 								<IconButton aria-label="add task" onClick={toggleCreateDialog}>
-									<AddIcon />
+									<AddIcon fontSize="large" />
 								</IconButton>
 							</Typography>
 						</Box>
@@ -152,10 +192,12 @@ class Macro extends React.Component {
 				<TasksSection tasks={this.state.tasks} hookTask={this.hookTask} />
 
 				<Snackbar open={popUpAlert} autoHideDuration={2000} onClose={togglePopUpAlert} >
-					<MuiAlert elevation={6} variant="filled" severity="warning">
+					<MuiAlert elevation={6} variant="filled" severity={this.state.alertSeverity}>
 						{this.state.alertMessage}
 					</MuiAlert>
 				</Snackbar>
+
+				<MacroSettings openConfig={this.state.openConfig} settings={settings} hookTask={this.hookTask} />
 
 			</React.Fragment>
 
