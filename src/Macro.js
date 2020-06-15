@@ -6,6 +6,7 @@ import { DataContext } from './contexts/DataContext';
 import { Typography, Box, Grid, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { foo } from './mock/processes';
+import { macroModel } from './mock/models';
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -138,7 +139,8 @@ class Macro extends React.Component {
 	}
 
 	launch = () => {
-		console.log("launched");
+		let macro = macroModel(this.state);
+		console.log("launched", macro);
 	}
 
 	onConfigClose = () => {

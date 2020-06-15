@@ -30,3 +30,20 @@ export function eventModel({ argument="", rule="", match=false, id=Math.random()
 		"match": match,
 	}
 }
+
+export function macroModel({ name, description, debug=false, production=true, pname, entrypoint, unsafe=null, dependencies=[], tasks }){
+	return {
+		'name': name,
+		'description': description,
+		'debug': debug,
+		'production': production,
+		'inner-protocol': 'TASK',
+		'protocol': 'CTRL',
+		'pname': pname,
+		'entrypoint': entrypoint,
+		'unsafe': unsafe,
+		'dependencies': dependencies,
+		'tasks': tasks,
+	}
+}
+
