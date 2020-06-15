@@ -29,7 +29,7 @@ export default function TriggerCreateDialog({ open, setOpen, group, hookTrigger,
       setOpen(false);
       pushTrigger(trigger);
     } else {
-      alert("This trigger name is already taken");
+      alert("This action name is already taken");
     }
 
   }
@@ -37,16 +37,16 @@ export default function TriggerCreateDialog({ open, setOpen, group, hookTrigger,
   return (
     <div>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Create new trigger</DialogTitle>
+        <DialogTitle id="form-dialog-title">Create new action</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Write an unique name, into the {translateTriggerGroup(group)} group, as an identificator for the trigger
+            Write an unique name, into the {translateTriggerGroup(group)} group, as an identificator for the action
           </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="Trigger name"
+            label="Action name"
             type="text"
             onChange={(e) => {setValue(e.target.value)}}
             fullWidth
@@ -58,7 +58,7 @@ export default function TriggerCreateDialog({ open, setOpen, group, hookTrigger,
             Cancel
           </Button>
           <Button onClick={handleSave} color="primary">
-            Create Trigger
+            Create Action
           </Button>
         </DialogActions>
       </Dialog>

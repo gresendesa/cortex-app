@@ -76,7 +76,7 @@ class Trigger extends React.Component {
 							<CodeIcon />
 						</Avatar>
 					</ListItemAvatar>
-					<ListItemText primary={this.state.trigger.name} secondary="trigger" />
+					<ListItemText primary={this.state.trigger.name} secondary="action" />
 					
 					{
 

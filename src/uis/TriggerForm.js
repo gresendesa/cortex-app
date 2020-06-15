@@ -147,7 +147,7 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
             
             <Grid item>
               <Button color="primary" onClick={handleOpenEvents}>
-                Required events
+                Required Conditions
               </Button>
             </Grid>
 

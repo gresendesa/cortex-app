@@ -122,7 +122,7 @@ export default function TriggerList({ task, group, hookTask }) {
                 <AddIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="Create" secondary="new trigger" />
+            <ListItemText primary="Create" secondary="new action" />
           </ListItem>
           <TriggerCreateDialog open={open} setOpen={setOpen} group={group} hookTrigger={hookTrigger} alert={alert} />
         </List>
