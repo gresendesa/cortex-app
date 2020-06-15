@@ -14,8 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 class Trigger extends React.Component {
 
 	state = {
-		...this.props,
-		...this.props.trigger,
+		'trigger': this.props.trigger,
 		'openEditor': false
 	}
 
@@ -37,7 +36,6 @@ class Trigger extends React.Component {
 	}
 
 	saveTrigger = (trigger) => {
-		
 		const task = Object.assign({}, this.props.task);
 		const group = this.props.group;
 		const editTask = this.props.hookTask().editTask;
@@ -48,6 +46,7 @@ class Trigger extends React.Component {
 			task.triggers[group][indexTrigger] = trigger;
 			editTask(task);
 			this.props.hookTask().alert("saved", "success");
+			this.setState({'trigger':trigger});
 		} else {
 			this.props.hookTask().alert("issue");
 		}
@@ -59,7 +58,6 @@ class Trigger extends React.Component {
 		if((getFocus().task != null) && (getFocus().task.id == this.props.task.id)){
 			if(getFocus().group == this.props.group){
 				if((getFocus().trigger != null) && (getFocus().trigger.id == this.props.trigger.id)){
-					console.log("has focus here");
 					this.setState({'openEditor': true});
 				}
 			}
@@ -78,7 +76,7 @@ class Trigger extends React.Component {
 							<CodeIcon />
 						</Avatar>
 					</ListItemAvatar>
-					<ListItemText primary={this.state.name} secondary="trigger" />
+					<ListItemText primary={this.state.trigger.name} secondary="trigger" />
 					
 					{
 
@@ -94,7 +92,13 @@ class Trigger extends React.Component {
 					}
 					
 	            </ListItem>
-	            <TriggerForm task={this.props.task} saveTrigger={this.saveTrigger} trigger={this.state.trigger} open={this.state.openEditor} toggleEditor={this.toggleEditor} group={this.group} setFocus={setFocus} />
+	            <TriggerForm task={this.props.task} 
+	            			 saveTrigger={this.saveTrigger} 
+	            			 trigger={this.state.trigger} 
+	            			 open={this.state.openEditor} 
+	            			 toggleEditor={this.toggleEditor} 
+	            			 group={this.group} 
+	            			 setFocus={setFocus} />
 			</React.Fragment>
 		);
 

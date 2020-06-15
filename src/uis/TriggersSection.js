@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -49,7 +49,12 @@ export default function TriggersSection({ task, hookTask }) {
     }
   }
 
-  const [value, setValue] = React.useState(initial_value);
+  //const [myTask, setMyTask] = useState(task);
+  const [value, setValue] = useState(initial_value);
+
+  /*useEffect(() => {
+
+  }, [myTask]);*/
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

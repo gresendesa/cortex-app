@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -44,9 +44,17 @@ export default function TriggerList({ task, group, hookTask }) {
 
   const classes = useStyles();
   const history = useHistory();
-  const triggers = task.triggers[group];
+  //const triggers = task.triggers[group];
 
-  const { editTask, alert } = hookTask();
+  const [triggers, setTriggers] = useState(task.triggers[group])
+
+  const { editTask, alert, setFocus } = hookTask();
+
+  useEffect(() => {
+    const tempTask = Object.assign({}, task);
+    tempTask.triggers[group] = triggers;
+    editTask(tempTask);
+  }, [triggers])
 
   const [open, setOpen] = useState(false);
 
@@ -62,9 +70,9 @@ export default function TriggerList({ task, group, hookTask }) {
   }
 
   const pushTrigger = (trigger) => {
-    const tempTask = Object.assign({}, task);
-    tempTask.triggers[group].push(trigger);
-    editTask(tempTask);
+    const tempTriggers = Object.assign([], triggers);
+    tempTriggers.push(trigger);
+    setTriggers(tempTriggers);
   }
 
   const hookTrigger = () => {
@@ -83,10 +91,9 @@ export default function TriggerList({ task, group, hookTask }) {
       let aboveTrigger = copyTriggers[index-1]
       copyTriggers[index-1] = copyTriggers[index];
       copyTriggers[index] = aboveTrigger;
-      let tempTask = Object.assign({}, task);
-      tempTask.triggers[group] = copyTriggers;
-      editTask(tempTask);
+      setTriggers(copyTriggers);
     }
+    setFocus({'task': task, 'group': group})
   }
 
   return (
@@ -103,7 +110,7 @@ export default function TriggerList({ task, group, hookTask }) {
 
             triggers.map((trigger, indice) => {
               return (
-                <Trigger indice={indice} moveUp={moveUp} group={group} task={task} trigger={trigger} key={indice} hookTask={hookTask} />
+                <Trigger indice={indice} moveUp={moveUp} group={group} task={task} trigger={trigger} key={trigger.id} hookTask={hookTask} />
               ) 
             })
 

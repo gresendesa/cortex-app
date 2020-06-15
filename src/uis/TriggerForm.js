@@ -90,10 +90,6 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
     saveTrigger(triggerModel({ 'name':name, 'action':action, 'id':trigger.id, 'blocking':blocking, 'events':events }));
   }
 
-  const fooFunc = () => {
-    console.log("ok");
-  };
-
   const onEventsClose = () => {
     setOpenEvents(false);
   }
@@ -103,7 +99,6 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
   }
 
   const pushBlankEvent = () => {
-    console.log("tey");
     setEvents([...events, eventModel({})])
   }
 
@@ -126,7 +121,7 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
   //<Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
   return (
     <div>
-      <Dialog fullScreen open={open} onClose={handleClose} >
+      <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} >
         <AppBar className={classes.appBar} color="secondary">
           <Toolbar>
             <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
@@ -187,9 +182,9 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
               
               {
 
-                events.map(e => {
+                events.map((e, k) => {
                   return (
-                    <Event event={e} deleteEvent={deleteEvent} updateEvent={updateEvent} />
+                    <Event event={e} key={k} deleteEvent={deleteEvent} updateEvent={updateEvent} />
                   )
                 })
 

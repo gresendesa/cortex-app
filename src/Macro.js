@@ -10,6 +10,7 @@ import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import SettingsIcon from '@material-ui/icons/Settings';
 import MacroSettings from './uis/MacroSettings';
+import { Icon } from 'semantic-ui-react';
 
 class Macro extends React.Component {
 
@@ -20,21 +21,15 @@ class Macro extends React.Component {
 		'alertMessage': '',
 		'focus': {'task':null, 'group':null, 'trigger':null},
 		'openConfig': false,
+		'cloudScriptId': foo.name.replace(' ','-').toLowerCase(),
+		'devName': 'Federal',
 	}
 
 	constructor(){
 		super();
 		this.listRef = React.createRef();
-		this.pageYOffset = null;
+		this.pageY = null;
 	}
-
-	/*getSnapshotBeforeUpdate(prevProps, prevState) {
-		this.pageYOffset = window.pageYOffset;
-	}
-
-	componentDidUpdate(prevProps, prevState, snapshot) {
-		window.scrollBy(0, this.pageYOffset);
-	}*/
 
 	deleteTask = (id) => {
 		var tasks = this.state.tasks.filter(task => {
@@ -92,7 +87,7 @@ class Macro extends React.Component {
 		this.setState({'tasks':tasks}, callback);
 	}
 
-	editTask = (task) => {
+	editTask2 = (task) => {
 
 		const copyTasks = Object.assign([], this.state.tasks);
 		/*const indice = copyTasks.findIndex(t => {
@@ -107,6 +102,15 @@ class Macro extends React.Component {
 			this.setState({tasks})
 		});
 		
+	}
+
+	editTask = (task) => {
+		const copyTasks = Object.assign([], this.state.tasks);
+		const indice = copyTasks.findIndex(t => {
+			return t.id == task.id
+		});
+		copyTasks[indice]=task;
+		this.setState({'tasks': copyTasks});
 	}
 
 	showAlert = (message, severity) => {
@@ -149,6 +153,7 @@ class Macro extends React.Component {
 			'description': this.state.description,
 			'pname': this.state.pname,
 			'entrypoint': this.state.entrypoint,
+			'cloudScriptId': this.state.cloudScriptId,
 		}
 
 		return (
@@ -163,10 +168,15 @@ class Macro extends React.Component {
 					<Grid item>
 						<Box component="span" m={1}>
 							<Typography color="textSecondary">
-								Macro {this.state.name} 
+								{this.state.name} 
 								<IconButton aria-label="add task" onClick={() => {this.setOpenConfig(true)}}>
 									<SettingsIcon fontSize="small" />
 								</IconButton>
+
+								<IconButton aria-label="add task" onClick={() => {this.setOpenConfig(true)}}>
+									<Icon name='rocket' size='small' />
+								</IconButton>
+
 							</Typography> 
 							<Typography variant="h5">
 								Tasks
@@ -197,7 +207,7 @@ class Macro extends React.Component {
 					</MuiAlert>
 				</Snackbar>
 
-				<MacroSettings openConfig={this.state.openConfig} settings={settings} hookTask={this.hookTask} />
+				<MacroSettings openConfig={this.state.openConfig} settings={settings} hookTask={this.hookTask} devName={this.state.devName} />
 
 			</React.Fragment>
 

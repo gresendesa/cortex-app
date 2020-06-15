@@ -1,12 +1,18 @@
 import React from 'react';
-import Routes from './routes'
-import DataContextProvider from './contexts/DataContext'
+import Routes from './routes';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
+const theme = createMuiTheme({
+  typography: {
+    fontSize: 20,
+  },
+});
 
 function App() {
 	return (
-		<DataContextProvider>
+		<ThemeProvider theme={theme}>
 			<Routes />	
-		</DataContextProvider>
+		</ThemeProvider>
 	);
 }
 

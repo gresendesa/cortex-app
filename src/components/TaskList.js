@@ -17,7 +17,7 @@ export default function TaskList({ tasks }) {
 
     return (
 
-      <ExpansionPanel key={key} >
+      <ExpansionPanel key={task.id} >
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
