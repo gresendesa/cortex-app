@@ -11,9 +11,9 @@ export default function TasksSection({ tasks, hookTask }) {
 		<Box>
 		{
 			tasks.length > 0 ?
-			tasks.map((task) => {
+			tasks.map((task, indice) => {
 				return (
-					<TaskPanel task={task} key={task.id} hookTask={hookTask} />
+					<TaskPanel indice={indice} task={task} key={task.id} hookTask={hookTask} />
 				)
 			})
 			:

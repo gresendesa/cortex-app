@@ -11,12 +11,14 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+
 import TaskEditDialog from './TaskEditDialog';
 import usePrevious from './utils'
 
-export default function TasksPanel({ task, hookTask }) {
+export default function TasksPanel({ task, hookTask, indice }) {
 
-	const { deleteTask, editTask, hasTask, alert, focus, setFocus, getFocus } = hookTask();
+	const { deleteTask, editTask, hasTask, alert, focus, setFocus, getFocus, moveTaskUp } = hookTask();
 
 	var initial_expand = false;
 	if((getFocus().task!=null) && (getFocus().task.id==task.id)){
@@ -32,6 +34,10 @@ export default function TasksPanel({ task, hookTask }) {
 
 	const handleDeleteClick = () => {
 		deleteTask(task.id);
+	}
+
+	const handleMoveTaskUp = () => {
+		moveTaskUp(task);
 	}
 
 	const handleExpandClick = () => {
@@ -68,8 +74,13 @@ export default function TasksPanel({ task, hookTask }) {
 						</Grid>
 						<Grid item>
 							<BottomNavigation >
-								<BottomNavigationAction onClick={activeEditPanel} label="Nearby" value="nearby" icon={<EditIcon />} />
-								<BottomNavigationAction onClick={handleDeleteClick} label="Folder" value="folder" icon={<DeleteIcon />} />
+								{
+									indice>0 ?
+									<BottomNavigationAction onClick={handleMoveTaskUp} label="Move Up" icon={<ArrowUpwardIcon />} />
+									: ""
+								}
+								<BottomNavigationAction onClick={activeEditPanel} label="Edit" icon={<EditIcon />} />
+								<BottomNavigationAction onClick={handleDeleteClick} label="Delete" icon={<DeleteIcon />} />
 							</BottomNavigation>
 						</Grid>
 					</Grid>

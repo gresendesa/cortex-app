@@ -87,21 +87,17 @@ class Macro extends React.Component {
 		this.setState({'tasks':tasks}, callback);
 	}
 
-	editTask2 = (task) => {
-
-		const copyTasks = Object.assign([], this.state.tasks);
-		/*const indice = copyTasks.findIndex(t => {
+	moveTaskUp = (task) => {
+		let copyTasks = Object.assign([], this.state.tasks);
+		const indice = copyTasks.findIndex(t => {
 			return t.id == task.id
-		})*/
-		const filteredTasks = copyTasks.filter(t => {
-			return t.id !== task.id
-		})
-		const tasks = [task, ...filteredTasks];
-		//tasks[indice] = task;
-		this.deleteTask(task.id, () => {
-			this.setState({tasks})
 		});
-		
+		if (indice>0){
+			let aboveTask = copyTasks[indice-1];
+			copyTasks[indice-1] = task;
+			copyTasks[indice] = aboveTask;
+			this.setState({'tasks': copyTasks});
+		}
 	}
 
 	editTask = (task) => {
@@ -134,10 +130,15 @@ class Macro extends React.Component {
 			'editTask': (task) => { this.editTask(task) },
 			'alert': (message, severity="warning") => { this.showAlert(message, severity) },
 			'setMacroState': (state) => {this.setState(state)},
+			'moveTaskUp': (task) => { this.moveTaskUp(task) },
 			'setFocus': this.setFocus,
 			'hasFocus': this.hasFocus,
 			'getFocus': this.getFocus,
 		}
+	}
+
+	launch = () => {
+		console.log("launched");
 	}
 
 	onConfigClose = () => {
@@ -173,7 +174,7 @@ class Macro extends React.Component {
 									<SettingsIcon fontSize="small" />
 								</IconButton>
 
-								<IconButton aria-label="add task" onClick={() => {this.setOpenConfig(true)}}>
+								<IconButton aria-label="add task" onClick={this.launch}>
 									<Icon name='rocket' size='small' />
 								</IconButton>
 
