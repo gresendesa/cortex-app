@@ -32,6 +32,7 @@ import Switch from '@material-ui/core/Switch';
 import Drawer from '@material-ui/core/Drawer';
 
 import Event from './Event';
+import DrawerHeader from './DrawerHeader';
 
 import { eventModel } from '../mock/models';
 
@@ -180,6 +181,8 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
 
             <Drawer anchor="left" open={openEvents} onClose={onEventsClose}>
               
+              <DrawerHeader onClose={onEventsClose} />
+
               {
 
                 events.map((e, k) => {

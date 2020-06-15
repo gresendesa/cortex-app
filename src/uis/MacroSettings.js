@@ -7,6 +7,7 @@ import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import Delete from '@material-ui/icons/Delete';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import DrawerHeader from './DrawerHeader';
 
 import TextField from '@material-ui/core/TextField';
 
@@ -39,7 +40,10 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 
 	return(
 
-		<Drawer anchor="right" open={openConfig} onClose={handleClose} >     
+		<Drawer anchor="right" open={openConfig} onClose={handleClose} >  
+
+			<DrawerHeader onClose={handleClose} />
+
 			<List aria-label="main mailbox folders">
 				<ListItem>
 					<TextField small="small" fullWidth label="Macro name" value={config.name} onChange={(e) => {handleChange("name", e.target.value)}} variant="outlined" />

@@ -140,7 +140,20 @@ class Macro extends React.Component {
 
 	launch = () => {
 		let macro = macroModel(this.state);
-		console.log("launched", macro);
+		//console.log("launched", JSON.stringify(macro));
+
+		fetch('http://localhost:8000/cortex', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(macro)
+		})
+			.then((response) => response.json())
+			.then((json) => {
+				console.log(json);
+			});
 	}
 
 	onConfigClose = () => {
