@@ -1,7 +1,4 @@
-import { v1 as uuidv1 }  from 'uuid';
-
-
-export function taskModel({ name, id=uuidv1(), delay=1, unsafe=100 }){
+export function taskModel({ name, id=Math.random(), delay=1, unsafe=100 }){
 	return {
 		'name': name, 
 		'id':id,
@@ -15,7 +12,7 @@ export function taskModel({ name, id=uuidv1(), delay=1, unsafe=100 }){
 	}
 }
 
-export function triggerModel({ name, id=uuidv1(), blocking=false, action='', events=[] }){
+export function triggerModel({ name, id=Math.random(), blocking=false, action='', events=[] }){
 	return {
 		"name": name,
 		"id":id,
@@ -25,7 +22,7 @@ export function triggerModel({ name, id=uuidv1(), blocking=false, action='', eve
 	}
 }
 
-export function eventModel({ argument="", rule="", match=false, id=uuidv1() }){
+export function eventModel({ argument="", rule="", match=false, id=Math.random() }){
 	return {
 		"id": id,
 		"argument": argument,

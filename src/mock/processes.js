@@ -1,5 +1,3 @@
-import { v1 as uuidv1 }  from 'uuid';
-
 export const foo = {
 
 	"name": "Foo",
@@ -17,18 +15,18 @@ export const foo = {
 	"tasks": [
 		{
 			"name": "main",
-			"id":uuidv1(),
+			"id":Math.random(),
 			"delay": 1,
 			"unsafe": 100,
 			"triggers": {
 				"opening": [
 					{
 						"name": "trigger1",
-						"id":uuidv1(),
+						"id":Math.random(),
 						"blocking": false,
 						"events": [
 							{
-								"id":uuidv1(),
+								"id":Math.random(),
 								"argument": "",
 								"rule": 1,
 								"match": false
@@ -40,11 +38,11 @@ export const foo = {
 				"main": [
 					{
 						"name": "trigger2",
-						"id":uuidv1(),
+						"id":Math.random(),
 						"blocking": false,
 						"events": [
 							{
-								"id":uuidv1(),
+								"id":Math.random(),
 								"argument": "PITCH",
 								"rule": ">60",
 								"match": false
@@ -56,11 +54,11 @@ export const foo = {
 				"ending": [
 					{
 						"name": "trigger3",
-						"id":uuidv1(),
+						"id":Math.random(),
 						"blocking": false,
 						"events": [
 							{
-								"id":uuidv1(),
+								"id":Math.random(),
 								"argument": "",
 								"rule": 1,
 								"match": false
@@ -75,24 +73,24 @@ export const foo = {
 
 		{
 			"name": "baz",
-			"id":uuidv1(),
+			"id":Math.random(),
 			"delay": 1,
 			"unsafe": 100,
 			"triggers": {
 				"opening": [
 					{
 						"name": "trigger4",
-						"id":uuidv1(),
+						"id":Math.random(),
 						"blocking": false,
 						"events": [
 							{
-								"id":uuidv1(),
+								"id":Math.random(),
 								"argument": "",
 								"rule": 1,
 								"match": false
 							},
 							{
-								"id":uuidv1(),
+								"id":Math.random(),
 								"argument": "PLAYER",
 								"rule": "^Federal$",
 								"match": true
@@ -104,11 +102,11 @@ export const foo = {
 				"main": [
 					{
 						"name": "trigger5",
-						"id":uuidv1(),
+						"id":Math.random(),
 						"blocking": false,
 						"events": [
 							{
-								"id":uuidv1(),
+								"id":Math.random(),
 								"argument": "PITCH",
 								"rule": "<60",
 								"match": false
@@ -118,11 +116,11 @@ export const foo = {
 					},
 					{
 						"name": "trigger6",
-						"id":uuidv1(),
+						"id":Math.random(),
 						"blocking": false,
 						"events": [
 							{
-								"id":uuidv1(),
+								"id":Math.random(),
 								"argument": "PITCH",
 								"rule": "<30",
 								"match": false
@@ -139,14 +137,14 @@ export const foo = {
 
 		{
 			"name": "def",
-			"id":uuidv1(),
+			"id":Math.random(),
 			"delay": 1,
 			"unsafe": 100,
 			"triggers": {
 				"opening": [
 					{
 						"name": "trigger7",
-						"id":uuidv1(),
+						"id":Math.random(),
 						"blocking": false,
 						"events": [
 							{
@@ -161,7 +159,7 @@ export const foo = {
 				"main": [
 					{
 						"name": "trigger8",
-						"id":uuidv1(),
+						"id":Math.random(),
 						"blocking": false,
 						"events": [
 							{

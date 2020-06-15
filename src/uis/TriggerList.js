@@ -74,6 +74,21 @@ export default function TriggerList({ task, group, hookTask }) {
     }
   }
 
+  const moveUp = (trigger) => {
+    let copyTriggers = Object.assign([], triggers);
+    let index = copyTriggers.findIndex((t) => {
+      return t.id == trigger.id
+    });
+    if(index>0){
+      let aboveTrigger = copyTriggers[index-1]
+      copyTriggers[index-1] = copyTriggers[index];
+      copyTriggers[index] = aboveTrigger;
+      let tempTask = Object.assign({}, task);
+      tempTask.triggers[group] = copyTriggers;
+      editTask(tempTask);
+    }
+  }
+
   return (
     <Grid
         container
@@ -88,7 +103,7 @@ export default function TriggerList({ task, group, hookTask }) {
 
             triggers.map((trigger, indice) => {
               return (
-                <Trigger group={group} task={task} trigger={trigger} key={indice} hookTask={hookTask} />
+                <Trigger indice={indice} moveUp={moveUp} group={group} task={task} trigger={trigger} key={indice} hookTask={hookTask} />
               ) 
             })
 
