@@ -13,6 +13,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import EditIcon from '@material-ui/icons/Edit';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
@@ -44,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
   title: {
     marginLeft: theme.spacing(2),
     flex: 1,
+    overflow: 'hidden',
   },
   editor: {
     backgroundColor: 'green',
@@ -70,6 +72,8 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
 
   const [openEvents, setOpenEvents] = useState(false);
 
+  const [openConfig, setOpenConfig] = useState(false);
+
   const [name, setName] = useState(trigger.name);
   const [action, setAction] = useState(trigger.action);
   const [blocking, setBlocking] = useState(trigger.blocking);
@@ -95,8 +99,16 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
     setOpenEvents(false);
   }
 
+  const onConfigClose = () => {
+    setOpenConfig(false);
+  }
+
   const handleOpenEvents = () => {
     setOpenEvents(true);
+  }
+
+  const handleOpenConfig = () => {
+    setOpenConfig(true);
   }
 
   const pushBlankEvent = () => {
@@ -128,9 +140,12 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
             <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
               <CloseIcon />
             </IconButton>
-            <Typography variant="h6" className={classes.title}>
-               <TextField value={name} onChange={handleNameChange} variant="outlined" />  
+            <Typography variant="subtitle1" className={classes.title} >
+              {name}
             </Typography>
+            <Box className={classes.breadCrumb}>
+              {task.name} • {translateTriggerGroup(group)}
+              </Box>
             <Button autoFocus color="inherit" onClick={onSave}>
               save
             </Button>
@@ -152,9 +167,9 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
             </Grid>
 
             <Grid item>
-              <Box className={classes.breadCrumb}>
-              {task.name} • {translateTriggerGroup(group)}
-              </Box>
+              <IconButton aria-label="add task" onClick={handleOpenConfig}>
+                <EditIcon fontSize="small" />
+              </IconButton>
             </Grid>
 
           </Grid>
@@ -178,6 +193,30 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
               fontSize={20}
               width="100%"
             />
+
+            <Drawer anchor="right" open={openConfig} onClose={onConfigClose} >
+
+              <DrawerHeader onClose={onConfigClose} />
+
+              <List aria-label="main mailbox folders">
+                <ListItem>
+                  <TextField value={name} small="small" onChange={(e) => { setName(e.target.value) }} label="Action name" variant="outlined" />  
+                </ListItem>
+                <ListItem>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={blocking}
+                        onChange={() => {setBlocking(!blocking)}}
+                        color="primary"
+                      />
+                    }
+                    label="Blocking"
+                  />
+                </ListItem>
+              </List>
+
+            </Drawer>
 
             <Drawer anchor="left" open={openEvents} onClose={onEventsClose}>
               
