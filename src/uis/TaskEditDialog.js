@@ -25,12 +25,15 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
 
   const handleToggleUnsafe = () => {
     if (hasMacroUnsafe()){
-      alert("Unsafe mode is applyed globally already");
+      alert("Unsafe mode is set globally already");
     }  
     setUnsafe(!unsafe);
   }
 
   const handleUnsafeNumber = (e) => {
+    if (hasMacroUnsafe()){
+      alert("Unsafe mode is set globally already");
+    }
     setUnsafeNumber(e.target.value);
   }
 

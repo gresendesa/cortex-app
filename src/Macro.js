@@ -136,6 +136,7 @@ class Macro extends React.Component {
 			'hasFocus': this.hasFocus,
 			'getFocus': this.getFocus,
 			'hasMacroUnsafe': () => { return this.state.unsafe!=null },
+			'launch': this.launch,
 		}
 	}
 

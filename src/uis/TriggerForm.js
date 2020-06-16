@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+
+import SaveIcon from '@material-ui/icons/Save';
+import { Icon } from 'semantic-ui-react';
+
 import Dialog from '@material-ui/core/Dialog';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
@@ -65,7 +70,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TriggerForm({ task, trigger, open, toggleEditor, group, saveTrigger, alert, setFocus }) {
+export default function TriggerForm({ task, trigger, open, toggleEditor, group, saveTrigger, alert, setFocus, launch }) {
   const classes = useStyles();
 
   const [events, setEvents] = useState(Object.assign([], trigger.events));
@@ -101,12 +106,17 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
     return has;
   }
 
-  const onSave = () => {
+  const onSave = (publish=false) => {
     let newTrigger = triggerModel({ 'name':name, 'action':action, 'id':trigger.id, 'blocking':blocking, 'events':events })
     if(name.match(/"|^$/)){
       alert("Invalid name");
     } else if(!hasTrigger(newTrigger)){
-      saveTrigger(newTrigger);
+      
+      if(publish){
+        saveTrigger(newTrigger,launch);
+      } else {
+        saveTrigger(newTrigger);
+      }
     } else {
       alert("Action name is already taken");
     }
@@ -163,9 +173,16 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
             <Box className={classes.breadCrumb}>
               {task.name} • {translateTriggerGroup(group)}
               </Box>
-            <Button autoFocus color="inherit" onClick={onSave}>
-              save
-            </Button>
+
+            <ButtonGroup color="primary" aria-label="outlined primary button group">
+              <IconButton edge="end" color="inherit" onClick={() => {onSave()}} aria-label="close">
+                <SaveIcon />
+              </IconButton>
+              <IconButton edge="end" color="inherit" onClick={() => {onSave(true)}} aria-label="close">
+                <Icon name='rocket' size='small' />
+              </IconButton>
+            </ButtonGroup>
+
           </Toolbar>
         </AppBar>
 

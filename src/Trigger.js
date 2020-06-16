@@ -35,7 +35,7 @@ class Trigger extends React.Component {
 		this.props.moveUp(this.props.trigger);
 	}
 
-	saveTrigger = (trigger) => {
+	saveTrigger = (trigger, callback=()=>{}) => {
 		const task = Object.assign({}, this.props.task);
 		const group = this.props.group;
 		const editTask = this.props.hookTask().editTask;
@@ -46,7 +46,7 @@ class Trigger extends React.Component {
 			task.triggers[group][indexTrigger] = trigger;
 			editTask(task);
 			this.props.hookTask().alert("saved", "success");
-			this.setState({'trigger':trigger});
+			this.setState({'trigger':trigger}, callback);
 		} else {
 			this.props.hookTask().alert("issue");
 		}
@@ -67,6 +67,8 @@ class Trigger extends React.Component {
 	render(){
 
 		const { setFocus, alert } = this.props.hookTask();
+
+		const { launch } = this.props.hookTask();
 
 		return (
 			<React.Fragment>
@@ -99,7 +101,8 @@ class Trigger extends React.Component {
 	            			 toggleEditor={this.toggleEditor} 
 	            			 group={this.group} 
 	            			 setFocus={setFocus}
-	            			 alert={alert} />
+	            			 alert={alert}
+	            			 launch={launch} />
 			</React.Fragment>
 		);
 
