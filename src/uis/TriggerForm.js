@@ -103,7 +103,9 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
 
   const onSave = () => {
     let newTrigger = triggerModel({ 'name':name, 'action':action, 'id':trigger.id, 'blocking':blocking, 'events':events })
-    if(!hasTrigger(newTrigger)){
+    if(name.match(/"|^$/)){
+      alert("Invalid name");
+    } else if(!hasTrigger(newTrigger)){
       saveTrigger(newTrigger);
     } else {
       alert("Action name is already taken");

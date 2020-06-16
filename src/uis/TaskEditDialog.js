@@ -46,7 +46,7 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
     tempTask.delay = delay;
     tempTask.unsafe = unsafe ? unsafeNumber : null;
 
-    if(name.match(/ |"/)){
+    if(name.match(/ |"|^$/)){
       alert("Invalid name");
     } else if(!hasTask(tempTask, true)){
       editTask(tempTask)

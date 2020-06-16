@@ -9,6 +9,10 @@ import Delete from '@material-ui/icons/Delete';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import DrawerHeader from './DrawerHeader';
 
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Grid from '@material-ui/core/Grid';
+
 import TextField from '@material-ui/core/TextField';
 
 export default function MacroSettings({ openConfig, devName, settings, hookTask }) {
@@ -58,6 +62,44 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 			<Divider />
 			<List aria-label="main mailbox folders">
 				<ListItem>
+					<Grid
+						container
+						direction="row"
+						justify="flex-end"
+						alignItems="center"
+						spacing={3}>
+
+						<Grid item xs={6}>
+							<TextField
+								label="Unsafe"
+								type="number"
+								value={false}
+								onChange={false}
+								disabled={false}
+								variant="outlined"
+							/>
+						</Grid>
+
+						<Grid item xs={6}>
+						  	<FormControlLabel
+							control={
+								<Switch
+									checked={false}
+									onChange={false}
+									color="primary"
+							  	/>
+								}
+							label="Unsafe"
+							/>
+						</Grid>
+					
+					</Grid>
+
+				</ListItem>
+			</List>
+			<Divider />
+			<List aria-label="main mailbox folders">
+				<ListItem>
 					<TextField small="small" fullWidth label="Task entrypoint" value={config.entrypoint} onChange={(e) => {handleChange("entrypoint", e.target.value)}} variant="outlined" />
 				</ListItem>
 			</List>
@@ -68,9 +110,9 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 							   onChange={(e) => {handleChange("cloudScriptId", e.target.value)}} 
 							   variant="outlined" 
 							   InputProps={{
-            					  startAdornment: <InputAdornment position="start">{prefixDevName}</InputAdornment>,
-        						}} 
-        			/>
+								  startAdornment: <InputAdornment position="start">{prefixDevName}</InputAdornment>,
+								}} 
+					/>
 				</ListItem>
 			</List>
 		  

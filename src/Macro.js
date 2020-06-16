@@ -152,7 +152,8 @@ class Macro extends React.Component {
 		})
 			.then((response) => response.json())
 			.then((json) => {
-				console.log(json);
+				//console.log(json);
+				this.showAlert(json.output,"success");
 			});
 	}
 

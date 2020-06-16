@@ -21,8 +21,8 @@ export default function TaskCreateDialog({ hookTask }) {
   const handleSave = (e) => { 
     var task = taskModel({ 'name': value })
 
-    if(task.name.length==0){
-      alert("Name is empty!");
+    if(task.name.match(/ |"|^$/)){
+      alert("Invalid name!");
     } else if(!hasTask(task)){
       pushTask(task)
       toggleCreateDialog();

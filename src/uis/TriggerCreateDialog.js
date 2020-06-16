@@ -25,7 +25,9 @@ export default function TriggerCreateDialog({ open, setOpen, group, hookTrigger,
 
     let trigger = triggerModel({ 'name':value });
 
-    if(!hasTrigger(trigger)){
+    if(trigger.name.match(/"|^$/)){
+      alert("Invalid name")
+    } else if(!hasTrigger(trigger)){
       setOpen(false);
       pushTrigger(trigger);
     } else {
