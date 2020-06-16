@@ -140,7 +140,7 @@ class Macro extends React.Component {
 
 	launch = () => {
 		let macro = macroModel(this.state);
-		//console.log("launched", JSON.stringify(macro));
+		console.log(macro);
 
 		fetch('http://localhost:8000/cortex', {
 			method: 'POST',

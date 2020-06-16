@@ -14,7 +14,6 @@ import Switch from '@material-ui/core/Switch';
 
 export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask, alert }) {
 
-  const [tempTask, setTempTask] = useState(task);
   const [unsafe, setUnsafe] = useState(task.unsafe!==null)
   const [unsafeNumber, setUnsafeNumber] = useState(task.unsafe)
   const [delay, setDelay] = useState(task.delay)
@@ -28,22 +27,28 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
     setUnsafe(!unsafe);
   }
 
-  const handleDelay = (e) => {
-    setDelay(e.target.value);
-  }
-
   const handleUnsafeNumber = (e) => {
     setUnsafeNumber(e.target.value);
   }
 
-  useEffect(() => {
-    //copyTempTask = Object.assign({}, tempTask);
-    //copyTempTask.unsafe = null;
-  }, [unsafe, unsafeNumber])
+  const handleDelay = (e) => {
+    setDelay(e.target.value);
+  }
+
+  const handleName = (e) => {
+    setName(e.target.value);
+  }
 
   const handleSave = () => { 
 
-    if(!hasTask(tempTask, true)){
+    let tempTask = Object.assign({}, task);
+    tempTask.name = name;
+    tempTask.delay = delay;
+    tempTask.unsafe = unsafe ? unsafeNumber : null;
+
+    if(name.match(/ |"/)){
+      alert("Invalid name");
+    } else if(!hasTask(tempTask, true)){
       editTask(tempTask)
       setEdit(false);
     } else {
@@ -69,24 +74,24 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
             spacing={3}
           >
 
-            <Grid item xs={6} md={12}>
+            <Grid item xs={12} md={6}>
               <TextField
                 autoFocus
                 margin="dense"
                 id="name"
                 label="Task name"
                 type="text"
-                value={tempTask.name}
-                onChange={(e) => { setTempTask({...tempTask, 'name': e.target.value }) }}
+                value={name}
+                onChange={handleName}
                 fullWidth
               />
             </Grid>
 
-            <Grid item xs={6} md={12}>
+            <Grid item xs={12} md={6}>
               <TextField
                 label="Delay"
                 type="number"
-                value={tempTask.delay}
+                value={delay}
                 size="small"
                 onChange={handleDelay}
               />

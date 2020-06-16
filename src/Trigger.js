@@ -66,7 +66,7 @@ class Trigger extends React.Component {
 
 	render(){
 
-		const { setFocus } = this.props.hookTask();
+		const { setFocus, alert } = this.props.hookTask();
 
 		return (
 			<React.Fragment>
@@ -98,7 +98,8 @@ class Trigger extends React.Component {
 	            			 open={this.state.openEditor} 
 	            			 toggleEditor={this.toggleEditor} 
 	            			 group={this.group} 
-	            			 setFocus={setFocus} />
+	            			 setFocus={setFocus}
+	            			 alert={alert} />
 			</React.Fragment>
 		);
 

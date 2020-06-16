@@ -65,7 +65,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TriggerForm({ task, trigger, open, toggleEditor, group, saveTrigger, setFocus }) {
+export default function TriggerForm({ task, trigger, open, toggleEditor, group, saveTrigger, alert, setFocus }) {
   const classes = useStyles();
 
   const [events, setEvents] = useState(Object.assign([], trigger.events));
@@ -91,8 +91,23 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
     setAction(newValue);
   }
 
+  const hasTrigger = (trigger) => {
+    let filteredTriggers = task.triggers[group].filter(t => {
+      return t.id !== trigger.id;
+    })
+    let has = filteredTriggers.some(t => {
+      return t.name == trigger.name;
+    });
+    return has;
+  }
+
   const onSave = () => {
-    saveTrigger(triggerModel({ 'name':name, 'action':action, 'id':trigger.id, 'blocking':blocking, 'events':events }));
+    let newTrigger = triggerModel({ 'name':name, 'action':action, 'id':trigger.id, 'blocking':blocking, 'events':events })
+    if(!hasTrigger(newTrigger)){
+      saveTrigger(newTrigger);
+    } else {
+      alert("Action name is already taken");
+    }
   }
 
   const onEventsClose = () => {
