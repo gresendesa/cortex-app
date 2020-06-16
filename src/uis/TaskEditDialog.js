@@ -24,11 +24,10 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
   }
 
   const handleToggleUnsafe = () => {
-    if (hasMacroUnsafe() && (!unsafe)) {
+    if (hasMacroUnsafe()){
       alert("Unsafe mode is applyed globally already");
-    } else {
-      setUnsafe(!unsafe);
-    }
+    }  
+    setUnsafe(!unsafe);
   }
 
   const handleUnsafeNumber = (e) => {
