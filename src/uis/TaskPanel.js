@@ -18,7 +18,7 @@ import usePrevious from './utils'
 
 export default function TasksPanel({ task, hookTask, indice }) {
 
-	const { deleteTask, editTask, hasTask, alert, focus, setFocus, getFocus, moveTaskUp } = hookTask();
+	const { deleteTask, editTask, hasTask, alert, focus, setFocus, getFocus, moveTaskUp, hasMacroUnsafe } = hookTask();
 
 	var initial_expand = false;
 	if((getFocus().task!=null) && (getFocus().task.id==task.id)){
@@ -86,7 +86,7 @@ export default function TasksPanel({ task, hookTask, indice }) {
 					</Grid>
 				</ExpansionPanelDetails>
 			</ExpansionPanel>
-			<TaskEditDialog task={task} editTask={editTask} edit={edit} setEdit={setEdit} hasTask={hasTask} alert={alert} />
+			<TaskEditDialog task={task} editTask={editTask} edit={edit} setEdit={setEdit} hasTask={hasTask} alert={alert} hasMacroUnsafe={hasMacroUnsafe} />
 		</Box>
 	);
 

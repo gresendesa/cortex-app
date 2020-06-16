@@ -22,7 +22,7 @@ class Macro extends React.Component {
 		'alertMessage': '',
 		'focus': {'task':null, 'group':null, 'trigger':null},
 		'openConfig': false,
-		'cloudScriptId': foo.name.replace(' ','-').toLowerCase(),
+		'csid': foo.name.replace(' ','-').toLowerCase(),
 		'devName': 'Federal',
 	}
 
@@ -135,6 +135,7 @@ class Macro extends React.Component {
 			'setFocus': this.setFocus,
 			'hasFocus': this.hasFocus,
 			'getFocus': this.getFocus,
+			'hasMacroUnsafe': () => { return this.state.unsafe!=null },
 		}
 	}
 
@@ -170,7 +171,10 @@ class Macro extends React.Component {
 			'description': this.state.description,
 			'pname': this.state.pname,
 			'entrypoint': this.state.entrypoint,
-			'cloudScriptId': this.state.cloudScriptId,
+			'csid': this.state.csid,
+			'unsafe': this.state.unsafe,
+			'debug': this.state.debug,
+			'production': this.state.production,
 		}
 
 		return (

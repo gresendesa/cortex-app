@@ -19,12 +19,18 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 
 	const { setOpenConfig, setMacroState } = hookTask();
 
+	const [unsafeMode, setUnsafeMode] = useState(settings.unsafe!==null);
+	const [unsafeValue, setUnsafeValue] = useState(settings.unsafe==null ? 100 : settings.unsafe);
+
 	const [config, setConfig] = useState({
 		'name': settings.name,
 		'description': settings.description,
 		'pname': settings.pname,
 		'entrypoint': settings.entrypoint,
-		'cloudScriptId': settings.cloudScriptId,
+		'csid': settings.csid,
+		'unsafe': settings.unsafe,
+		'debug': settings.debug,
+		'production': settings.production,
 	});
 
 	const handleClose = () => {
@@ -38,6 +44,20 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 		let copyConfig = Object.assign({}, config);
 		copyConfig[item] = value;
 		setConfig(copyConfig);
+	}
+
+	const handleUnsafeValue = (e) => {
+		handleChange("unsafe", e.target.value);
+		setUnsafeValue(e.target.value);
+	}
+
+	const toggleUnsafeMode = () => {
+		if(unsafeMode){
+			handleChange("unsafe", null);
+		} else {
+			handleChange("unsafe", unsafeValue);
+		}
+		setUnsafeMode(!unsafeMode);
 	}
 
 	const prefixDevName = devName.toLowerCase() + ".";
@@ -73,9 +93,9 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 							<TextField
 								label="Unsafe"
 								type="number"
-								value={false}
-								onChange={false}
-								disabled={false}
+								value={unsafeValue}
+								onChange={handleUnsafeValue}
+								disabled={!unsafeMode}
 								variant="outlined"
 							/>
 						</Grid>
@@ -84,8 +104,8 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 						  	<FormControlLabel
 							control={
 								<Switch
-									checked={false}
-									onChange={false}
+									checked={unsafeMode}
+									onChange={toggleUnsafeMode}
 									color="primary"
 							  	/>
 								}
@@ -106,13 +126,52 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 			<Divider />
 			<List aria-label="main mailbox folders">
 				<ListItem>
-					<TextField small="small" fullWidth label="CloudScript id" value={config.cloudScriptId} 
-							   onChange={(e) => {handleChange("cloudScriptId", e.target.value)}} 
+					<TextField small="small" fullWidth label="CloudScript id" value={config.csid} 
+							   onChange={(e) => {handleChange("csid", e.target.value)}} 
 							   variant="outlined" 
 							   InputProps={{
 								  startAdornment: <InputAdornment position="start">{prefixDevName}</InputAdornment>,
 								}} 
 					/>
+				</ListItem>
+			</List>
+			<List aria-label="main mailbox folders">
+				<ListItem>
+					<Grid
+						container
+						direction="row"
+						justify="flex-end"
+						alignItems="center"
+						spacing={3}>
+
+						<Grid item xs={6}>
+						  	<FormControlLabel
+							control={
+								<Switch
+									checked={config.debug}
+									onChange={(e) => {handleChange("debug", !config.debug)}}
+									color="primary"
+							  	/>
+								}
+							label="Debug"
+							/>
+						</Grid>
+
+						<Grid item xs={6}>
+						  	<FormControlLabel
+							control={
+								<Switch
+									checked={config.production}
+									onChange={(e) => {handleChange("production", !config.production)}}
+									color="primary"
+							  	/>
+								}
+							label="Production"
+							/>
+						</Grid>
+					
+					</Grid>
+
 				</ListItem>
 			</List>
 		  

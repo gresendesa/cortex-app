@@ -12,9 +12,9 @@ import { v1 as uuidv1 }  from 'uuid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
-export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask, alert }) {
+export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask, alert, hasMacroUnsafe }) {
 
-  const [unsafe, setUnsafe] = useState(task.unsafe!==null)
+  const [unsafe, setUnsafe] = useState((task.unsafe!==null) && (!hasMacroUnsafe()))
   const [unsafeNumber, setUnsafeNumber] = useState(task.unsafe)
   const [delay, setDelay] = useState(task.delay)
   const [name, setName] = useState(task.name)
@@ -24,7 +24,11 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
   }
 
   const handleToggleUnsafe = () => {
-    setUnsafe(!unsafe);
+    if (hasMacroUnsafe() && (!unsafe)) {
+      alert("Unsafe mode is applyed globally already");
+    } else {
+      setUnsafe(!unsafe);
+    }
   }
 
   const handleUnsafeNumber = (e) => {
