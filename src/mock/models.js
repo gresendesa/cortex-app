@@ -12,13 +12,14 @@ export function taskModel({ name, id=Math.random(), delay=1, unsafe=100 }){
 	}
 }
 
-export function triggerModel({ name, id=Math.random(), blocking=false, action='', events=[] }){
+export function triggerModel({ name, id=Math.random(), blocking=false, action='', events=[], active=true }){
 	return {
 		"name": name,
 		"id":id,
 		"blocking": blocking,
 		"events": events,
-		"action": action
+		"action": action,
+		"active": active
 	}
 }
 

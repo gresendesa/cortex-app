@@ -105,6 +105,20 @@ export default function TriggerList({ task, group, hookTask }) {
     setFocus({'task': task, 'group': group})
   }
 
+  const toggleActiveTrigger = (trigger) => {
+    let copyTriggers = Object.assign([], triggers);
+    let copyTrigger = Object.assign({}, trigger);
+    copyTrigger.active = !copyTrigger.active;
+    let index = copyTriggers.findIndex((t) => {
+      return t.id == trigger.id
+    });
+    if(index>=0){
+      copyTriggers[index] = copyTrigger;
+      setTriggers(copyTriggers);
+    }
+    setFocus({'task': task, 'group': group})
+  }
+
   return (
     <Grid
         container
@@ -119,7 +133,7 @@ export default function TriggerList({ task, group, hookTask }) {
 
             triggers.map((trigger, indice) => {
               return (
-                <Trigger indice={indice} moveUp={moveUp} group={group} task={task} trigger={trigger} key={trigger.id} hookTask={hookTask} deleteTrigger={deleteTrigger} />
+                <Trigger indice={indice} moveUp={moveUp} group={group} task={task} trigger={trigger} key={trigger.id} hookTask={hookTask} deleteTrigger={deleteTrigger} toggleActiveTrigger={toggleActiveTrigger} />
               ) 
             })
 

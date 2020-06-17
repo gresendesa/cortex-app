@@ -22,7 +22,6 @@ class Macro extends React.Component {
 		'alertMessage': '',
 		'focus': {'task':null, 'group':null, 'trigger':null},
 		'openConfig': false,
-		'csid': foo.name.replace(' ','-').toLowerCase(),
 		'devName': 'Federal',
 	}
 
@@ -102,6 +101,7 @@ class Macro extends React.Component {
 	}
 
 	editTask = (task) => {
+		console.log("tasks", task);
 		const copyTasks = Object.assign([], this.state.tasks);
 		const indice = copyTasks.findIndex(t => {
 			return t.id == task.id

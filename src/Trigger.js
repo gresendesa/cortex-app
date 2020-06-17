@@ -12,6 +12,7 @@ import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import BlockIcon from '@material-ui/icons/Block';
+import CheckIcon from '@material-ui/icons/Check';
 
 class Trigger extends React.Component {
 
@@ -66,6 +67,16 @@ class Trigger extends React.Component {
 		}
 	}
 
+	toggleActive = () => {
+
+		const { toggleActiveTrigger } = this.props;
+		toggleActiveTrigger(this.state.trigger);
+		let copyTrigger = Object.assign({}, this.state.trigger);
+		copyTrigger.active = !copyTrigger.active;
+		this.setState({'trigger': copyTrigger});
+
+	}
+
 	render(){
 
 		const { setFocus, alert } = this.props.hookTask();
@@ -82,7 +93,12 @@ class Trigger extends React.Component {
 							<CodeIcon />
 						</Avatar>
 					</ListItemAvatar>
-					<ListItemText primary={this.state.trigger.name} secondary="action" />
+					<ListItemText primary={
+						this.props.trigger.active ?
+						this.state.trigger.name
+						:
+						<strike>{this.state.trigger.name}</strike>
+					} secondary="action" />
 
 					
 						<ListItemSecondaryAction>
@@ -95,12 +111,19 @@ class Trigger extends React.Component {
 								:
 								""
 							}
+							{
+								this.props.trigger.active ?
+								<IconButton edge="end" aria-label="toggle-active" onClick={this.toggleActive}>
+									<BlockIcon />
+								</IconButton>
+								:
+								<IconButton edge="end" aria-label="toggle-active" onClick={this.toggleActive}>
+									<CheckIcon />
+								</IconButton>
+							}
+							
 
-							<IconButton edge="end" aria-label="move-up" onClick={false}>
-								<BlockIcon />
-							</IconButton>
-
-							<IconButton edge="end" aria-label="move-up" onClick={() => deleteTrigger(this.state.trigger)}>
+							<IconButton edge="end" aria-label="delete" onClick={() => deleteTrigger(this.state.trigger)}>
 								<DeleteOutlineIcon />
 							</IconButton>
 

@@ -82,6 +82,7 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
   const [name, setName] = useState(trigger.name);
   const [action, setAction] = useState(trigger.action);
   const [blocking, setBlocking] = useState(trigger.blocking);
+  const [active, setActive] = useState(trigger.active);
 
   const handleClose = () => {
     toggleEditor();
@@ -107,7 +108,7 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
   }
 
   const onSave = (publish=false) => {
-    let newTrigger = triggerModel({ 'name':name, 'action':action, 'id':trigger.id, 'blocking':blocking, 'events':events })
+    let newTrigger = triggerModel({ 'name':name, 'action':action, 'id':trigger.id, 'blocking':blocking, 'events':events, 'active':active })
     if(name.match(/"|^$/)){
       alert("Invalid name");
     } else if(!hasTrigger(newTrigger)){
