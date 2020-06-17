@@ -2,6 +2,7 @@ import React, { makeStyles } from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import TriggerForm from './uis/TriggerForm';
@@ -97,7 +98,9 @@ class Trigger extends React.Component {
 						this.props.trigger.active ?
 						this.state.trigger.name
 						:
-						<strike>{this.state.trigger.name}</strike>
+						<Typography color="textSecondary">
+							<strike>{this.state.trigger.name}</strike>
+						</Typography>
 					} secondary="action" />
 
 					
@@ -114,11 +117,11 @@ class Trigger extends React.Component {
 							{
 								this.props.trigger.active ?
 								<IconButton edge="end" aria-label="toggle-active" onClick={this.toggleActive}>
-									<BlockIcon />
+									<BlockIcon size="small" />
 								</IconButton>
 								:
 								<IconButton edge="end" aria-label="toggle-active" onClick={this.toggleActive}>
-									<CheckIcon />
+									<CheckIcon size="small" />
 								</IconButton>
 							}
 							

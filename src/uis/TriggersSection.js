@@ -70,7 +70,6 @@ export default function TriggersSection({ task, hookTask }) {
           indicatorColor="primary"
           textColor="primary"
           scrollButtons="auto"
-          aria-label="scrollable auto tabs example"
           centered
         >
           <Tab label="Before" {...a11yProps(0)} />
