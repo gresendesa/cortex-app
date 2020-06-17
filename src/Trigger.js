@@ -10,6 +10,8 @@ import CodeIcon from '@material-ui/icons/Code';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import IconButton from '@material-ui/core/IconButton';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import BlockIcon from '@material-ui/icons/Block';
 
 class Trigger extends React.Component {
 
@@ -70,6 +72,8 @@ class Trigger extends React.Component {
 
 		const { launch } = this.props.hookTask();
 
+		const { deleteTrigger } = this.props;
+
 		return (
 			<React.Fragment>
 				<ListItem button onClick={this.handleClick} >
@@ -79,19 +83,29 @@ class Trigger extends React.Component {
 						</Avatar>
 					</ListItemAvatar>
 					<ListItemText primary={this.state.trigger.name} secondary="action" />
+
 					
-					{
-
-						this.props.indice>0 ?
 						<ListItemSecondaryAction>
-							<IconButton edge="end" aria-label="move-up" onClick={this.handleMoveUp}>
-								<ArrowUpwardIcon />
-							</IconButton>
-						</ListItemSecondaryAction>
-						:
-						""
 
-					}
+							{
+								this.props.indice>0 ?
+								<IconButton edge="end" aria-label="move-up" onClick={this.handleMoveUp}>
+									<ArrowUpwardIcon size="small" />
+								</IconButton>
+								:
+								""
+							}
+
+							<IconButton edge="end" aria-label="move-up" onClick={false}>
+								<BlockIcon />
+							</IconButton>
+
+							<IconButton edge="end" aria-label="move-up" onClick={() => deleteTrigger(this.state.trigger)}>
+								<DeleteOutlineIcon />
+							</IconButton>
+
+						</ListItemSecondaryAction>
+								
 					
 	            </ListItem>
 	            <TriggerForm task={this.props.task} 
