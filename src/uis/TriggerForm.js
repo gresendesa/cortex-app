@@ -70,7 +70,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TriggerForm({ task, trigger, open, toggleEditor, group, saveTrigger, alert, setFocus, launch }) {
+export default function TriggerForm({ task, trigger, open, toggleEditor, group, saveTrigger, alert, setFocus, launch, active }) {
   const classes = useStyles();
 
   const [events, setEvents] = useState(Object.assign([], trigger.events));
@@ -82,7 +82,6 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
   const [name, setName] = useState(trigger.name);
   const [action, setAction] = useState(trigger.action);
   const [blocking, setBlocking] = useState(trigger.blocking);
-  const [active, setActive] = useState(trigger.active);
 
   const handleClose = () => {
     toggleEditor();

@@ -142,7 +142,8 @@ class Trigger extends React.Component {
 	            			 group={this.group} 
 	            			 setFocus={setFocus}
 	            			 alert={alert}
-	            			 launch={launch} />
+	            			 launch={launch}
+	            			 active={this.state.trigger.active} />
 			</React.Fragment>
 		);
 
