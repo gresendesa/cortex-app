@@ -16,7 +16,7 @@ import { DataContext } from './contexts/DataContext';
 import Server from './server';
 import ProjectCreateDialog from './uis/ProjectCreateDialog';
 import { Alert, AlertTitle } from '@material-ui/lab';
-
+import { useHistory } from 'react-router-dom';
 
 class Projects extends React.Component {
 
@@ -56,6 +56,11 @@ class Projects extends React.Component {
 			console.log(response);
 		}
 		this.props.delMacro({ id:id, success, error });
+	}
+
+	redirectToProject = (id) => {
+		const { history } = this.props;
+		history.push(`/project/${id}`);
 	}
 
 	render(){
@@ -98,7 +103,7 @@ class Projects extends React.Component {
 						this.props.macros.length > 0 ?
 						this.props.macros.map(p => {
 							return (
-								<ListItem button key={p.id}>
+								<ListItem button key={p.id} onClick={() => {this.redirectToProject(p.id)}}>
 									<ListItemAvatar>
 										<Avatar>
 											<SportsEsportsIcon />

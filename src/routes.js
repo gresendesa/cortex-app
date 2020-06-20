@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import history from './history';
 import ButtonAppBar from './components/NavBar';
 import { Container } from '@material-ui/core';
@@ -8,6 +8,7 @@ import Projects from './Projects';
 import Login from './components/Login';
 import Footer from './uis/Footer';
 import { DataContext } from './contexts/DataContext';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 export default function Routes({ context }) {
 
@@ -22,7 +23,20 @@ export default function Routes({ context }) {
 						{
 							context.token !== null ?
 							<Switch>
-								<Route exact path="/macro" component={Macro} />
+								<Route path="/project/:id" render={(props) => {
+
+									//const macro = context.macros.some
+									const project = context.macros.find(m => m.id == props.match.params.id)
+							
+									return (
+										project ?
+										<Macro {...props} project={project} saveMacro={context.saveMacro} />
+										:
+										<LinearProgress color="secondary" />
+									)
+
+									}}
+								/>
 								<Route render={(props) => (
 									<Projects {...props} 
 										fetchMacros={context.fetchMacros} 

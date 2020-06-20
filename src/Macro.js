@@ -16,14 +16,21 @@ import { Icon } from 'semantic-ui-react';
 class Macro extends React.Component {
 
 	state = {
-		...foo,
 		'openCreateDialog': false,
 		'popUpAlert': false,
 		'alertMessage': '',
 		'focus': {'task':null, 'group':null, 'trigger':null},
 		'openConfig': false,
-		'devName': 'Federal',
+		'devName': 'Federal'
 	}
+
+	componentWillMount(){
+		//console.log("vou montar bitch", this.props);
+		this.setState({ 'project': this.props.project, ...this.props.project.macro });
+	}
+
+
+	//{this.props.match.params.id}
 
 	constructor(){
 		super();
@@ -68,6 +75,10 @@ class Macro extends React.Component {
 
 	pushTask = (task) => {
 		this.setState({'tasks': [...this.state.tasks, task]})
+	}
+
+	deployMacro = () => {
+		const saveMacro = this.props.saveMacro;
 	}
 
 	hasTask = (task, except=false) => {
@@ -189,7 +200,7 @@ class Macro extends React.Component {
 					<Grid item>
 						<Box component="span" m={1}>
 							<Typography color="textSecondary">
-								{this.state.name} 
+								{this.state.name}
 								<IconButton aria-label="add task" onClick={() => {this.setOpenConfig(true)}}>
 									<SettingsIcon fontSize="small" />
 								</IconButton>

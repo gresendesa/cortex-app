@@ -74,6 +74,19 @@ class Server {
 	
 	}
 
+	updateMacro({ id, macro, launch, success, error }) {
+
+		console.log("atualizando", id, macro, launch);
+
+		/*const conn = this.getConnection();
+
+		conn.put(`/project/save/${id}`, { launch, macro }).then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			error(e.response);
+		})*/
+	}
+
 }
 
 export default Server;

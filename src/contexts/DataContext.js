@@ -60,6 +60,19 @@ class DataContextProvider extends Component {
 		}
 	}
 
+	saveMacro = ({ id, macro, launch=false, success=()=>{}, error=()=>{} }) => {
+		if(this.state.token!==null){
+			const server = new Server({ token: this.state.token });
+			const onOk = (response) => {
+				this.fetchMacros({});
+				success(response);
+			}
+			server.updateMacro({ id, macro, launch, success:onOk, error })
+		} else {
+			error("sem token");
+		}
+	}
+
 	componentWillMount(){
 
 		const token = localStorage.getItem('cortex-token');
@@ -75,7 +88,9 @@ class DataContextProvider extends Component {
 											setToken: this.setToken, 
 											fetchMacros: this.fetchMacros,
 											addMacro: this.addMacro,
-											delMacro: this.delMacro
+											delMacro: this.delMacro,
+											saveMacro: this.saveMacro
+											
 										}}>
 				{this.props.children}
 			</DataContext.Provider>
