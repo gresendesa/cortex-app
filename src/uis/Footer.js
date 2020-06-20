@@ -17,10 +17,10 @@ export default function Footer() {
 
 				<Box mt={5}>
 					<Typography variant="body2" color="textSecondary" align="center">
-						{'Federal • Macrosoft ® '}
+						{'Federal • Macrosoft ®'}
 						{' '}
 						{new Date().getFullYear()}
-						{'.'}
+						{''}
 					</Typography>
 				</Box>
 
