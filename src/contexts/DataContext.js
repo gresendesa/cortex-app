@@ -8,6 +8,7 @@ class DataContextProvider extends Component {
 	state = {
 		'macros': [],
 		'token': null,
+		'processing': false
 	}
 
 	setToken = (token) => {
@@ -24,9 +25,15 @@ class DataContextProvider extends Component {
 	fetchMacros = ({ success=()=>{}, error=()=>{} }) => {
 		if(this.state.token!==null){
 			const server = new Server({ token: this.state.token });
+			this.setState({'processing': true});
 			const onOk = (response) => {
 				this.setState({'macros': response.projects});
 				success(response);
+				this.setState({'processing': false});
+			}
+			const onIssue = (response) => {
+				error(response);
+				this.setState({'processing': false});
 			}
 			server.getMacros({ success:onOk, error })
 		} else {
@@ -89,8 +96,9 @@ class DataContextProvider extends Component {
 											fetchMacros: this.fetchMacros,
 											addMacro: this.addMacro,
 											delMacro: this.delMacro,
-											saveMacro: this.saveMacro
-											
+											saveMacro: this.saveMacro,
+											processing: this.state.processing
+
 										}}>
 				{this.props.children}
 			</DataContext.Provider>

@@ -179,11 +179,19 @@ class Macro extends React.Component {
 		const macro = macroModel(this.state);
 		const success = (response) => {
 			console.log("ok deploy", response);
-			this.setState({'deployLoading': false});
+			this.setState({'deployLoading': false}, () => {
+				if (launch){
+					this.showAlert(`Launched as ${macro.csid}`, "success");
+				} else {
+					this.showAlert("Saved", "success");
+				}
+			});
 		}
 		const error = (response) => {
 			console.log("erro deploy", response);
-			this.setState({'deployLoading': false});
+			this.setState({'deployLoading': false}, () => {
+				this.showAlert(`${response}`, "warning");
+			});
 		}
 		const id = this.state.project.id;
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -11,6 +11,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 
 import Server from '../server';
 
@@ -39,77 +42,92 @@ export default function SignIn({ setToken }) {
 
 	const [username, setUsername] = useState('');
 	const [passw, setPassw] = useState('');
+	const [processing, setProcessing] = useState(false);
+	const [showMessage, setShowMessage] = useState(false);
 
 	const onSubmit = (e) => {
 		console.log(username, passw);
 		let server = new Server({});
+		setProcessing(true);
 		const success = (response) => {
 			setToken(response.token);
+			setProcessing(false);
 		}
 		const error = (response) => {
 			console.log("fey", response);
+			setProcessing(false);
+			setShowMessage(true);
 		}
 		server.auth({ username, password:passw, success, error });
 		setPassw('');
 	}
 
 	return (
-		<Container component="main" maxWidth="xs">
-			<div className={classes.paper}>
-				<Avatar className={classes.avatar}>
-					<LockOutlinedIcon />
-				</Avatar>
-				<Typography component="h1" variant="h5">
-					Log in on Cortex
-				</Typography>
-				<form className={classes.form} noValidate>
-					<TextField
-						variant="outlined"
-						margin="normal"
-						required
-						fullWidth
-						id="email"
-						label="CloudScript username"
-						name="email"
-						autoComplete="email"
-						value={username}
-						onChange={(e) => {setUsername(e.target.value)}}
-						autoFocus
-					/>
-					<TextField
-						variant="outlined"
-						margin="normal"
-						required
-						fullWidth
-						name="password"
-						label="Password"
-						type="password"
-						id="password"
-						value={passw}
-						onChange={(e) => {setPassw(e.target.value)}}
-						autoComplete="current-password"
-					/>
-					<Button
-						fullWidth
-						variant="contained"
-						color="primary"
-						className={classes.submit}
-						onClick={onSubmit}
-					>
-						Access my projects
-					</Button>
-					<Grid container
-					direction="column"
-					justify="center"
-					alignItems="center">
-						<Grid item>
-							<Link href="https://cloudscript.bezouro.com.br/login" variant="body2">
-								{"Don't have an account? Sign Up on CloudScript"}
-							</Link>
+		<Fragment>
+			{processing && <LinearProgress color="secondary" />}
+			<Container component="main" maxWidth="xs">
+				<div className={classes.paper}>
+					<Avatar className={classes.avatar}>
+						<LockOutlinedIcon />
+					</Avatar>
+					<Typography component="h1" variant="h5">
+						Log in on Cortex
+					</Typography>
+					<form className={classes.form} noValidate>
+						<TextField
+							variant="outlined"
+							margin="normal"
+							required
+							fullWidth
+							id="email"
+							label="CloudScript username"
+							name="email"
+							autoComplete="email"
+							value={username}
+							onChange={(e) => {setUsername(e.target.value)}}
+							autoFocus
+						/>
+						<TextField
+							variant="outlined"
+							margin="normal"
+							required
+							fullWidth
+							name="password"
+							label="Password"
+							type="password"
+							id="password"
+							value={passw}
+							onChange={(e) => {setPassw(e.target.value)}}
+							autoComplete="current-password"
+						/>
+						<Button
+							fullWidth
+							variant="contained"
+							color="primary"
+							className={classes.submit}
+							onClick={onSubmit}
+							disabled={processing}
+						>
+							Access my projects
+						</Button>
+						<Grid container
+						direction="column"
+						justify="center"
+						alignItems="center">
+							<Grid item>
+								<Link href="https://cloudscript.bezouro.com.br/login" variant="body2">
+									{"Don't have an account? Sign Up on CloudScript"}
+								</Link>
+							</Grid>
 						</Grid>
-					</Grid>
-				</form>
-			</div>
-		</Container>
+					</form>
+				</div>
+				<Snackbar open={showMessage} autoHideDuration={2000} onClose={() => {setShowMessage(false)}} >
+					<MuiAlert elevation={6} variant="filled" severity="error">
+						Access not available
+					</MuiAlert>
+				</Snackbar>
+			</Container>
+		</Fragment>
 	);
 }

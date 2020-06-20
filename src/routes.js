@@ -20,6 +20,8 @@ export default function Routes({ context }) {
 				<Router history={history}>
 					<ButtonAppBar logged={context.token !== null} setToken={context.setToken} />
 					<Container maxWidth="sm">
+
+						{context.processing && <LinearProgress color="secondary" />}
 						{
 							context.token !== null ?
 							<Switch>
@@ -31,8 +33,7 @@ export default function Routes({ context }) {
 									return (
 										project ?
 										<Macro {...props} project={project} saveMacro={context.saveMacro} />
-										:
-										<LinearProgress color="secondary" />
+										:''
 									)
 
 									}}

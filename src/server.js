@@ -81,7 +81,7 @@ class Server {
 		conn.put(`/project/save/${id}`, { launch, macro }).then(r => {
 			success(r.data)
 		}).catch(function(e) {
-			error(e.response);
+			error(e.message);
 		})
 	}
 
