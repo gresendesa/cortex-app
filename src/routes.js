@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import history from './history';
 import ButtonAppBar from './components/NavBar';
 import { Container } from '@material-ui/core';
@@ -21,10 +21,12 @@ export default function Routes({ context }) {
 					<Container maxWidth="sm">
 						{
 							context.token !== null ?
-							<Fragment>
-								<Route exact path="/" component={Macro} />
-								<Route exact path="/projects" component={Projects} />
-							</Fragment>
+							<Switch>
+								<Route exact path="/macro" component={Macro} />
+								<Route render={(props) => (
+									<Projects {...props} fetchMacros={context.fetchMacros} macros={context.macros} /> 
+								)} />
+							</Switch>
 							:
 							<Route 
 								render={(props) => (

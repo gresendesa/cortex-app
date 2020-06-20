@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
@@ -13,14 +13,30 @@ import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 import { Box } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { DataContext } from './contexts/DataContext';
+import Server from './server';
+import ProjectCreateDialog from './uis/ProjectCreateDialog';
 
 class Projects extends React.Component {
 
 	static contextType = DataContext;
 
+	state = {
+		'openCreateDialog': false,
+	}
+
+	componentWillMount(){
+
+		this.props.fetchMacros();
+
+	}
+
+	createProject = (input) => {
+		console.log(input)
+	}
+
 	render(){
 
-		console.log(this.context)
+		//console.log(this.context)
 
 		return (
 			<div>
@@ -41,7 +57,7 @@ class Projects extends React.Component {
 					<Grid item>
 						<Box component="span" m={1}>
 							<Typography>
-								<IconButton aria-label="add task" >
+								<IconButton onClick={() => {this.setState({openCreateDialog: !this.state.openCreateDialog})}} aria-label="add project" >
 									<AddIcon fontSize="large" />
 								</IconButton>
 							</Typography>
@@ -53,39 +69,34 @@ class Projects extends React.Component {
 
 				<List>
 					
-					<ListItem button>
-						<ListItemAvatar>
-							<Avatar>
-								<SportsEsportsIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText
-							primary="Single-line item"
-							/>
-						<ListItemSecondaryAction>
-								<IconButton edge="end" aria-label="delete">
-									<DeleteIcon />
-								</IconButton>
-						</ListItemSecondaryAction>
-					</ListItem>
+					{
+						this.props.macros.map(p => {
+							return (
+								<ListItem button key={p.id}>
+									<ListItemAvatar>
+										<Avatar>
+											<SportsEsportsIcon />
+										</Avatar>
+									</ListItemAvatar>
+									<ListItemText
+										primary={p.macro.name}
+										secondary={p.macro.description}
+										/>
+									<ListItemSecondaryAction>
+											<IconButton edge="end" aria-label="delete">
+												<DeleteIcon />
+											</IconButton>
+									</ListItemSecondaryAction>
+								</ListItem>
+							)
+						})
+					}
 
-					<ListItem button>
-						<ListItemAvatar>
-							<Avatar>
-								<SportsEsportsIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText
-							primary="Single-line item"
-							/>
-						<ListItemSecondaryAction>
-								<IconButton edge="end" aria-label="delete">
-									<DeleteIcon />
-								</IconButton>
-						</ListItemSecondaryAction>
-					</ListItem>
 
 				</List>
+
+				<ProjectCreateDialog open={this.state.openCreateDialog} setOpen={(bool) => {this.setState({openCreateDialog: bool})}} createProject={this.createProject} />
+
 			</div>
 
 		);

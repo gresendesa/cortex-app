@@ -42,12 +42,15 @@ export default function SignIn({ setToken }) {
 
 	const onSubmit = (e) => {
 		console.log(username, passw);
-		//setUsername('');
-		//setToken(username);
-		//setPassw('');
-
 		let server = new Server({});
-		server.auth();
+		const success = (response) => {
+			setToken(response.token);
+		}
+		const error = (response) => {
+			console.log("fey", response);
+		}
+		server.auth({ username, password:passw, success, error });
+		setPassw('');
 	}
 
 	return (
