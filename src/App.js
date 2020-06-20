@@ -1,19 +1,26 @@
 import React from 'react';
 import Routes from './routes';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import DataContextProvider from './contexts/DataContext';
 
-const theme = createMuiTheme({
-  typography: {
-    fontSize: 20,
-  },
-});
+class App extends React.Component {
 
-function App() {
-	return (
-		<ThemeProvider theme={theme}>
-			<Routes />	
-		</ThemeProvider>
-	);
+	render(){
+
+		const theme = createMuiTheme({
+				typography: {
+				fontSize: 20,
+			},
+		});
+
+		return (
+			<DataContextProvider>
+				<ThemeProvider theme={theme}>
+					<Routes />	
+				</ThemeProvider>
+			</DataContextProvider>
+		);
+	};
 }
 
 export default App;

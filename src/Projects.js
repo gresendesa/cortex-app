@@ -12,13 +12,15 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 import { Box } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import { DataContext } from './contexts/DataContext';
 
 class Projects extends React.Component {
+
+	static contextType = DataContext;
 
 	render(){
 
 		return (
-			
 			<div>
 
 				<Grid container
@@ -37,7 +39,7 @@ class Projects extends React.Component {
 					<Grid item>
 						<Box component="span" m={1}>
 							<Typography>
-								<IconButton aria-label="add task" onClick={false}>
+								<IconButton aria-label="add task" >
 									<AddIcon fontSize="large" />
 								</IconButton>
 							</Typography>
