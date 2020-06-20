@@ -5,6 +5,7 @@ import TaskEditDialog from './uis/TaskEditDialog';
 import { DataContext } from './contexts/DataContext';
 import { Typography, Box, Grid, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import SaveIcon from '@material-ui/icons/Save';
 import { foo } from './mock/processes';
 import { macroModel } from './mock/models';
 import { Snackbar } from '@material-ui/core';
@@ -12,6 +13,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import SettingsIcon from '@material-ui/icons/Settings';
 import MacroSettings from './uis/MacroSettings';
 import { Icon } from 'semantic-ui-react';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 class Macro extends React.Component {
 
@@ -21,7 +23,8 @@ class Macro extends React.Component {
 		'alertMessage': '',
 		'focus': {'task':null, 'group':null, 'trigger':null},
 		'openConfig': false,
-		'devName': 'Federal'
+		'devName': 'Federal',
+		'deployLoading': false,
 	}
 
 	componentWillMount(){
@@ -75,10 +78,6 @@ class Macro extends React.Component {
 
 	pushTask = (task) => {
 		this.setState({'tasks': [...this.state.tasks, task]})
-	}
-
-	deployMacro = () => {
-		const saveMacro = this.props.saveMacro;
 	}
 
 	hasTask = (task, except=false) => {
@@ -162,16 +161,35 @@ class Macro extends React.Component {
 			},
 			body: JSON.stringify(macro)
 		})
-			.then((response) => response.json())
-			.then((json) => {
-				//console.log(json);
-				this.showAlert(json.output,"success");
-			});
+		.then((response) => response.json())
+		.then((json) => {
+			//console.log(json);
+			this.showAlert(json.output,"success");
+		});
 	}
 
 	onConfigClose = () => {
 		this.setState({'openConfig': false});
 	}
+
+	deployMacro = ({ launch }) => {
+
+		this.setState({'deployLoading': true});
+
+		const macro = macroModel(this.state);
+		const success = (response) => {
+			console.log("ok deploy", response);
+			this.setState({'deployLoading': false});
+		}
+		const error = (response) => {
+			console.log("erro deploy", response);
+			this.setState({'deployLoading': false});
+		}
+		const id = this.state.project.id;
+
+		this.props.saveMacro({ id, macro, launch, success, error });
+	}
+
 
 	render(){
 
@@ -192,6 +210,9 @@ class Macro extends React.Component {
 
 			<React.Fragment>
 
+				
+				{this.state.deployLoading && <LinearProgress color="secondary" />}
+
 				<Grid container
 				  direction="row"
 				  justify="space-between"
@@ -205,9 +226,15 @@ class Macro extends React.Component {
 									<SettingsIcon fontSize="small" />
 								</IconButton>
 
-								<IconButton aria-label="add task" onClick={this.launch}>
+								<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.deployMacro({ launch:false })}}>
+									<SaveIcon fontSize="small" />
+								</IconButton>
+
+								<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.deployMacro({ launch:true })}}>
 									<Icon name='rocket' size='small' />
 								</IconButton>
+
+								
 
 							</Typography> 
 							<Typography variant="h5">

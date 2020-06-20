@@ -60,7 +60,7 @@ export default function SignIn({ setToken }) {
 					<LockOutlinedIcon />
 				</Avatar>
 				<Typography component="h1" variant="h5">
-					Log in
+					Log in on Cortex
 				</Typography>
 				<form className={classes.form} noValidate>
 					<TextField
