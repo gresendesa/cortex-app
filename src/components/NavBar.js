@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ButtonAppBar() {
+export default function ButtonAppBar({ logged }) {
   const classes = useStyles();
 
   var [cor, setCor] = useState("primary");
@@ -55,16 +55,26 @@ export default function ButtonAppBar() {
   }
 
   return (
+
     <div className={classes.root}>
       <AppBar position="static" color={cor}>
         <Toolbar>
-          <IconButton onClick={mudarCor} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
+          {
+            logged ?
+            <IconButton onClick={mudarCor} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+              <MenuIcon />
+            </IconButton>
+            : ''
+          }
           <Typography variant="h6" className={classes.title}>
             Cortex
           </Typography>
-          <Button color="inherit">Logout</Button>
+
+          {
+            logged ?
+            <Button color="inherit">Logout</Button>
+            : ''
+          }
         </Toolbar>
       </AppBar>
 

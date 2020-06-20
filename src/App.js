@@ -2,6 +2,7 @@ import React from 'react';
 import Routes from './routes';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import DataContextProvider from './contexts/DataContext';
+import { DataContext } from './contexts/DataContext';
 
 class App extends React.Component {
 

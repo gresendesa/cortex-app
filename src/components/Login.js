@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -35,6 +35,15 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn() {
 	const classes = useStyles();
 
+	const [username, setUsername] = useState('');
+	const [passw, setPassw] = useState('');
+
+	const onSubmit = (e) => {
+		console.log(username, passw);
+		//setUsername('');
+		setPassw('');
+	}
+
 	return (
 		<Container component="main" maxWidth="xs">
 			<div className={classes.paper}>
@@ -54,6 +63,8 @@ export default function SignIn() {
 						label="CloudScript username"
 						name="email"
 						autoComplete="email"
+						value={username}
+						onChange={(e) => {setUsername(e.target.value)}}
 						autoFocus
 					/>
 					<TextField
@@ -65,14 +76,16 @@ export default function SignIn() {
 						label="Password"
 						type="password"
 						id="password"
+						value={passw}
+						onChange={(e) => {setPassw(e.target.value)}}
 						autoComplete="current-password"
 					/>
 					<Button
-						type="submit"
 						fullWidth
 						variant="contained"
 						color="primary"
 						className={classes.submit}
+						onClick={onSubmit}
 					>
 						Access my projects
 					</Button>

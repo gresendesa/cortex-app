@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import history from './history';
 import ButtonAppBar from './components/NavBar';
@@ -7,18 +7,36 @@ import Macro from './Macro';
 import Projects from './Projects';
 import Login from './components/Login';
 import Footer from './uis/Footer';
+import { DataContext } from './contexts/DataContext';
 
-export default function Routes() {
+export default function Routes({ context }) {
+
 	return(
-		<Router history={history}>
- 			<ButtonAppBar />
-			<Container maxWidth="sm">
-				<Route exact path="/" component={Macro} />
-				<Route exact path="/login" component={Login} />
-				<Route exact path="/projects" component={Projects} />
-			</Container>
-			<Footer />
-		</Router>
+		
+		<DataContext.Consumer>{(context) => {
+
+			return(
+				<Router history={history}>
+					<ButtonAppBar logged={context.token !== null} />
+					<Container maxWidth="sm">
+						{
+							context.token !== null ?
+							<Fragment>
+								<Route exact path="/" component={Macro} />
+								<Route exact path="/projects" component={Projects} />
+							</Fragment>
+							:
+							<Route component={Login} />
+						}
+						
+					</Container>
+					<Footer />
+				</Router>
+			)
+		}}
+		</DataContext.Consumer>
+		
+		
 	);
 }
 //<BottomBar />
