@@ -93,8 +93,8 @@ export default function ButtonAppBar({ logged, setToken }) {
             </ListItemIcon>
             <ListItemText primary="My Projects" />
           </ListItem>
-          <ListItem button>
-            <ListItemIcon onClick={logOut}>
+          <ListItem button onClick={logOut}>
+            <ListItemIcon>
               <ExitToAppIcon />
             </ListItemIcon>
             <ListItemText primary="Logout" />

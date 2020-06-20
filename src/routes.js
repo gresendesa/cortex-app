@@ -24,7 +24,12 @@ export default function Routes({ context }) {
 							<Switch>
 								<Route exact path="/macro" component={Macro} />
 								<Route render={(props) => (
-									<Projects {...props} fetchMacros={context.fetchMacros} macros={context.macros} /> 
+									<Projects {...props} 
+										fetchMacros={context.fetchMacros} 
+										addMacro={context.addMacro} 
+										delMacro={context.delMacro}
+										macros={context.macros} 
+									/> 
 								)} />
 							</Switch>
 							:

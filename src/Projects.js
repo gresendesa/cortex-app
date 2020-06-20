@@ -15,6 +15,8 @@ import AddIcon from '@material-ui/icons/Add';
 import { DataContext } from './contexts/DataContext';
 import Server from './server';
 import ProjectCreateDialog from './uis/ProjectCreateDialog';
+import { Alert, AlertTitle } from '@material-ui/lab';
+
 
 class Projects extends React.Component {
 
@@ -26,12 +28,34 @@ class Projects extends React.Component {
 
 	componentWillMount(){
 
-		this.props.fetchMacros();
+		const success = (response) => {
+			console.log("ok", response.projects);
+		}
+		const error = (response) => {
+			console.log(response);
+		}
+		this.props.fetchMacros({ success, error });
 
 	}
 
-	createProject = (input) => {
-		console.log(input)
+	createProject = (project) => {
+		const success = (response) => {
+			console.log("ok", response);
+		}
+		const error = (response) => {
+			console.log(response);
+		}
+		this.props.addMacro({ macro:project, success, error });
+	}
+
+	removeProject = (id) => {
+		const success = (response) => {
+			console.log("ok", response);
+		}
+		const error = (response) => {
+			console.log(response);
+		}
+		this.props.delMacro({ id:id, success, error });
 	}
 
 	render(){
@@ -70,6 +94,8 @@ class Projects extends React.Component {
 				<List>
 					
 					{
+
+						this.props.macros.length > 0 ?
 						this.props.macros.map(p => {
 							return (
 								<ListItem button key={p.id}>
@@ -83,13 +109,17 @@ class Projects extends React.Component {
 										secondary={p.macro.description}
 										/>
 									<ListItemSecondaryAction>
-											<IconButton edge="end" aria-label="delete">
+											<IconButton edge="end" aria-label="delete" onClick={() => {this.removeProject(p.id)}}>
 												<DeleteIcon />
 											</IconButton>
 									</ListItemSecondaryAction>
 								</ListItem>
 							)
 						})
+						:
+						<Alert severity="info">
+							<AlertTitle>No projects loaded</AlertTitle>
+						</Alert>
 					}
 
 

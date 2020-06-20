@@ -6,15 +6,17 @@ class Server {
 		this.token = token
 	}
 
-	getConnection({ url='http://localhost:8000/cortex', method='POST' }){
+	getConnection(){
 		
+		const url='http://localhost:8000/cortex';
+
 		const instance = axios.create({
 			baseURL: url
 		});
 
-		if (method!=='GET'){
-			instance.defaults.headers.post['Content-Type'] = 'application/json';
-		}
+
+		instance.defaults.headers.post['Content-Type'] = 'application/json';
+
 
 		if (this.token!==null){
 			instance.defaults.headers.common['Authorization'] = `Token ${this.token}`;
@@ -38,9 +40,33 @@ class Server {
 
 	getMacros({ success, error }) {
 
-		const conn = this.getConnection({});
+		const conn = this.getConnection();
 
 		conn.get('/project/getlist').then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			error(e.response);
+		})
+
+	}
+
+	createMacro({ macro, success, error }) {
+
+		const conn = this.getConnection();
+
+		conn.post('/project/create', { macro }).then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			error(e.response);
+		})
+	
+	}
+
+	deleteMacro({ id, success, error }) {
+
+		const conn = this.getConnection();
+
+		conn.delete(`/project/delete/${id}`).then(r => {
 			success(r.data)
 		}).catch(function(e) {
 			error(e.response);

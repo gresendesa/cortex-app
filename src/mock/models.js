@@ -32,7 +32,7 @@ export function eventModel({ argument="", rule="", match=false, id=Math.random()
 	}
 }
 
-export function macroModel({ name, description, debug=false, production=true, pname, entrypoint, unsafe=null, dependencies=[], tasks }){
+export function macroModel({ name, description, debug=false, production=true, csid, pname, entrypoint, unsafe=null, dependencies=[], tasks }){
 	return {
 		'name': name,
 		'description': description,
@@ -40,6 +40,7 @@ export function macroModel({ name, description, debug=false, production=true, pn
 		'production': production,
 		'inner-protocol': 'TASK',
 		'protocol': 'CTRL',
+		'csid': csid,
 		'pname': pname,
 		'entrypoint': entrypoint,
 		'unsafe': unsafe,

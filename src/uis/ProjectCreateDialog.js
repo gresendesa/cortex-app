@@ -6,7 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { taskModel } from '../mock/models';
+import { taskModel, macroModel } from '../mock/models';
 
 export default function ProjectCreateDialog({ open, setOpen, createProject }) {
 
@@ -20,8 +20,29 @@ export default function ProjectCreateDialog({ open, setOpen, createProject }) {
     setDescription('');
   };
 
-  const handleSave = (e) => { 
-    createProject({ name: name, description: description });
+  const handleSave = (e) => {
+
+    const success = () => {
+
+    }
+
+    const error = () => {
+      
+    }
+
+    const model = macroModel({ 
+                                name, 
+                                description, 
+                                debug: false, 
+                                production: true, 
+                                pname:name.replace(' ','').toLowerCase(), 
+                                entrypoint: 'main', 
+                                unsafe: null,
+                                csid: name.replace(' ','').toLowerCase() + String(Math.random()).replace('.',''), 
+                                dependencies: [], 
+                                tasks: []
+                              });
+    createProject(model);
     handleClose();
   }
 

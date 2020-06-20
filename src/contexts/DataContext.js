@@ -17,26 +17,46 @@ class DataContextProvider extends Component {
 			this.setState({'token': null});
 		} else {
 			localStorage.setItem('cortex-token', token);
-			this.setState({'token': token});
-
+			this.setState({'token': token}, () => this.fetchMacros({}));
 		}	
 	}
 
-	setMacros = (macros) => {
-		this.setState({'macros': macros});
-	}
-
-	fetchMacros = () => {
+	fetchMacros = ({ success=()=>{}, error=()=>{} }) => {
 		if(this.state.token!==null){
 			const server = new Server({ token: this.state.token });
-			const success = (response) => {
-				console.log(response.projects);
-				this.setMacros(response.projects);
+			const onOk = (response) => {
+				this.setState({'macros': response.projects});
+				success(response);
 			}
-			const error = (response) => {
-				console.log(response);
+			server.getMacros({ success:onOk, error })
+		} else {
+			error("sem token");
+		}
+	}
+
+	addMacro = ({ macro, success=()=>{}, error=()=>{} }) => {
+		if(this.state.token!==null){
+			const server = new Server({ token: this.state.token });
+			const onOk = (response) => {
+				this.fetchMacros({});
+				success(response);
 			}
-			const macros = server.getMacros({ success, error })
+			server.createMacro({ macro, success:onOk, error })
+		} else {
+			error("sem token");
+		}
+	}
+
+	delMacro = ({ id, success=()=>{}, error=()=>{} }) => {
+		if(this.state.token!==null){
+			const server = new Server({ token: this.state.token });
+			const onOk = (response) => {
+				this.fetchMacros({});
+				success(response);
+			}
+			server.deleteMacro({ id, success:onOk, error })
+		} else {
+			error("sem token");
 		}
 	}
 
@@ -50,12 +70,13 @@ class DataContextProvider extends Component {
 	render() {
 
 		return (
-			<DataContext.Provider value={
-				{...this.state, 
-					setToken: this.setToken, 
-					fetchMacros: this.fetchMacros
-				}
-			}>
+			<DataContext.Provider value={{
+											...this.state, 
+											setToken: this.setToken, 
+											fetchMacros: this.fetchMacros,
+											addMacro: this.addMacro,
+											delMacro: this.delMacro
+										}}>
 				{this.props.children}
 			</DataContext.Provider>
 		);
