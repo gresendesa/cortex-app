@@ -4,7 +4,21 @@ export const DataContext = createContext();
 
 class DataContextProvider extends Component {
 	
+	state = {
+		'macros': [],
+		'token': null, 
+	}
+
+	setToken = (token) => {
+		this.setState({'token': token});
+	}
+
+	setMacros = (macros) => {
+		this.setState({'macros': macros});
+	}
+
 	render() {
+
 		return (
 			<DataContext.Provider value={{...this.state}}>
 				{this.props.children}
