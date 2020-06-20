@@ -6,6 +6,7 @@ import BottomBar from './components/BottomBar';
 import ButtonAppBar from './components/NavBar';
 import { Container } from '@material-ui/core';
 import Macro from './Macro';
+import Projects from './Projects';
 import Login from './components/Login';
 import Footer from './uis/Footer';
 
@@ -16,6 +17,7 @@ export default function Routes() {
 			<Container maxWidth="sm">
 				<Route exact path="/" component={Macro} />
 				<Route exact path="/login" component={Login} />
+				<Route exact path="/projects" component={Projects} />
 			</Container>
 			<Footer />
 		</Router>
