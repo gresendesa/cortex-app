@@ -12,6 +12,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import Server from '../server';
+
 const useStyles = makeStyles((theme) => ({
 	paper: {
 		marginTop: theme.spacing(8),
@@ -41,8 +43,11 @@ export default function SignIn({ setToken }) {
 	const onSubmit = (e) => {
 		console.log(username, passw);
 		//setUsername('');
-		setToken(username);
-		setPassw('');
+		//setToken(username);
+		//setPassw('');
+
+		let server = new Server({});
+		server.auth();
 	}
 
 	return (

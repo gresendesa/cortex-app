@@ -7,7 +7,6 @@ class DataContextProvider extends Component {
 	state = {
 		'macros': [],
 		'token': null,
-		'server': 'http://localhost:8000/'
 	}
 
 	setToken = (token) => {
