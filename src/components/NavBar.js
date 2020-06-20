@@ -6,6 +6,18 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import DrawerHeader from '../uis/DrawerHeader';
+import Drawer from '@material-ui/core/Drawer';
+import ListItem from '@material-ui/core/ListItem';
+import List from '@material-ui/core/List';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import DraftsIcon from '@material-ui/icons/Drafts';
+import SendIcon from '@material-ui/icons/Send';
+import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { useHistory } from 'react-router-dom';
+import Projects from '../Projects';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,12 +35,23 @@ export default function ButtonAppBar() {
   const classes = useStyles();
 
   var [cor, setCor] = useState("primary");
+
+  var [openMenu, setOpenMenu] = useState(false)
+
   const mudarCor = () => {
+    setOpenMenu(!openMenu);
     if (cor=="primary"){
       setCor("secondary");
     } else {
       setCor("primary");
     }
+  }
+
+  const history = useHistory();
+
+  const handleRedirect = (path) => {
+      history.push(path);
+      setOpenMenu(!openMenu);
   }
 
   return (
@@ -44,6 +67,26 @@ export default function ButtonAppBar() {
           <Button color="inherit">Logout</Button>
         </Toolbar>
       </AppBar>
+
+      <Drawer anchor="left" open={openMenu} onClose={() => {setOpenMenu(false)}} >
+
+        <List>
+          <ListItem button onClick={() => {handleRedirect("/projects")}}>
+            <ListItemIcon>
+              <SportsEsportsIcon />
+            </ListItemIcon>
+            <ListItemText primary="My Projects" />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <ExitToAppIcon />
+            </ListItemIcon>
+            <ListItemText primary="Logout" />
+          </ListItem>
+        </List>
+
+      </Drawer>
+
     </div>
   );
 }

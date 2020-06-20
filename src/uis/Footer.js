@@ -28,7 +28,7 @@ export default function Footer() {
 			<Grid item>
 
 				<Box mt={1} mb={8}>
-					<Typography variant="body3" color="textSecondary" align="center">
+					<Typography variant="caption" color="textSecondary" align="center">
 						{'Supported by '}
 						<Link color="inherit" href="https://cloudscript.bezouro.com.br/">
 							CloudScript
