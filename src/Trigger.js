@@ -1,7 +1,5 @@
-import React, { makeStyles } from 'react';
-import List from '@material-ui/core/List';
+import React from 'react';
 import ListItem from '@material-ui/core/ListItem';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
@@ -30,7 +28,7 @@ class Trigger extends React.Component {
 
 	handleClick = (e) => {
 		this.setState({'openEditor': true});
-		const { setFocus, getFocus } = this.props.hookTask();
+		const { setFocus } = this.props.hookTask();
 		const { task, group, trigger } = this.props;
 		setFocus({ task, group, trigger });
 	}
