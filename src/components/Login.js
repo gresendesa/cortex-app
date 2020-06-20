@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function SignIn() {
+export default function SignIn({ setToken }) {
 	const classes = useStyles();
 
 	const [username, setUsername] = useState('');
@@ -41,6 +41,7 @@ export default function SignIn() {
 	const onSubmit = (e) => {
 		console.log(username, passw);
 		//setUsername('');
+		setToken(username);
 		setPassw('');
 	}
 

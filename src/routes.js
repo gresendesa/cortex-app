@@ -17,7 +17,7 @@ export default function Routes({ context }) {
 
 			return(
 				<Router history={history}>
-					<ButtonAppBar logged={context.token !== null} />
+					<ButtonAppBar logged={context.token !== null} setToken={context.setToken} />
 					<Container maxWidth="sm">
 						{
 							context.token !== null ?
@@ -26,7 +26,10 @@ export default function Routes({ context }) {
 								<Route exact path="/projects" component={Projects} />
 							</Fragment>
 							:
-							<Route component={Login} />
+							<Route 
+								render={(props) => (
+									<Login {...props} setToken={context.setToken} /> 
+								)} />
 						}
 						
 					</Container>

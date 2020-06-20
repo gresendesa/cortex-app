@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ButtonAppBar({ logged }) {
+export default function ButtonAppBar({ logged, setToken }) {
   const classes = useStyles();
 
   var [cor, setCor] = useState("primary");
@@ -54,6 +54,12 @@ export default function ButtonAppBar({ logged }) {
       setOpenMenu(!openMenu);
   }
 
+  const logOut = () => {
+    setToken(null);
+    setOpenMenu(false);
+    console.log('access token lost');
+  }
+
   return (
 
     <div className={classes.root}>
@@ -72,7 +78,7 @@ export default function ButtonAppBar({ logged }) {
 
           {
             logged ?
-            <Button color="inherit">Logout</Button>
+            <Button color="inherit" onClick={logOut}>Logout</Button>
             : ''
           }
         </Toolbar>
@@ -88,7 +94,7 @@ export default function ButtonAppBar({ logged }) {
             <ListItemText primary="My Projects" />
           </ListItem>
           <ListItem button>
-            <ListItemIcon>
+            <ListItemIcon onClick={logOut}>
               <ExitToAppIcon />
             </ListItemIcon>
             <ListItemText primary="Logout" />
