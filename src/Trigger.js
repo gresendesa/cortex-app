@@ -47,7 +47,7 @@ class Trigger extends React.Component {
 		if(indexTrigger>=0){
 			task.triggers[group][indexTrigger] = trigger;
 			editTask(task);
-			this.props.hookTask().alert("saved", "success");
+			//this.props.hookTask().alert("saved", "success");
 			this.setState({'trigger':trigger}, callback);
 		} else {
 			this.props.hookTask().alert("issue");
@@ -80,7 +80,7 @@ class Trigger extends React.Component {
 
 		const { setFocus, alert } = this.props.hookTask();
 
-		const { launch } = this.props.hookTask();
+		const { deployMacro } = this.props.hookTask();
 
 		const { deleteTrigger } = this.props;
 
@@ -140,7 +140,7 @@ class Trigger extends React.Component {
 	            			 group={this.group} 
 	            			 setFocus={setFocus}
 	            			 alert={alert}
-	            			 launch={launch}
+	            			 deployMacro={deployMacro}
 	            			 active={this.state.trigger.active} />
 			</React.Fragment>
 		);

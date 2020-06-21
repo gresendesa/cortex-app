@@ -17,7 +17,7 @@ import TextField from '@material-ui/core/TextField';
 
 export default function MacroSettings({ openConfig, devName, settings, hookTask }) {
 
-	const { setOpenConfig, setMacroState } = hookTask();
+	const { setOpenConfig, setMacroState, deployMacro } = hookTask();
 
 	const [unsafeMode, setUnsafeMode] = useState(settings.unsafe!==null);
 	const [unsafeValue, setUnsafeValue] = useState(settings.unsafe==null ? 100 : settings.unsafe);
@@ -35,7 +35,9 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 
 	const handleClose = () => {
 		setOpenConfig(false);
-		setMacroState(config);
+		setMacroState(config, () => {
+			deployMacro({ launch:false })
+		});
 	}
 
 	const handleChange = (item, value) => {

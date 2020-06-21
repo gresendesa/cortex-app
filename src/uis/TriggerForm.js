@@ -70,7 +70,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TriggerForm({ task, trigger, open, toggleEditor, group, saveTrigger, alert, setFocus, launch, active }) {
+export default function TriggerForm({ task, trigger, open, toggleEditor, group, saveTrigger, alert, setFocus, deployMacro, active }) {
   const classes = useStyles();
 
   const [events, setEvents] = useState(Object.assign([], trigger.events));
@@ -82,6 +82,8 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
   const [name, setName] = useState(trigger.name);
   const [action, setAction] = useState(trigger.action);
   const [blocking, setBlocking] = useState(trigger.blocking);
+
+  const [deploying, setDeploying] = useState(false);
 
   const handleClose = () => {
     toggleEditor();
@@ -106,16 +108,23 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
     return has;
   }
 
-  const onSave = (publish=false) => {
+  const onSave = (publish) => {
+
+    setDeploying(true);
+
     let newTrigger = triggerModel({ 'name':name, 'action':action, 'id':trigger.id, 'blocking':blocking, 'events':events, 'active':active })
     if(name.match(/"|^$/)){
       alert("Invalid name");
     } else if(!hasTrigger(newTrigger)){
       
       if(publish){
-        saveTrigger(newTrigger,launch);
+        saveTrigger(newTrigger,() => {
+          deployMacro({ launch:true, callback: () => {setDeploying(false)}})
+        });
       } else {
-        saveTrigger(newTrigger);
+        saveTrigger(newTrigger,() => {
+          deployMacro({ launch:false, callback: () => {setDeploying(false)}})
+        });
       }
     } else {
       alert("Action name is already taken");
@@ -175,10 +184,10 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
               </Box>
 
             <ButtonGroup color="primary" aria-label="outlined primary button group">
-              <IconButton edge="end" color="inherit" onClick={() => {onSave()}} aria-label="close">
+              <IconButton edge="end" disabled={deploying} color="inherit" onClick={() => {onSave()}} aria-label="close">
                 <SaveIcon />
               </IconButton>
-              <IconButton edge="end" color="inherit" onClick={() => {onSave(true)}} aria-label="close">
+              <IconButton edge="end" disabled={deploying} color="inherit" onClick={() => {onSave(true)}} aria-label="close">
                 <Icon name='rocket' size='small' />
               </IconButton>
             </ButtonGroup>

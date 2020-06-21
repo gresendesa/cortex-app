@@ -139,40 +139,17 @@ class Macro extends React.Component {
 			'deleteTask': (id) => { this.deleteTask(id) },
 			'editTask': (task) => { this.editTask(task) },
 			'alert': (message, severity="warning") => { this.showAlert(message, severity) },
-			'setMacroState': (state) => {this.setState(state)},
+			'setMacroState': (state, callback=() => {}) => {this.setState(state, callback)},
 			'moveTaskUp': (task) => { this.moveTaskUp(task) },
 			'setFocus': this.setFocus,
 			'hasFocus': this.hasFocus,
 			'getFocus': this.getFocus,
 			'hasMacroUnsafe': () => { return this.state.unsafe!=null },
-			'launch': this.launch,
+			'deployMacro': this.deployMacro,
 		}
 	}
 
-	launch = () => {
-		let macro = macroModel(this.state);
-		console.log(macro);
-
-		fetch('http://localhost:8000/cortex', {
-			method: 'POST',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(macro)
-		})
-		.then((response) => response.json())
-		.then((json) => {
-			//console.log(json);
-			this.showAlert(json.output,"success");
-		});
-	}
-
-	onConfigClose = () => {
-		this.setState({'openConfig': false});
-	}
-
-	deployMacro = ({ launch }) => {
+	deployMacro = ({ launch, callback=()=>{} }) => {
 
 		this.setState({'deployLoading': true});
 
@@ -185,6 +162,7 @@ class Macro extends React.Component {
 				} else {
 					this.showAlert("Saved", "success");
 				}
+				callback();
 			});
 		}
 		const error = (response) => {
@@ -192,12 +170,12 @@ class Macro extends React.Component {
 			this.setState({'deployLoading': false}, () => {
 				this.showAlert(`${response}`, "warning");
 			});
+			callback();
 		}
 		const id = this.state.project.id;
 
 		this.props.saveMacro({ id, macro, launch, success, error });
 	}
-
 
 	render(){
 
@@ -241,9 +219,6 @@ class Macro extends React.Component {
 								<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.deployMacro({ launch:true })}}>
 									<Icon name='rocket' size='small' />
 								</IconButton>
-
-								
-
 							</Typography> 
 							<Typography variant="h5">
 								Tasks
