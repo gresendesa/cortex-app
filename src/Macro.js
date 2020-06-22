@@ -80,6 +80,10 @@ class Macro extends React.Component {
 		this.setState({'tasks': [...this.state.tasks, task]})
 	}
 
+	pushDependencie = (dependencie) => {
+		this.setState({'dependencies': [...this.state.dependencies, dependencie]})
+	}
+
 	hasTask = (task, except=false) => {
 		if (except) {
 			var filtered_tasks = this.state.tasks.filter(t => t.id !== task.id);
@@ -135,6 +139,7 @@ class Macro extends React.Component {
 			'togglePopUpAlert': () => { this.setState({'popUpAlert': !this.state.popUpAlert }); },
 			'setOpenConfig': (bool) => { this.setOpenConfig(bool) },
 			'pushTask': (task) => { this.pushTask(task) },
+			'pushDependencie': (dependencie) => { this.pushDependencie(dependencie) },
 			'hasTask': (task, except=false) => { return this.hasTask(task, except) },
 			'deleteTask': (id) => { this.deleteTask(id) },
 			'editTask': (task) => { this.editTask(task) },

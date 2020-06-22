@@ -32,6 +32,14 @@ export function eventModel({ argument="", rule="", match=false, id=Math.random()
 	}
 }
 
+export function dependencieModel({ dev, project, taskName }){
+	return {
+		dev,
+		project,
+		taskName
+	}
+}
+
 export function macroModel({ name, description, debug=false, production=true, csid, pname, entrypoint, unsafe=null, dependencies=[], tasks }){
 	return {
 		'name': name,

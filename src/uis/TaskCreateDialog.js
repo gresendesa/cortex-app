@@ -7,16 +7,47 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { v1 as uuidv1 }  from 'uuid';
-import { taskModel } from '../mock/models';
+import { taskModel, dependencieModel } from '../mock/models';
 
 export default function TaskCreateDialog({ hookTask }) {
 
-  var { open, toggleCreateDialog, pushTask, hasTask, alert } = hookTask();
+  var { open, toggleCreateDialog, pushTask, hasTask, alert, pushDependencie } = hookTask();
   var [value, setValue] = useState('');
 
   const handleClose = () => {
     toggleCreateDialog();
   };
+
+  const handleImport = (e) => {
+
+    const [dev, project] = value.split('.',2);
+
+    const nameItems = value.split('.');
+    nameItems.splice(0, 2);
+    const taskName = nameItems.join('.');
+    var dependencie = dependencieModel({ dev, project, taskName });
+
+    if((dependencie.dev) && (dependencie.dev.length>0) &&
+       (dependencie.project) && (dependencie.project.length>0) &&
+       (dependencie.taskName) && (dependencie.taskName.length>0)){
+
+      if(dependencie.taskName.match(/ |"|^$/)){
+        alert("Invalid name!");
+      } else if(!hasTask({name:dependencie.taskName})){
+        pushDependencie(dependencie);
+        toggleCreateDialog();
+      } else {
+        alert("This name is already taken from other task!");
+      }
+
+    } else {
+      alert("Use the <dev>.<project>.<task>");
+    }
+
+      
+
+    console.log(dependencie);
+  }
 
   const handleSave = (e) => { 
     var task = taskModel({ 'name': value })
@@ -35,10 +66,10 @@ export default function TaskCreateDialog({ hookTask }) {
   return (
     <div>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Create new task</DialogTitle>
+        <DialogTitle id="form-dialog-title">New task</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Write an unique alphanumeric word, without spaces, as a name for the task
+            Create or import a new task
           </DialogContentText>
           <TextField
             autoFocus
@@ -54,6 +85,9 @@ export default function TaskCreateDialog({ hookTask }) {
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
+          </Button>
+          <Button onClick={handleImport} color="primary">
+            Import task
           </Button>
           <Button onClick={handleSave} color="primary">
             Create task
