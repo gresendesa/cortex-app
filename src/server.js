@@ -8,8 +8,7 @@ class Server {
 
 	getConnection(){
 		
-		//const url='http://localhost:8000/cortex';
-		const url='https://webmacrosoft.herokuapp.com/cortex';
+		const url= window.location.href.split('/')[2] === 'localhost:3000' ? 'http://localhost:8000/cortex' : 'https://webmacrosoft.herokuapp.com/cortex';
 
 		const instance = axios.create({
 			baseURL: url
