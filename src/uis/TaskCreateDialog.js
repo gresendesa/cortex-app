@@ -31,8 +31,8 @@ export default function TaskCreateDialog({ hookTask }) {
        (dependencie.project) && (dependencie.project.length>0) &&
        (dependencie.taskName) && (dependencie.taskName.length>0)){
 
-      if(dependencie.taskName.match(/ |"|^$/)){
-        alert("Invalid name!");
+      if(dependencie.taskName.match(/ |"|'|;|^$/)){
+        alert("Don't use spaces or especial chars!");
       } else if(!hasTask({name:dependencie.taskName})){
         pushDependencie(dependencie);
         toggleCreateDialog();
@@ -43,17 +43,13 @@ export default function TaskCreateDialog({ hookTask }) {
     } else {
       alert("Use the <dev>.<project>.<task>");
     }
-
-      
-
-    console.log(dependencie);
   }
 
   const handleSave = (e) => { 
     var task = taskModel({ 'name': value })
 
-    if(task.name.match(/ |"|^$/)){
-      alert("Invalid name!");
+    if(task.name.match(/ |"|'|;|^$/)){
+      alert("Don't use spaces or especial chars!");
     } else if(!hasTask(task)){
       pushTask(task)
       toggleCreateDialog();

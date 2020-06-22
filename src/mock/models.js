@@ -1,9 +1,10 @@
-export function taskModel({ name, id=Math.random(), delay=1, unsafe=100 }){
+export function taskModel({ name, id=Math.random(), delay=1, unsafe=100, visible=false }){
 	return {
 		'name': name, 
 		'id':id,
 		'delay':delay, 
 		'unsafe':unsafe,
+		'visible':visible,
 		'triggers': {
 			'opening': [],
 			'main': [],
@@ -32,8 +33,9 @@ export function eventModel({ argument="", rule="", match=false, id=Math.random()
 	}
 }
 
-export function dependencieModel({ dev, project, taskName }){
+export function dependencieModel({ dev, project, taskName, id=Math.random() }){
 	return {
+		id,
 		dev,
 		project,
 		taskName

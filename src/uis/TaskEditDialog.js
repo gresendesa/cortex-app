@@ -17,6 +17,7 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
   const [unsafe, setUnsafe] = useState((task.unsafe!==null) && (!hasMacroUnsafe()))
   const [unsafeNumber, setUnsafeNumber] = useState(task.unsafe)
   const [delay, setDelay] = useState(task.delay)
+  const [visible, setVisible] = useState(task.visible)
   const [name, setName] = useState(task.name)
 
   const handleClose = () => {
@@ -28,6 +29,10 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
       alert("Unsafe mode is set globally already");
     }  
     setUnsafe(!unsafe);
+  }
+
+  const handleToggleVisible = () => {
+    setVisible(!visible);
   }
 
   const handleUnsafeNumber = (e) => {
@@ -50,10 +55,11 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
     let tempTask = Object.assign({}, task);
     tempTask.name = name;
     tempTask.delay = delay;
+    tempTask.visible = visible;
     tempTask.unsafe = unsafe ? unsafeNumber : null;
 
-    if(name.match(/ |"|^$/)){
-      alert("Invalid name");
+    if(name.match(/ |"|'|;|^$/)){
+      alert("Don't use spaces or especial chars!");
     } else if(!hasTask(tempTask, true)){
       editTask(tempTask)
       setEdit(false);
@@ -113,7 +119,7 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
             spacing={3}
           >
 
-            <Grid item xs={6}>
+            <Grid item xs={12} md={4}>
               <TextField
                 label="Unsafe"
                 type="number"
@@ -124,7 +130,7 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
               />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={6} md={4}>
               <FormControlLabel
                 control={
                   <Switch
@@ -136,6 +142,20 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
                 label="Unsafe"
               />
             </Grid>
+
+            <Grid item xs={6} md={4}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={visible}
+                    onChange={handleToggleVisible}
+                    color="primary"
+                  />
+                }
+                label="Public"
+              />
+            </Grid>
+
             
           </Grid>
             

@@ -1,5 +1,6 @@
 import React from 'react';
 import TasksSection from './uis/TasksSection';
+import DependenciesSection from './uis/DependenciesSection';
 import TaskCreateDialog from './uis/TaskCreateDialog';
 import TaskEditDialog from './uis/TaskEditDialog';
 import { DataContext } from './contexts/DataContext';
@@ -46,6 +47,13 @@ class Macro extends React.Component {
 			return task.id !== id;
 		});
 		this.setState({'tasks':tasks});
+	}
+
+	deleteDependencie = (id) => {
+		var dependencies = this.state.dependencies.filter(dependencie => {
+			return dependencie.id !== id;
+		});
+		this.setState({'dependencies':dependencies});
 	}
 
 	setFocus = ({ task=null, group=null, trigger=null}) => {
@@ -142,6 +150,7 @@ class Macro extends React.Component {
 			'pushDependencie': (dependencie) => { this.pushDependencie(dependencie) },
 			'hasTask': (task, except=false) => { return this.hasTask(task, except) },
 			'deleteTask': (id) => { this.deleteTask(id) },
+			'deleteDependencie': this.deleteDependencie,
 			'editTask': (task) => { this.editTask(task) },
 			'alert': (message, severity="warning") => { this.showAlert(message, severity) },
 			'setMacroState': (state, callback=() => {}) => {this.setState(state, callback)},
@@ -160,7 +169,7 @@ class Macro extends React.Component {
 
 		const macro = macroModel(this.state);
 		const success = (response) => {
-			console.log("ok deploy", response);
+			//console.log("ok deploy", response);
 			this.setState({'deployLoading': false}, () => {
 				if (launch){
 					this.showAlert(`Launched as ${macro.csid}`, "success");
@@ -171,7 +180,7 @@ class Macro extends React.Component {
 			});
 		}
 		const error = (response) => {
-			console.log("erro deploy", response);
+			//console.log("erro deploy", response);
 			this.setState({'deployLoading': false}, () => {
 				this.showAlert(`${response}`, "warning");
 			});
@@ -247,6 +256,8 @@ class Macro extends React.Component {
 				</Grid>
 
 				<TasksSection tasks={this.state.tasks} hookTask={this.hookTask} />
+
+				<DependenciesSection dependencies={this.state.dependencies} hookTask={this.hookTask} />
 
 				<Snackbar open={popUpAlert} autoHideDuration={2000} onClose={togglePopUpAlert} >
 					<MuiAlert elevation={6} variant="filled" severity={this.state.alertSeverity}>
