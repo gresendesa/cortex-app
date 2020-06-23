@@ -13,6 +13,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 
+import DeleteButtonTask from './DeleteButton';
+
 import TaskEditDialog from './TaskEditDialog';
 import usePrevious from './utils'
 
@@ -80,7 +82,7 @@ export default function TasksPanel({ task, hookTask, indice }) {
 									: ""
 								}
 								<BottomNavigationAction onClick={activeEditPanel} label="Edit" icon={<EditIcon />} />
-								<BottomNavigationAction onClick={handleDeleteClick} label="Delete" icon={<DeleteIcon />} />
+								<DeleteButtonTask type='task' callback={handleDeleteClick} />
 							</BottomNavigation>
 						</Grid>
 					</Grid>

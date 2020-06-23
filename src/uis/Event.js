@@ -7,6 +7,7 @@ import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Delete from '@material-ui/icons/Delete';
+import DeleteButton from './DeleteButton';
 
 
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -75,9 +76,7 @@ export default function Event({ event, deleteEvent, updateEvent }) {
 						</Grid>
 
 						<Grid item>
-							<IconButton aria-label="add event" onClick={handleDelete}>
-								<Delete />
-							</IconButton>
+							<DeleteButton type='event' callback={handleDelete} />
 						</Grid>
 
 					</Grid>

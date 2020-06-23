@@ -17,6 +17,8 @@ import Server from './server';
 import ProjectCreateDialog from './uis/ProjectCreateDialog';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { useHistory } from 'react-router-dom';
+import DeleteButton from './uis/DeleteButton';
+
 
 class Projects extends React.Component {
 
@@ -114,9 +116,7 @@ class Projects extends React.Component {
 										secondary={p.macro.description}
 										/>
 									<ListItemSecondaryAction>
-											<IconButton edge="end" aria-label="delete" onClick={() => {this.removeProject(p.id)}}>
-												<DeleteIcon />
-											</IconButton>
+										<DeleteButton type='project' callback={() => {this.removeProject(p.id)}} />
 									</ListItemSecondaryAction>
 								</ListItem>
 							)

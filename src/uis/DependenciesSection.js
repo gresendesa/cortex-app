@@ -12,8 +12,8 @@ import Divider from '@material-ui/core/Divider';
 import InboxIcon from '@material-ui/icons/Inbox';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
-import DeleteTwoToneIcon from '@material-ui/icons/DeleteTwoTone';
 import DependencieInfoDialog from './DependencieInfoDialog';
+import DeleteButton from './DeleteButton';
 
 
 function Dependencie({ dependencie, deleteDependencie, getForeingTask, popUp, alert }){
@@ -39,9 +39,7 @@ function Dependencie({ dependencie, deleteDependencie, getForeingTask, popUp, al
 			</ListItemIcon>
 			<ListItemText primary={dependencie.taskName} secondary={dependencie.dev + "." + dependencie.project} />
 			<ListItemSecondaryAction>
-				<IconButton edge="end" aria-label="delete" onClick={() => {deleteDependencie(dependencie.id)}}>
-					<DeleteTwoToneIcon />
-				</IconButton>
+				<DeleteButton type='dependencie' callback={() => {deleteDependencie(dependencie.id)}} />
 			</ListItemSecondaryAction>
 		</ListItem>
 	)

@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import BlockIcon from '@material-ui/icons/Block';
 import CheckIcon from '@material-ui/icons/Check';
+import DeleteButton from './uis/DeleteButton';
 
 class Trigger extends React.Component {
 
@@ -122,11 +123,8 @@ class Trigger extends React.Component {
 									<CheckIcon size="small" />
 								</IconButton>
 							}
-							
 
-							<IconButton edge="end" aria-label="delete" onClick={() => deleteTrigger(this.state.trigger)}>
-								<DeleteOutlineIcon />
-							</IconButton>
+							<DeleteButton type='trigger' callback={() => deleteTrigger(this.state.trigger)} />
 
 						</ListItemSecondaryAction>
 								
