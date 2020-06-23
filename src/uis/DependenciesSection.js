@@ -14,9 +14,25 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteTwoToneIcon from '@material-ui/icons/DeleteTwoTone';
 
-function Dependencie({ dependencie, deleteDependencie }){
+function Dependencie({ dependencie, deleteDependencie, getForeingTask }){
+
+
+	const handleClick = () => {
+		console.log("tey")
+
+		const success = (response) => {
+			console.log('ok', response)
+		}
+
+		const error = (response) => {
+			console.log('erro', response);
+		}
+
+		getForeingTask({ dev:dependencie.dev, project:dependencie.project, task:dependencie.taskName, success, error })
+	}
+
 	return (
-		<ListItem button>
+		<ListItem dense button onClick={handleClick}>
 			<ListItemIcon>
 				<ExtensionTwoToneIcon />
 			</ListItemIcon>
@@ -32,23 +48,30 @@ function Dependencie({ dependencie, deleteDependencie }){
 
 export default function DependenciesSection({ dependencies, hookTask }) {
 
-	const { deleteDependencie } = hookTask();
+	const { deleteDependencie, getForeingTask } = hookTask();
 
 	return (
 
 		<Box>
-			<List component="nav" aria-label="main mailbox folders">
-				<Divider />
+			{
+				dependencies.length>0 ?
 
-				{
-					dependencies.map(dependencie => {
-						return (
-							<Dependencie dependencie={dependencie} deleteDependencie={deleteDependencie} key={dependencie.id} />
-						)
-					})
-				}
+				<List dense component="nav" aria-label="main mailbox folders">
+					<Divider />
 
-			</List>
+					{
+						dependencies.map(dependencie => {
+							return (
+								<Dependencie dependencie={dependencie} deleteDependencie={deleteDependencie} getForeingTask={getForeingTask} key={dependencie.id} />
+							)
+						})
+					}
+					<Divider />
+				</List>
+
+				: ''
+			}
+			
 		</Box>
 	);
 }

@@ -32,7 +32,7 @@ export default function Routes({ context }) {
 							
 									return (
 										project ?
-										<Macro {...props} project={project} saveMacro={context.saveMacro} />
+										<Macro {...props} project={project} saveMacro={context.saveMacro} getTask={context.getTask} />
 										:''
 									)
 

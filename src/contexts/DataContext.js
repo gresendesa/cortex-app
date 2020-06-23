@@ -80,6 +80,15 @@ class DataContextProvider extends Component {
 		}
 	}
 
+	getTask = ({ dev, project, task, success=()=>{}, error=()=>{} }) => {
+		if(this.state.token!==null){
+			const server = new Server({ token: this.state.token });
+			server.getTask({ dev, project, task, success, error })
+		} else {
+			error("sem token");
+		}
+	}
+
 	componentWillMount(){
 
 		const token = localStorage.getItem('cortex-token');
@@ -97,6 +106,7 @@ class DataContextProvider extends Component {
 											addMacro: this.addMacro,
 											delMacro: this.delMacro,
 											saveMacro: this.saveMacro,
+											getTask: this.getTask,
 											processing: this.state.processing
 
 										}}>

@@ -81,7 +81,26 @@ class Server {
 		conn.put(`/project/save/${id}`, { launch, macro }).then(r => {
 			success(r.data)
 		}).catch(function(e) {
-			error(e.message);
+			try {
+				error(e.response.data.detail);
+			} catch {
+				error(e.message);
+			}
+		})
+	}
+
+	getTask({ dev, project, task, success, error }) {
+
+		const conn = this.getConnection();
+
+		conn.get(`/task/getinfo/${dev}/${project}/${task}`).then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			try {
+				error(e.response.data.detail);
+			} catch {
+				error(e.message);
+			}
 		})
 	}
 

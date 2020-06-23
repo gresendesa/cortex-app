@@ -11,7 +11,7 @@ import { taskModel, dependencieModel } from '../mock/models';
 
 export default function TaskCreateDialog({ hookTask }) {
 
-  var { open, toggleCreateDialog, pushTask, hasTask, alert, pushDependencie } = hookTask();
+  var { open, toggleCreateDialog, pushTask, hasTask, alert, pushDependencie, hasDependencie } = hookTask();
   var [value, setValue] = useState('');
 
   const handleClose = () => {
@@ -33,7 +33,7 @@ export default function TaskCreateDialog({ hookTask }) {
 
       if(dependencie.taskName.match(/ |"|'|;|^$/)){
         alert("Don't use spaces or especial chars!");
-      } else if(!hasTask({name:dependencie.taskName})){
+      } else if((!hasTask({name:dependencie.taskName})) && (!hasDependencie(dependencie))){
         pushDependencie(dependencie);
         toggleCreateDialog();
       } else {
@@ -50,7 +50,7 @@ export default function TaskCreateDialog({ hookTask }) {
 
     if(task.name.match(/ |"|'|;|^$/)){
       alert("Don't use spaces or especial chars!");
-    } else if(!hasTask(task)){
+    } else if((!hasTask(task)) && (!hasDependencie({taskName:task.name, id:task.id}))){
       pushTask(task)
       toggleCreateDialog();
     } else {

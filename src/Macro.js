@@ -102,6 +102,11 @@ class Macro extends React.Component {
 		return result;
 	}
 
+	hasDependencie = (dependencie) => {
+		const result = (this.state.dependencies.some(e => e.taskName == dependencie.taskName) || this.state.dependencies.some(e => e.id == dependencie.id))
+		return result;
+	}
+
 	deleteTask = (id, callback) => {
 		var tasks = this.state.tasks.filter(task => {
 			return task.id != id;
@@ -149,6 +154,7 @@ class Macro extends React.Component {
 			'pushTask': (task) => { this.pushTask(task) },
 			'pushDependencie': (dependencie) => { this.pushDependencie(dependencie) },
 			'hasTask': (task, except=false) => { return this.hasTask(task, except) },
+			'hasDependencie': this.hasDependencie,
 			'deleteTask': (id) => { this.deleteTask(id) },
 			'deleteDependencie': this.deleteDependencie,
 			'editTask': (task) => { this.editTask(task) },
@@ -160,7 +166,12 @@ class Macro extends React.Component {
 			'getFocus': this.getFocus,
 			'hasMacroUnsafe': () => { return this.state.unsafe!=null },
 			'deployMacro': this.deployMacro,
+			'getForeingTask': this.getForeingTask
 		}
+	}
+
+	getForeingTask = ({ dev, project, task, success, error }) => {
+		this.props.getTask({ dev, project, task, success, error });
 	}
 
 	deployMacro = ({ launch, callback=()=>{} }) => {
