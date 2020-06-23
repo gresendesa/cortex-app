@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import TaskPanel from './TaskPanel';
@@ -13,15 +13,19 @@ import InboxIcon from '@material-ui/icons/Inbox';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteTwoToneIcon from '@material-ui/icons/DeleteTwoTone';
+import DependencieInfoDialog from './DependencieInfoDialog';
 
-function Dependencie({ dependencie, deleteDependencie, getForeingTask }){
+
+function Dependencie({ dependencie, deleteDependencie, getForeingTask, popUp }){
 
 
 	const handleClick = () => {
+
 		console.log("tey")
 
 		const success = (response) => {
-			console.log('ok', response)
+			console.log('ok', response);
+			popUp({ dependencie });
 		}
 
 		const error = (response) => {
@@ -49,6 +53,13 @@ function Dependencie({ dependencie, deleteDependencie, getForeingTask }){
 export default function DependenciesSection({ dependencies, hookTask }) {
 
 	const { deleteDependencie, getForeingTask } = hookTask();
+	const [open, setOpen] = useState(false);
+	const [dependencie, setDependencie] = useState({});
+
+	const popUp = ({ dependencie }) => {
+		setDependencie(dependencie);
+		setOpen(true);
+	}
 
 	return (
 
@@ -60,9 +71,9 @@ export default function DependenciesSection({ dependencies, hookTask }) {
 					<Divider />
 
 					{
-						dependencies.map(dependencie => {
+						dependencies.map(d => {
 							return (
-								<Dependencie dependencie={dependencie} deleteDependencie={deleteDependencie} getForeingTask={getForeingTask} key={dependencie.id} />
+								<Dependencie dependencie={d} deleteDependencie={deleteDependencie} getForeingTask={getForeingTask} popUp={popUp} key={d.id} />
 							)
 						})
 					}
@@ -71,7 +82,10 @@ export default function DependenciesSection({ dependencies, hookTask }) {
 
 				: ''
 			}
+
+			<DependencieInfoDialog open={open} setOpen={setOpen} dependencie={dependencie} />
 			
 		</Box>
+
 	);
 }

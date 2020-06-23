@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -12,13 +13,23 @@ import { v1 as uuidv1 }  from 'uuid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
+
+const useStyles = makeStyles(theme => ({
+  textarea: {
+    resize: "both",
+  }
+}));
+
 export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask, alert, hasMacroUnsafe }) {
+
+  const classes = useStyles();
 
   const [unsafe, setUnsafe] = useState((task.unsafe!==null) && (!hasMacroUnsafe()))
   const [unsafeNumber, setUnsafeNumber] = useState(task.unsafe)
   const [delay, setDelay] = useState(task.delay)
   const [visible, setVisible] = useState(task.visible)
   const [name, setName] = useState(task.name)
+  const [description, setDescription] = useState(task.description) 
 
   const handleClose = () => {
     setEdit(false);
@@ -50,12 +61,17 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
     setName(e.target.value);
   }
 
+  const handleDescription = (e) => {
+    setDescription(e.target.value);
+  }
+
   const handleSave = () => { 
 
     let tempTask = Object.assign({}, task);
     tempTask.name = name;
     tempTask.delay = delay;
     tempTask.visible = visible;
+    tempTask.description = description;
     tempTask.unsafe = unsafe ? unsafeNumber : null;
 
     if(name.match(/ |"|'|;|^$/)){
@@ -75,7 +91,7 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
         <DialogTitle id="form-dialog-title">Edit the task</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Write an unique alphanumeric word, without spaces, as a name for the task
+            Give props to your task
           </DialogContentText>
           
           <Grid
@@ -107,7 +123,7 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
                 size="small"
                 onChange={handleDelay}
               />
-            </Grid>  
+            </Grid>    
             
           </Grid>
 
@@ -156,7 +172,19 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
               />
             </Grid>
 
-            
+            <Grid item xs={12}>
+              <TextField
+                id="outlined-textarea"
+                label="Description"
+                placeholder="Talk about your task here"
+                value={description}
+                onChange={handleDescription}
+                multiline
+                inputProps={{ className: classes.textarea }}
+                fullWidth
+              />
+            </Grid>
+
           </Grid>
             
         </DialogContent>

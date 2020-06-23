@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Drawer from '@material-ui/core/Drawer';
+import { makeStyles } from '@material-ui/core/styles';
 
 import ListItem from '@material-ui/core/ListItem';
 import List from '@material-ui/core/List';
@@ -15,7 +16,15 @@ import Grid from '@material-ui/core/Grid';
 
 import TextField from '@material-ui/core/TextField';
 
+const useStyles = makeStyles(theme => ({
+  textarea: {
+    resize: "both",
+  }
+}));
+
 export default function MacroSettings({ openConfig, devName, settings, hookTask }) {
+
+	const classes = useStyles();
 
 	const { setOpenConfig, setMacroState, deployMacro } = hookTask();
 
@@ -75,7 +84,18 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 					<TextField small="small" fullWidth label="Macro name" value={config.name} onChange={(e) => {handleChange("name", e.target.value)}} variant="outlined" />
 				</ListItem>
 				<ListItem>
-					<TextField small="small" fullWidth label="Description" value={config.description} onChange={(e) => {handleChange("description", e.target.value)}} variant="outlined" />
+					<TextField
+						id="outlined-textarea"
+						label="Description"
+						small="small"
+						placeholder="Talk about your task here"
+						value={config.description}
+						onChange={(e) => {handleChange("description", e.target.value)}}
+						multiline
+						variant="outlined"
+						inputProps={{ className: classes.textarea }}
+						fullWidth
+					/>
 				</ListItem>
 				<ListItem>
 					<TextField small="small" fullWidth label="pname" value={config.pname} onChange={(e) => {handleChange("pname", e.target.value)}} variant="outlined" />

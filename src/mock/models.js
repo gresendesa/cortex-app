@@ -1,10 +1,11 @@
-export function taskModel({ name, id=Math.random(), delay=1, unsafe=100, visible=false }){
+export function taskModel({ name, description='', id=Math.random(), delay=1, unsafe=100, visible=false }){
 	return {
 		'name': name, 
 		'id':id,
 		'delay':delay, 
 		'unsafe':unsafe,
 		'visible':visible,
+		'description': description,
 		'triggers': {
 			'opening': [],
 			'main': [],

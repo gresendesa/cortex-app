@@ -81,9 +81,18 @@ class DataContextProvider extends Component {
 	}
 
 	getTask = ({ dev, project, task, success=()=>{}, error=()=>{} }) => {
+		this.setState({'processing': true});
 		if(this.state.token!==null){
 			const server = new Server({ token: this.state.token });
-			server.getTask({ dev, project, task, success, error })
+			const onOk = (response) => {
+				success(response);
+				this.setState({'processing': false});
+			}
+			const onIssue = (response) => {
+				error(response);
+				this.setState({'processing': false});
+			}
+			server.getTask({ dev, project, task, success:onOk, error:onIssue })
 		} else {
 			error("sem token");
 		}
