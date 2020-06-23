@@ -193,7 +193,7 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
             Cancel
           </Button>
           <Button onClick={handleSave} color="primary">
-            Save changes
+            OK
           </Button>
         </DialogActions>
       </Dialog>

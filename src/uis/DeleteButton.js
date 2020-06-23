@@ -20,6 +20,14 @@ export default function DeleteButton({ type='task', callback }) {
 
 	const handleClick = () => {
 		if (tryDel) {
+			callback();
+		} else {
+			activePermanentDel();
+		}
+	}
+
+	const handleClickProject = () => {
+		if (tryDel) {
 			if(window.confirm("A deleted project cannot be restored!")){
 				callback();
 			}
@@ -61,7 +69,7 @@ export default function DeleteButton({ type='task', callback }) {
 			)
 		case 'project':
 			return (
-				<IconButton edge="end" aria-label="delete" onClick={handleClick}>
+				<IconButton edge="end" aria-label="delete" onClick={handleClickProject}>
 				{
 					tryDel ?
 					<DeleteForeverIcon color='error' />
