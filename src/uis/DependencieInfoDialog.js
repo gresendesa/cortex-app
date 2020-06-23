@@ -2,6 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
+import Grid from '@material-ui/core/Grid';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
@@ -32,7 +33,7 @@ const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
-      <Typography variant="h6">{children}</Typography>
+      {children}
       {onClose ? (
         <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
           <CloseIcon />
@@ -55,7 +56,7 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-export default function DependencieInfoDialog({ open, setOpen, dependencie }) {
+export default function DependencieInfoDialog({ open, setOpen, dependencie, task }) {
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -66,12 +67,46 @@ export default function DependencieInfoDialog({ open, setOpen, dependencie }) {
 
   return (
     <div>
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} TransitionComponent={Transition}>
+      <Dialog maxWidth='xs' fullWidth onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} TransitionComponent={Transition}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          {dependencie.taskName}
+            
+          <Grid
+            container
+            direction="row"
+            justify="flex-start"
+            alignItems="center"
+            spacing={1}
+          >
+
+            <Grid item>
+              <Typography variant="h6">{dependencie.taskName} {' '}</Typography>
+            </Grid>
+
+            <Grid item>
+             by {dependencie.dev}
+            </Grid>
+
+          </Grid>
+
+          
         </DialogTitle>
         <DialogContent dividers>
+
+          {
+
+            task.description && task.description.length>0 ?
+
+            <Typography variant="body2">
+              {task.description}
+            </Typography>
+
+            :
+
+            <strong>No description provided</strong>
+
+          }
           
+
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">

@@ -16,20 +16,17 @@ import DeleteTwoToneIcon from '@material-ui/icons/DeleteTwoTone';
 import DependencieInfoDialog from './DependencieInfoDialog';
 
 
-function Dependencie({ dependencie, deleteDependencie, getForeingTask, popUp }){
+function Dependencie({ dependencie, deleteDependencie, getForeingTask, popUp, alert }){
 
 
 	const handleClick = () => {
 
-		console.log("tey")
-
 		const success = (response) => {
-			console.log('ok', response);
-			popUp({ dependencie });
+			popUp({ dependencie, task: response.detail });
 		}
 
 		const error = (response) => {
-			console.log('erro', response);
+			alert(response);
 		}
 
 		getForeingTask({ dev:dependencie.dev, project:dependencie.project, task:dependencie.taskName, success, error })
@@ -52,12 +49,14 @@ function Dependencie({ dependencie, deleteDependencie, getForeingTask, popUp }){
 
 export default function DependenciesSection({ dependencies, hookTask }) {
 
-	const { deleteDependencie, getForeingTask } = hookTask();
+	const { deleteDependencie, getForeingTask, alert } = hookTask();
 	const [open, setOpen] = useState(false);
-	const [dependencie, setDependencie] = useState({});
+	const [dependencieDetails, setDependencieDetails] = useState({});
+	const [taskDetails, setTaskDetails] = useState({})
 
-	const popUp = ({ dependencie }) => {
-		setDependencie(dependencie);
+	const popUp = ({ dependencie, task }) => {
+		setDependencieDetails(dependencie);
+		setTaskDetails(task)
 		setOpen(true);
 	}
 
@@ -73,7 +72,7 @@ export default function DependenciesSection({ dependencies, hookTask }) {
 					{
 						dependencies.map(d => {
 							return (
-								<Dependencie dependencie={d} deleteDependencie={deleteDependencie} getForeingTask={getForeingTask} popUp={popUp} key={d.id} />
+								<Dependencie dependencie={d} deleteDependencie={deleteDependencie} getForeingTask={getForeingTask} popUp={popUp} alert={alert} key={d.id} />
 							)
 						})
 					}
@@ -83,7 +82,7 @@ export default function DependenciesSection({ dependencies, hookTask }) {
 				: ''
 			}
 
-			<DependencieInfoDialog open={open} setOpen={setOpen} dependencie={dependencie} />
+			<DependencieInfoDialog open={open} setOpen={setOpen} dependencie={dependencieDetails} task={taskDetails} />
 			
 		</Box>
 
