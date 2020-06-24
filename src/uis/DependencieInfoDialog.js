@@ -9,6 +9,7 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
+import ReactHtmlParser from 'react-html-parser';
 
 import Slide from '@material-ui/core/Slide';
 
@@ -96,12 +97,10 @@ export default function DependencieInfoDialog({ open, setOpen, dependencie, task
 
             task.description && task.description.length>0 ?
 
-            <Typography style={{'white-space': 'pre-line'}}>
-              {task.description}
+            <Typography style={{'white-space': 'pre-line'}} variant="body2">
+              {ReactHtmlParser(task.description)}
             </Typography>
-
             :
-
             <strong>No description provided</strong>
 
           }
