@@ -96,7 +96,7 @@ export default function DependencieInfoDialog({ open, setOpen, dependencie, task
 
             task.description && task.description.length>0 ?
 
-            <Typography variant="body2">
+            <Typography style={{'white-space': 'pre-line'}}>
               {task.description}
             </Typography>
 
