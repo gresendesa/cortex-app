@@ -27,6 +27,7 @@ import { triggerModel } from '../mock/models'
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/ext-language_tools";
 
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import InboxIcon from '@material-ui/icons/Inbox';
@@ -167,6 +168,22 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
     setEvents(copyEvents);
   }
 
+  var CortexCompleter ={
+      getCompletions: function(editor, session, pos, prefix, callback) {
+          var completions = [
+            {value: '{{ jump(\'taskname\') }}', score: 2, meta: 'Jump to task'},
+            {value: '{{ call(\'taskname\') }}', score: 2, meta: 'Call task'},
+            {value: '{{ return(\'value\') }}', score: 2, meta: 'Return some value'},
+            {value: 'LOG("§5");', score: 1, meta: 'Print things'},
+            {value: 'IF(#var==10);\nELSE;\nENDIF', score: 10, meta: 'If with regex'},
+            {value: 'IFMATCHES(%&subject%,"^regex");\nENDIF;', score: 9, meta: 'If with regex'},
+            {value: 'FOR(#i,0,10);\nNEXT;', score: 2, meta: 'Controled loop'},
+            {value: 'DO(10);\nLOOP;', score: 2, meta: 'Controled loop'},
+          ];
+          callback(null, completions);
+      }
+  }
+
   //<Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
   return (
     <div>
@@ -234,7 +251,14 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
               name="UNIQUE_ID_OF_DIV"
               editorProps={{ $blockScrolling: true }}
               fontSize={20}
+              tabSize={2}
               width="100%"
+              setOptions={{
+                enableBasicAutocompletion: [CortexCompleter],
+                enableLiveAutocompletion: true,
+                enableSnippets: true,
+                animatedScroll: true
+              }}
             />
 
             <Drawer anchor="right" open={openConfig} onClose={onConfigClose} >
