@@ -47,12 +47,18 @@ class Indenter {
 		return <statement> if line close statement otherwise null
 	*/
 	check_closing(line){
-		const result = null;
+		var result = null;
 		if(this.level.length>0){
 			this.statements.forEach(statement => {
-				const current_level = this.level[this.level.length - 1].statement;
-					
-			})
+				var current_level = this.level[this.level.length - 1].statement;
+				const pattern = new RegExp(`^[ \t\n]*(${statement[1]})\\b.*`,'gi');
+				const groups = pattern.exec(line);
+				if (groups !== null){
+					if((current_level.toLowerCase() == statement[0].toLowerCase()) && (groups.length) && (groups[1].toLowerCase() == statement[1].toLowerCase())){
+						result = statement[1];
+					}
+				}
+			});
 		}
 		return result;
 	}
@@ -61,7 +67,18 @@ class Indenter {
 		return <statement> if line open statement otherwise null
 	*/
 	check_opening(line){
-
+		var result = null;
+		this.statements.forEach(statement => {
+			const pattern = new RegExp(`^[ \t\n]*(${statement[0]})\\b.*`,'gi');
+			const groups = pattern.exec(line);
+			//console.log(pattern, line, groups);
+			if (groups !== null){
+				if((groups.length) && (groups[1].toLowerCase() == statement[0].toLowerCase())){
+					result = statement[0];
+				}
+			}
+		});
+		return result;
 	}
 
 
@@ -78,18 +95,18 @@ class Indenter {
 	
 	*/
 	indent(){
-		const indented_lines = []
+		var indented_lines = []
 
 		for (var index = 0; index < this.lines.length; index++) {
 			const line = this.lines[index];
 
-			const checking = this.check_closing(line);
+			var checking = this.check_closing(line);
 			if(checking !== null){
-				this.level.top();
+				this.level.pop();
 				this.indentation -= 1;
 			}
 
-			indented_line = `${' ' * 2 * this.indentation}${line.jstrip()}`;
+			var indented_line = `${'\t'.repeat(this.indentation)}${line.jstrip()}`;
 
 			checking = this.check_opening(line);
 			if(checking !== null){
@@ -102,7 +119,7 @@ class Indenter {
 
 		indented_lines = indented_lines.map(i => {
 			if(i){
-				return `${i};`;
+				return `${i}`;
 			}
 		})
 
@@ -110,5 +127,5 @@ class Indenter {
 
 	}
 
-
 }
+export default Indenter;

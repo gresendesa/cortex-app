@@ -7,6 +7,7 @@ import Macro from './Macro';
 import Projects from './Projects';
 import Login from './components/Login';
 import Footer from './uis/Footer';
+import TemplateForm from './uis/TemplateForm';
 import { DataContext } from './contexts/DataContext';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
@@ -25,6 +26,7 @@ export default function Routes({ context }) {
 						{
 							context.token !== null ?
 							<Switch>
+
 								<Route path="/project/:id" render={(props) => {
 
 									//const macro = context.macros.some
@@ -48,10 +50,14 @@ export default function Routes({ context }) {
 								)} />
 							</Switch>
 							:
-							<Route 
-								render={(props) => (
-									<Login {...props} setToken={context.setToken} /> 
-								)} />
+							<Switch>
+								<Route exact path="/editor" component={TemplateForm} />
+								<Route 
+									render={(props) => (
+										<Login {...props} setToken={context.setToken} /> 
+									)} />
+							</Switch>
+								
 						}
 						
 					</Container>
