@@ -40,8 +40,15 @@ import Drawer from '@material-ui/core/Drawer';
 
 import Event from './Event';
 import DrawerHeader from './DrawerHeader';
+import Indenter from '../Indenter';
+
 
 import { eventModel } from '../mock/models';
+
+import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
+
+import { cortexMacroModCommands } from '../data/CortexMacroModCommands';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -184,6 +191,21 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
       }
   }
 
+  const handleIndent = () => {
+    const lines = action.split('\n');
+    const indenter = new Indenter(lines);
+    const result = indenter.indent();
+    setAction(result);
+  }
+
+
+  var CortexCompleter ={
+      getCompletions: function(editor, session, pos, prefix, callback) {
+          var completions = cortexMacroModCommands;
+          callback(null, completions);
+      }
+  }
+
   //<Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
   return (
     <div>
@@ -224,6 +246,9 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
               <Button color="primary" onClick={handleOpenEvents}>
                 Required Conditions
               </Button>
+              <IconButton edge="start" color="inherit" onClick={handleIndent} aria-label="close">
+                <FormatAlignRightIcon />
+              </IconButton>
             </Grid>
 
             <Grid item>

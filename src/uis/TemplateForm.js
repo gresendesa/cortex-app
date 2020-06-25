@@ -46,7 +46,7 @@ import { eventModel } from '../mock/models';
 import Indenter from '../Indenter';
 import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 
-import { macroModCommands } from '../data/MacroModCommands';
+import { cortexMacroModCommands } from '../data/CortexMacroModCommands';
 
 export default function TemplateForm() {
   
@@ -64,9 +64,31 @@ export default function TemplateForm() {
     setAction(result);
   }
 
+  /*const dataa = https://beta.mkb.gorlem.ml/api/docs/
+
+  const arr = dataa.map(i => {
+    if(i.type=='Variable'){
+      return ({
+        value: i.extendedName,
+        score: 1,
+        meta: i.description !== null ? i.description : ''
+      })
+    } else
+    if(i.type=='Action'){
+      return ({
+        value: `${i.extendedName};`,
+        score: 1,
+        meta: i.description !== null ? i.description : ''
+      })
+    }
+    return false;
+  });
+
+  console.log(arr.filter(i => i !== null));*/
+
   var CortexCompleter ={
       getCompletions: function(editor, session, pos, prefix, callback) {
-          var completions = macroModCommands;
+          var completions = cortexMacroModCommands;
           callback(null, completions);
       }
   }
