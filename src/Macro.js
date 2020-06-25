@@ -193,7 +193,7 @@ class Macro extends React.Component {
 		const error = (response) => {
 			//console.log("erro deploy", response);
 			this.setState({'deployLoading': false}, () => {
-				this.showAlert(`${response}`, "warning");
+				this.showAlert(`${response}`, "error");
 			});
 			callback();
 		}
