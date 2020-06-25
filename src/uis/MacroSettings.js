@@ -150,10 +150,7 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 				<ListItem>
 					<TextField small="small" fullWidth label="CloudScript id" value={config.csid} 
 							   onChange={(e) => {handleChange("csid", e.target.value)}} 
-							   variant="outlined" 
-							   InputProps={{
-								  startAdornment: <InputAdornment position="start">{prefixDevName}</InputAdornment>,
-								}} 
+							   variant="outlined"
 					/>
 				</ListItem>
 			</List>
