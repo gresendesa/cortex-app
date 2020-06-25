@@ -14,6 +14,7 @@ import Container from '@material-ui/core/Container';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
+import logo from '../images/logo512.png';
 
 import Server from '../server';
 
@@ -25,8 +26,7 @@ const useStyles = makeStyles((theme) => ({
 		alignItems: 'center',
 	},
 	avatar: {
-		margin: theme.spacing(1),
-		backgroundColor: theme.palette.secondary.main,
+		margin: theme.spacing(2),
 	},
 	form: {
 		width: '100%', // Fix IE 11 issue.
@@ -67,11 +67,10 @@ export default function SignIn({ setToken, setUsername }) {
 			{processing && <LinearProgress color="secondary" />}
 			<Container component="main" maxWidth="xs">
 				<div className={classes.paper}>
-					<Avatar className={classes.avatar}>
-						<LockOutlinedIcon />
-					</Avatar>
+					<Avatar className={classes.avatar} src={logo} />
+					
 					<Typography component="h1" variant="h5">
-						Log in on Cortex
+						Log in
 					</Typography>
 					<form className={classes.form} noValidate>
 						<TextField

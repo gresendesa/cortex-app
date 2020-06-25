@@ -18,6 +18,9 @@ import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useHistory } from 'react-router-dom';
 import Projects from '../Projects';
+import logo from '../images/logo512.png';
+import Avatar from '@material-ui/core/Avatar';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+  },
+  avatar: {
+    margin: theme.spacing(1),
   },
 }));
 
@@ -74,12 +80,13 @@ export default function ButtonAppBar({ logged, setToken, username }) {
           }
           <Typography variant="h6" className={classes.title}>
             Cortex
-          </Typography>
-
+          </Typography> 
           {
             logged ?
             <div>
+              <Typography variant="caption">
               {username}
+              </Typography>
               <IconButton onClick={logOut} edge="end" color="inherit" aria-label="menu">
                 <ExitToAppIcon />
               </IconButton>
