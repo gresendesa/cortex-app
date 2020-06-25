@@ -19,7 +19,7 @@ export default function Routes({ context }) {
 
 			return(
 				<Router history={history}>
-					<ButtonAppBar logged={context.token !== null} setToken={context.setToken} />
+					<ButtonAppBar logged={context.token !== null} setToken={context.setToken} username={context.username} />
 					<Container maxWidth="sm">
 
 						{context.processing && <LinearProgress color="secondary" />}
@@ -54,7 +54,7 @@ export default function Routes({ context }) {
 								<Route exact path="/editor" component={TemplateForm} />
 								<Route 
 									render={(props) => (
-										<Login {...props} setToken={context.setToken} /> 
+										<Login {...props} setToken={context.setToken} setUsername={context.setUsername} /> 
 									)} />
 							</Switch>
 								

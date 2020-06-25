@@ -8,6 +8,7 @@ class DataContextProvider extends Component {
 	state = {
 		'macros': [],
 		'token': null,
+		'username': null,
 		'processing': false
 	}
 
@@ -20,6 +21,16 @@ class DataContextProvider extends Component {
 			localStorage.setItem('cortex-token', token);
 			this.setState({'token': token}, () => this.fetchMacros({}));
 		}	
+	}
+
+	setUsername = (username) => {
+		if ((username == 'null') || (username == null)){
+			localStorage.removeItem('cortex-username');
+			this.setState({'username': null});
+		} else {
+			localStorage.setItem('cortex-username', username);
+			this.setState({'username': username});
+		}
 	}
 
 	fetchMacros = ({ success=()=>{}, error=()=>{} }) => {
@@ -101,7 +112,9 @@ class DataContextProvider extends Component {
 	componentWillMount(){
 
 		const token = localStorage.getItem('cortex-token');
-		this.setToken(token);		
+		this.setToken(token);
+		const username = localStorage.getItem('cortex-username');
+		this.setUsername(username);	
 
 	}
 
@@ -110,7 +123,8 @@ class DataContextProvider extends Component {
 		return (
 			<DataContext.Provider value={{
 											...this.state, 
-											setToken: this.setToken, 
+											setToken: this.setToken,
+											setUsername: this.setUsername,
 											fetchMacros: this.fetchMacros,
 											addMacro: this.addMacro,
 											delMacro: this.delMacro,

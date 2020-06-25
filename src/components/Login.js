@@ -37,20 +37,20 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function SignIn({ setToken }) {
+export default function SignIn({ setToken, setUsername }) {
 	const classes = useStyles();
 
-	const [username, setUsername] = useState('');
+	const [uname, setUname] = useState('');
 	const [passw, setPassw] = useState('');
 	const [processing, setProcessing] = useState(false);
 	const [showMessage, setShowMessage] = useState(false);
 
 	const onSubmit = (e) => {
-		console.log(username, passw);
 		let server = new Server({});
 		setProcessing(true);
 		const success = (response) => {
 			setToken(response.token);
+			setUsername(response.username);
 			setProcessing(false);
 		}
 		const error = (response) => {
@@ -58,7 +58,7 @@ export default function SignIn({ setToken }) {
 			setProcessing(false);
 			setShowMessage(true);
 		}
-		server.auth({ username, password:passw, success, error });
+		server.auth({ username:uname, password:passw, success, error });
 		setPassw('');
 	}
 
@@ -83,8 +83,8 @@ export default function SignIn({ setToken }) {
 							label="CloudScript username"
 							name="email"
 							autoComplete="email"
-							value={username}
-							onChange={(e) => {setUsername(e.target.value)}}
+							value={uname}
+							onChange={(e) => {setUname(e.target.value)}}
 							autoFocus
 						/>
 						<TextField

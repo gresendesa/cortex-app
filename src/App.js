@@ -9,8 +9,8 @@ class App extends React.Component {
 	render(){
 
 		const theme = createMuiTheme({
-				typography: {
-				fontSize: 20,
+			typography: {
+				fontSize: 21,
 			},
 		});
 

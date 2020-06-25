@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ButtonAppBar({ logged, setToken }) {
+export default function ButtonAppBar({ logged, setToken, username }) {
   const classes = useStyles();
 
   var [cor, setCor] = useState("primary");
@@ -78,7 +78,12 @@ export default function ButtonAppBar({ logged, setToken }) {
 
           {
             logged ?
-            <Button color="inherit" onClick={logOut}>Logout</Button>
+            <div>
+              {username}
+              <IconButton onClick={logOut} edge="end" color="inherit" aria-label="menu">
+                <ExitToAppIcon />
+              </IconButton>
+            </div>
             : ''
           }
         </Toolbar>
