@@ -270,7 +270,7 @@ class Macro extends React.Component {
 
 				<DependenciesSection dependencies={this.state.dependencies} hookTask={this.hookTask} />
 
-				<Snackbar open={popUpAlert} autoHideDuration={2000} onClose={togglePopUpAlert} >
+				<Snackbar open={popUpAlert} autoHideDuration={4000} onClose={togglePopUpAlert} >
 					<MuiAlert elevation={6} variant="filled" severity={this.state.alertSeverity}>
 						{this.state.alertMessage}
 					</MuiAlert>
