@@ -41,6 +41,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Event from './Event';
 import DrawerHeader from './DrawerHeader';
 import Indenter from '../Indenter';
+import EventIcon from '@material-ui/icons/Event';
 
 
 import { eventModel } from '../mock/models';
@@ -59,6 +60,9 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(2),
     flex: 1,
     overflow: 'hidden',
+  },
+  actionButton: {
+    marginLeft: theme.spacing(0.05),
   },
   editor: {
     backgroundColor: 'green',
@@ -243,10 +247,10 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
             sm={12}> 
             
             <Grid item>
-              <Button color="primary" onClick={handleOpenEvents}>
-                Required Conditions
-              </Button>
-              <IconButton edge="start" color="inherit" onClick={handleIndent} aria-label="close">
+              <IconButton edge="start" color="inherit" onClick={handleOpenEvents} className={classes.actionButton} aria-label="close">
+                <EventIcon />
+              </IconButton>
+              <IconButton edge="start" color="inherit" onClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
               </IconButton>
             </Grid>
