@@ -15,6 +15,8 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import MacroSettings from './uis/MacroSettings';
 import { Icon } from 'semantic-ui-react';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import CodeIcon from '@material-ui/icons/Code';
+import BuildPanel from './uis/BuildPanel';
 
 class Macro extends React.Component {
 
@@ -26,13 +28,14 @@ class Macro extends React.Component {
 		'openConfig': false,
 		'devName': 'Federal',
 		'deployLoading': false,
+		'openBuild': false,
+		'build': ''
 	}
 
 	componentWillMount(){
 		//console.log("vou montar bitch", this.props);
 		this.setState({ 'project': this.props.project, ...this.props.project.macro });
 	}
-
 
 	//{this.props.match.params.id}
 
@@ -202,6 +205,30 @@ class Macro extends React.Component {
 		this.props.saveMacro({ id, macro, launch, success, error });
 	}
 
+	setOpenBuild = (value) => {
+		this.setState({openBuild: value});
+	} 
+
+	getBuidCode = (id) => {
+
+		const success = (response) => {
+			console.log(response);
+			this.setState({'deployLoading': false}, () => {
+				this.setState({'build': response.build}, () => {
+					this.setState({'openBuild': true});
+				})
+			});
+		}
+		const error = (response) => {
+			this.setState({'deployLoading': false}, () => {
+				this.showAlert(`${response}`, "warning");
+			});
+		}
+
+		this.setState({'deployLoading': true});
+		this.props.getBuild({ id, success, error });
+	}
+
 	render(){
 
 		var { open, toggleCreateDialog, togglePopUpAlert, toggleEditDialog, pushTask, hasTask, deleteTask, popUpAlert} = this.hookTask();
@@ -241,6 +268,10 @@ class Macro extends React.Component {
 									<SaveIcon fontSize="small" />
 								</IconButton>
 
+								<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.getBuidCode(this.props.project.id)}}>
+									<CodeIcon name='rocket' size='small' />
+								</IconButton>
+
 								<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.deployMacro({ launch:true })}}>
 									<Icon name='rocket' size='small' />
 								</IconButton>
@@ -275,6 +306,8 @@ class Macro extends React.Component {
 						{this.state.alertMessage}
 					</MuiAlert>
 				</Snackbar>
+
+				<BuildPanel open={this.state.openBuild} setOpen={this.setOpenBuild} code={this.state.build} projectName={this.state.name} />
 
 				<MacroSettings openConfig={this.state.openConfig} settings={settings} hookTask={this.hookTask} devName={this.state.devName} />
 

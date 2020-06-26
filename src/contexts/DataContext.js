@@ -109,6 +109,24 @@ class DataContextProvider extends Component {
 		}
 	}
 
+	getBuild = ({ id, success=()=>{}, error=()=>{} }) => {
+		this.setState({'processing': true});
+		if(this.state.token!==null){
+			const server = new Server({ token: this.state.token });
+			const onOk = (response) => {
+				success(response);
+				this.setState({'processing': false});
+			}
+			const onIssue = (response) => {
+				error(response);
+				this.setState({'processing': false});
+			}
+			server.getBuild({ id, success: onOk, error: onIssue })
+		} else {
+			error("sem token");
+		}
+	}
+
 	componentWillMount(){
 
 		const token = localStorage.getItem('cortex-token');
@@ -130,7 +148,8 @@ class DataContextProvider extends Component {
 											delMacro: this.delMacro,
 											saveMacro: this.saveMacro,
 											getTask: this.getTask,
-											processing: this.state.processing
+											processing: this.state.processing,
+											getBuild: this.getBuild
 
 										}}>
 				{this.props.children}

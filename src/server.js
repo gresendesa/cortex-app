@@ -104,6 +104,21 @@ class Server {
 		})
 	}
 
+	getBuild({ id, success, error }) {
+
+		const conn = this.getConnection();
+
+		conn.get(`/project/build/get/${id}`).then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			try {
+				error(e.response.data.detail);
+			} catch {
+				error(e.message);
+			}
+		})
+	}
+
 }
 
 export default Server;
