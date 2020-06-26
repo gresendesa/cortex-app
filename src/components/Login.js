@@ -27,6 +27,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	avatar: {
 		margin: theme.spacing(2),
+		width: theme.spacing(7),
+	    height: theme.spacing(7),
 	},
 	form: {
 		width: '100%', // Fix IE 11 issue.
@@ -37,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
+
 export default function SignIn({ setToken, setUsername }) {
 	const classes = useStyles();
 
@@ -45,7 +48,7 @@ export default function SignIn({ setToken, setUsername }) {
 	const [processing, setProcessing] = useState(false);
 	const [showMessage, setShowMessage] = useState(false);
 
-	const onSubmit = (e) => {
+	const onSubmit = () => {
 		let server = new Server({});
 		setProcessing(true);
 		const success = (response) => {
@@ -54,12 +57,17 @@ export default function SignIn({ setToken, setUsername }) {
 			setProcessing(false);
 		}
 		const error = (response) => {
-			console.log("fey", response);
 			setProcessing(false);
 			setShowMessage(true);
 		}
 		server.auth({ username:uname, password:passw, success, error });
 		setPassw('');
+	}
+
+	const handleKeyPressed = (e) => {
+		if(e.key=='Enter'){
+			onSubmit();
+		}
 	}
 
 	return (
@@ -85,6 +93,7 @@ export default function SignIn({ setToken, setUsername }) {
 							value={uname}
 							onChange={(e) => {setUname(e.target.value)}}
 							autoFocus
+							onKeyPress={handleKeyPressed}
 						/>
 						<TextField
 							variant="outlined"
@@ -98,6 +107,7 @@ export default function SignIn({ setToken, setUsername }) {
 							value={passw}
 							onChange={(e) => {setPassw(e.target.value)}}
 							autoComplete="current-password"
+							onKeyPress={handleKeyPressed}
 						/>
 						<Button
 							fullWidth
