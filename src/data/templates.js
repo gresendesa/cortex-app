@@ -11,7 +11,7 @@ export const alltemplates = [
           code: "code"
         },
         {
-          name: "template1",
+          name: "template2",
           description: "description..",
           code: "code"
         }
@@ -25,12 +25,12 @@ export const alltemplates = [
       description: "descriptions ...",
       templates: [
         {
-          name: "template1",
+          name: "template3",
           description: "description..",
           code: "code"
         },
         {
-          name: "template1",
+          name: "template4",
           description: "description..",
           code: "code"
         }
@@ -44,12 +44,12 @@ export const alltemplates = [
       description: "descriptions ...",
       templates: [
         {
-          name: "template1",
+          name: "template5",
           description: "description..",
           code: "code"
         },
         {
-          name: "template1",
+          name: "template6",
           description: "description..",
           code: "code"
         }

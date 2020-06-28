@@ -7,9 +7,17 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { taskModel, macroModel } from '../mock/models';
+import { makeStyles } from '@material-ui/core/styles';
 
-export default function NamespaceCreateDialog({ open, setOpen, createProject }) {
+const useStyles = makeStyles(theme => ({
+  textarea: {
+    resize: "both",
+  }
+}));
 
+export default function NamespaceCreateDialog({ open, setOpen, createNamespace }) {
+
+  const classes = useStyles();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
@@ -42,7 +50,7 @@ export default function NamespaceCreateDialog({ open, setOpen, createProject }) 
                                 dependencies: [], 
                                 tasks: []
                               });
-    createProject(model);
+    createNamespace(model);
     handleClose();
   }
 
@@ -58,7 +66,7 @@ export default function NamespaceCreateDialog({ open, setOpen, createProject }) 
             autoFocus
             margin="dense"
             id="name"
-            label="Project name"
+            label="Namespace"
             type="text"
             value={name}
             onChange={(e) => {setName(e.target.value)}}
@@ -74,6 +82,9 @@ export default function NamespaceCreateDialog({ open, setOpen, createProject }) 
             onChange={(e) => {setDescription(e.target.value)}}
             fullWidth
             draggable
+            multiline
+            inputProps={{ className: classes.textarea }}
+            fullWidth
           />
         </DialogContent>
         <DialogActions>
@@ -81,7 +92,7 @@ export default function NamespaceCreateDialog({ open, setOpen, createProject }) 
             Cancel
           </Button>
           <Button onClick={handleSave} color="primary">
-            Create project
+            Create
           </Button>
         </DialogActions>
       </Dialog>

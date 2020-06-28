@@ -4,12 +4,28 @@ import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { Box } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
 import { alltemplates } from '../data/templates';
 import NamespaceCreateDialog from './NamespaceCreateDialog';
+import { namespaceModel, templateModel } from '../mock/models';
+import { deepOrange, green, blueGrey } from '@material-ui/core/colors';
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+
+import Avatar from '@material-ui/core/Avatar';
+import FolderIcon from '@material-ui/icons/Folder';
+import DeleteIcon from '@material-ui/icons/Delete';
+import CodeIcon from '@material-ui/icons/Code';
+import SaveIcon from '@material-ui/icons/Save';
 
 const ExpansionPanel = withStyles({
   root: {
@@ -46,14 +62,76 @@ const ExpansionPanelSummary = withStyles({
   expanded: {},
 })(MuiExpansionPanelSummary);
 
+const TemplateList = withStyles((theme) => {
+  return {
+      root: {
+        width: '100%',
+        backgroundColor: theme.palette.background.paper,
+    }
+  }
+})(List);
+
+const useStyles = makeStyles((theme) => ({
+  avatarTemplate: {
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+    color: theme.palette.getContrastText(green[500]),
+    backgroundColor: green[500],
+  },
+
+  avatarNewTemplate: {
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+    color: theme.palette.getContrastText(deepOrange[500]),
+    backgroundColor: deepOrange[500],
+  },
+
+  avatarNamespace: {
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+    color: theme.palette.getContrastText(blueGrey[500]),
+    backgroundColor: blueGrey[500],
+  },
+
+}));
+
 const ExpansionPanelDetails = withStyles((theme) => ({
   root: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
   },
 }))(MuiExpansionPanelDetails);
 
-const TemplatePanel = ({ index, template, expanded, setExpanded, handleChange }) => {
-  
+const TemplateItem = ({ template }) => {
+
+  const classes = useStyles();
+
+  return (
+
+    <ListItem button>
+      <ListItemAvatar>
+        <Avatar className={classes.avatarTemplate}>
+          <CodeIcon  />
+        </Avatar>
+      </ListItemAvatar>
+      <ListItemText
+        primary={template.name}
+        
+      />
+      <ListItemSecondaryAction>
+        <IconButton edge="end" aria-label="delete">
+          <DeleteIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
+
+  )
+
+}
+
+
+const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange }) => {
+
+  const classes = useStyles();
   const toggleExpanded = () => {
     if ((expanded!==index) || (expanded==null)) {
       setExpanded(index);
@@ -66,14 +144,58 @@ const TemplatePanel = ({ index, template, expanded, setExpanded, handleChange })
 
     <ExpansionPanel square expanded={expanded == index}>
       <ExpansionPanelSummary aria-controls="panel1d-content" id="panel1d-header" onClick={toggleExpanded}>
-        <Typography>{template.name}</Typography>
+        
+        <Grid
+          container
+          direction="row"
+          justify="flex-start"
+          alignItems="center"
+          spacing={1}
+        >
+
+          <Grid item>
+            <Avatar variant="rounded" className={classes.avatarNamespace}>
+              <FolderIcon />
+            </Avatar>
+          </Grid>
+
+          <Grid item>
+            <Typography>{namespace.name}</Typography>
+          </Grid>
+
+        </Grid>
+            
+        
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
-        <Typography>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-          sit amet blandit leo lobortis eget. Lorem ipsum dolor sit amet, consectetur adipiscing
-          elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </Typography>
+        <TemplateList>
+
+          { 
+
+            namespace.templates.map((template, index) => {
+              return (
+
+                <TemplateItem template={template} />
+
+              )
+            })
+
+          }
+
+          <ListItem button>
+            <ListItemAvatar>
+              <Avatar className={classes.avatarNewTemplate}>
+                <AddIcon  />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary="Add new template"
+              
+            />
+          </ListItem>
+
+        </TemplateList>
+
       </ExpansionPanelDetails>
     </ExpansionPanel>
 
@@ -81,6 +203,7 @@ const TemplatePanel = ({ index, template, expanded, setExpanded, handleChange })
 }
 
 export default function TemplateSection() {
+
   const [expanded, setExpanded] = useState(null);
   const [open, setOpen] = useState(false);
 
@@ -88,6 +211,14 @@ export default function TemplateSection() {
     setExpanded(newExpanded ? panel : false);
     console.log(panel)
   };
+
+  const handleClick = () => {
+    setOpen(true);
+  }
+
+  const createNamespace = () => {
+    setOpen(false);
+  }
 
   useEffect(() => {
     console.log(expanded);
@@ -103,7 +234,7 @@ export default function TemplateSection() {
           
           <Grid item>
             <Box component="span" m={1}>
-              <Typography variant="h5" color="primary">
+              <Typography variant="h5" color="secondary">
                 My Templates
               </Typography>
             </Box>
@@ -112,8 +243,11 @@ export default function TemplateSection() {
           <Grid item>
             <Box component="span" m={1}>
               <Typography>
-                <IconButton onClick={() => {}} aria-label="add namespace" >
-                  <AddIcon fontSize="large" />
+                <IconButton aria-label="save templates" >
+                  <SaveIcon />
+                </IconButton>
+                <IconButton onClick={handleClick} aria-label="add namespace" >
+                  <AddIcon  />
                 </IconButton>
               </Typography>
             </Box>
@@ -123,12 +257,12 @@ export default function TemplateSection() {
         </Grid>
 
       {
-        alltemplates.map((template, index) => {
+        alltemplates.map((namespace, index) => {
           return (
             <TemplatePanel 
               key={index} 
               index={index} 
-              template={template} 
+              namespace={namespace} 
               expanded={expanded} 
               setExpanded={setExpanded} 
               handleChange={handleChange} 
@@ -136,7 +270,7 @@ export default function TemplateSection() {
           )
         })
       }
-      <NamespaceCreateDialog open={open} setOpen={setOpen} />
+      <NamespaceCreateDialog open={open} setOpen={setOpen} createNamespace={createNamespace} />
     </div>
   );
 }

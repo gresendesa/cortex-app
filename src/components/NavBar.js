@@ -20,7 +20,7 @@ import { useHistory } from 'react-router-dom';
 import Projects from '../Projects';
 import logo from '../images/logo512.png';
 import Avatar from '@material-ui/core/Avatar';
-
+import FilterFramesIcon from '@material-ui/icons/FilterFrames';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -104,6 +104,12 @@ export default function ButtonAppBar({ logged, setToken, username }) {
               <SportsEsportsIcon />
             </ListItemIcon>
             <ListItemText primary="My Projects" />
+          </ListItem>
+          <ListItem button onClick={() => {handleRedirect("/templates")}}>
+            <ListItemIcon>
+              <FilterFramesIcon size="small" />
+            </ListItemIcon>
+            <ListItemText primary="My Templates" />
           </ListItem>
           <ListItem button onClick={logOut}>
             <ListItemIcon>
