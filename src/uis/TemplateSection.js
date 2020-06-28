@@ -9,8 +9,9 @@ import Grid from '@material-ui/core/Grid';
 import { Box } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
-import { alltemplates } from '../data/templates';
+
 import NamespaceCreateDialog from './NamespaceCreateDialog';
+import TemplateEditor from './TemplateEditor';
 import { namespaceModel, templateModel } from '../mock/models';
 import { deepOrange, green, blueGrey } from '@material-ui/core/colors';
 
@@ -101,13 +102,18 @@ const ExpansionPanelDetails = withStyles((theme) => ({
   },
 }))(MuiExpansionPanelDetails);
 
-const TemplateItem = ({ template }) => {
+const TemplateItem = ({ template, namespace }) => {
 
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  }
 
   return (
 
-    <ListItem button>
+    <ListItem button onClick={handleClick} >
       <ListItemAvatar>
         <Avatar className={classes.avatarTemplate}>
           <CodeIcon  />
@@ -122,14 +128,15 @@ const TemplateItem = ({ template }) => {
           <DeleteIcon />
         </IconButton>
       </ListItemSecondaryAction>
+      <TemplateEditor open={open} setOpen={setOpen} template={template} namespace={namespace} />
     </ListItem>
 
   )
 
 }
 
-
 const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange }) => {
+
 
   const classes = useStyles();
   const toggleExpanded = () => {
@@ -174,9 +181,7 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange }
 
             namespace.templates.map((template, index) => {
               return (
-
-                <TemplateItem template={template} />
-
+                <TemplateItem key={index} namespace={namespace} template={template} />
               )
             })
 
@@ -202,14 +207,13 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange }
   )
 }
 
-export default function TemplateSection() {
+export default function TemplateSection({ namespaces }) {
 
   const [expanded, setExpanded] = useState(null);
   const [open, setOpen] = useState(false);
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
-    console.log(panel)
   };
 
   const handleClick = () => {
@@ -218,6 +222,10 @@ export default function TemplateSection() {
 
   const createNamespace = () => {
     setOpen(false);
+  }
+
+  const saveTemplate = (namespace, template) => {
+
   }
 
   useEffect(() => {
@@ -257,7 +265,10 @@ export default function TemplateSection() {
         </Grid>
 
       {
-        alltemplates.map((namespace, index) => {
+        namespaces.map((namespace, index) => {
+
+
+
           return (
             <TemplatePanel 
               key={index} 
@@ -265,7 +276,7 @@ export default function TemplateSection() {
               namespace={namespace} 
               expanded={expanded} 
               setExpanded={setExpanded} 
-              handleChange={handleChange} 
+              handleChange={handleChange}
             />
           )
         })

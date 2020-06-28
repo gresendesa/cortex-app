@@ -1,16 +1,18 @@
 import React, { Fragment } from 'react';
 import TemplateSection from './uis/TemplateSection';
+import { alltemplates } from './data/templates';
 
 class Projects extends React.Component {
 
-	
-
+	state = {
+		namespaces: alltemplates,
+	}
 
 	render(){
 
 		return (
 				
-			<TemplateSection />
+			<TemplateSection namespaces={this.state.namespaces} />
 
 		);
 
