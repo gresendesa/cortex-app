@@ -5,6 +5,7 @@ import ButtonAppBar from './components/NavBar';
 import { Container } from '@material-ui/core';
 import Macro from './Macro';
 import Projects from './Projects';
+import Templates from './Templates';
 import Login from './components/Login';
 import Footer from './uis/Footer';
 import TemplateForm from './uis/TemplateForm';
@@ -40,6 +41,8 @@ export default function Routes({ context }) {
 
 									}}
 								/>
+
+								<Route exact path="/templates" component={Templates} />
 								<Route render={(props) => (
 									<Projects {...props} 
 										fetchMacros={context.fetchMacros} 

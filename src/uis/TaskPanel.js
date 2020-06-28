@@ -18,6 +18,23 @@ import DeleteButtonTask from './DeleteButton';
 import TaskEditDialog from './TaskEditDialog';
 import usePrevious from './utils'
 
+/*
+
+  overflow: 'hidden',
+	textOverflow: 'ellipsis',
+	whiteSpace: 'nowrap',
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
+  },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    flexBasis: '33.33%',
+    flexShrink: 0,
+  },
+}));*/
+
 export default function TasksPanel({ task, hookTask, indice }) {
 
 	const { deleteTask, editTask, hasTask, alert, focus, setFocus, getFocus, moveTaskUp, hasMacroUnsafe } = hookTask();
@@ -59,7 +76,7 @@ export default function TasksPanel({ task, hookTask, indice }) {
 					expandIcon={<ExpandMoreIcon />}
 					aria-controls="panel1a-content"
 					id="panel1a-header">
-					<Typography >
+					<Typography>
 						<strong>{task.name}</strong>
 					</Typography>
 				</ExpansionPanelSummary>

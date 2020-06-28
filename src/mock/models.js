@@ -43,6 +43,23 @@ export function dependencieModel({ dev, project, taskName, id=Math.random() }){
 	}
 }
 
+export function namespaceModel({ name, description, id=Math.random() }){
+	return {
+		id,
+		name,
+		description
+	}
+}
+
+export function templateModel({ name, description, code, id=Math.random() }){
+	return {
+		id,
+		name,
+		description,
+		code
+	}
+}
+
 export function macroModel({ name, description, debug=false, production=true, csid, pname, entrypoint, endpoint='', unsafe=null, dependencies=[], tasks }){
 	return {
 		'name': name,
