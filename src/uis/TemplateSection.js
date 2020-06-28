@@ -112,25 +112,25 @@ const TemplateItem = ({ template, namespace }) => {
   }
 
   return (
-
-    <ListItem button onClick={handleClick} >
-      <ListItemAvatar>
-        <Avatar className={classes.avatarTemplate}>
-          <CodeIcon  />
-        </Avatar>
-      </ListItemAvatar>
-      <ListItemText
-        primary={template.name}
-        
-      />
-      <ListItemSecondaryAction>
-        <IconButton edge="end" aria-label="delete">
-          <DeleteIcon />
-        </IconButton>
-      </ListItemSecondaryAction>
+    <div>
+      <ListItem button onClick={handleClick} >
+        <ListItemAvatar>
+          <Avatar className={classes.avatarTemplate}>
+            <CodeIcon  />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={template.name}
+          
+        />
+        <ListItemSecondaryAction>
+          <IconButton edge="end" aria-label="delete">
+            <DeleteIcon />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
       <TemplateEditor open={open} setOpen={setOpen} template={template} namespace={namespace} />
-    </ListItem>
-
+    </div>
   )
 
 }
@@ -176,7 +176,6 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange }
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <TemplateList>
-
           { 
 
             namespace.templates.map((template, index) => {
@@ -207,7 +206,7 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange }
   )
 }
 
-export default function TemplateSection({ namespaces }) {
+export default function TemplateSection({ namespaces, setNamespaces }) {
 
   const [expanded, setExpanded] = useState(null);
   const [open, setOpen] = useState(false);
@@ -220,7 +219,11 @@ export default function TemplateSection({ namespaces }) {
     setOpen(true);
   }
 
-  const createNamespace = () => {
+  const createNamespace = ({ name, description }) => {
+    const copyNamespaces = Object.assign([], namespaces);
+    copyNamespaces.push(namespaceModel({ name, description }));
+    console.log(copyNamespaces);
+    setNamespaces(copyNamespaces);
     setOpen(false);
   }
 
@@ -266,9 +269,6 @@ export default function TemplateSection({ namespaces }) {
 
       {
         namespaces.map((namespace, index) => {
-
-
-
           return (
             <TemplatePanel 
               key={index} 

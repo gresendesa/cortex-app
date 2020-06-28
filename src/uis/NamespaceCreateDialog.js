@@ -29,28 +29,7 @@ export default function NamespaceCreateDialog({ open, setOpen, createNamespace }
   };
 
   const handleSave = (e) => {
-
-    const success = () => {
-
-    }
-
-    const error = () => {
-      
-    }
-
-    const model = macroModel({ 
-                                name, 
-                                description, 
-                                debug: false, 
-                                production: true, 
-                                pname:name.replace(' ','').toLowerCase(), 
-                                entrypoint: 'main', 
-                                unsafe: null,
-                                csid: name.replace(' ','').toLowerCase() + String(Math.random()).replace('.',''), 
-                                dependencies: [], 
-                                tasks: []
-                              });
-    createNamespace(model);
+    createNamespace({ name, description });
     handleClose();
   }
 
@@ -71,7 +50,6 @@ export default function NamespaceCreateDialog({ open, setOpen, createNamespace }
             value={name}
             onChange={(e) => {setName(e.target.value)}}
             fullWidth
-            draggable
           />
           <TextField
             margin="dense"
@@ -81,10 +59,8 @@ export default function NamespaceCreateDialog({ open, setOpen, createNamespace }
             value={description}
             onChange={(e) => {setDescription(e.target.value)}}
             fullWidth
-            draggable
             multiline
             inputProps={{ className: classes.textarea }}
-            fullWidth
           />
         </DialogContent>
         <DialogActions>

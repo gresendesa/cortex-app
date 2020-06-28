@@ -43,11 +43,12 @@ export function dependencieModel({ dev, project, taskName, id=Math.random() }){
 	}
 }
 
-export function namespaceModel({ name, description, id=Math.random() }){
+export function namespaceModel({ name, description, id=Math.random(), templates=[] }){
 	return {
 		id,
 		name,
-		description
+		description,
+		templates
 	}
 }
 

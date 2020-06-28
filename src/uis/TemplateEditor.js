@@ -43,14 +43,11 @@ import DrawerHeader from './DrawerHeader';
 import Indenter from '../Indenter';
 import EventIcon from '@material-ui/icons/Event';
 
-
 import { eventModel } from '../mock/models';
 
 import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 
 import { cortexMacroModCommands } from '../data/CortexMacroModCommands';
-
-
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
