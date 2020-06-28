@@ -36,6 +36,7 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 		'description': settings.description,
 		'pname': settings.pname,
 		'entrypoint': settings.entrypoint,
+		'endpoint': settings.endpoint,
 		'csid': settings.csid,
 		'unsafe': settings.unsafe,
 		'debug': settings.debug,
@@ -143,6 +144,9 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 			<List aria-label="main mailbox folders">
 				<ListItem>
 					<TextField small="small" fullWidth label="Task entrypoint" value={config.entrypoint} onChange={(e) => {handleChange("entrypoint", e.target.value)}} variant="outlined" />
+				</ListItem>
+				<ListItem>
+					<TextField small="small" fullWidth label="Task endpoint" value={config.endpoint} onChange={(e) => {handleChange("endpoint", e.target.value)}} variant="outlined" />
 				</ListItem>
 			</List>
 			<Divider />

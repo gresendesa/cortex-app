@@ -9,7 +9,8 @@ class DataContextProvider extends Component {
 		'macros': [],
 		'token': null,
 		'username': null,
-		'processing': false
+		'processing': false,
+		'isUserSuper': false
 	}
 
 	setToken = (token) => {
@@ -30,6 +31,16 @@ class DataContextProvider extends Component {
 		} else {
 			localStorage.setItem('cortex-username', username);
 			this.setState({'username': username});
+		}
+	}
+
+	setIsUserSuper = (isSuper) => {
+		if ((isSuper == 'null') || (isSuper == null)){
+			localStorage.removeItem('cortex-is-user-super');
+			this.setState({'isUserSuper': null});
+		} else {
+			localStorage.setItem('cortex-is-user-super', isSuper);
+			this.setState({'isUserSuper': isSuper});
 		}
 	}
 
@@ -133,6 +144,8 @@ class DataContextProvider extends Component {
 		this.setToken(token);
 		const username = localStorage.getItem('cortex-username');
 		this.setUsername(username);	
+		const isSuper = localStorage.getItem('cortex-super');
+		this.setIsUserSuper(isSuper);	
 
 	}
 
@@ -143,6 +156,7 @@ class DataContextProvider extends Component {
 											...this.state, 
 											setToken: this.setToken,
 											setUsername: this.setUsername,
+											isUserSuper: this.isUserSuper,
 											fetchMacros: this.fetchMacros,
 											addMacro: this.addMacro,
 											delMacro: this.delMacro,

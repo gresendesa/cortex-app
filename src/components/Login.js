@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function SignIn({ setToken, setUsername }) {
+export default function SignIn({ setToken, setUsername, setIsUserSuper }) {
 	const classes = useStyles();
 
 	const [uname, setUname] = useState('');
@@ -54,6 +54,7 @@ export default function SignIn({ setToken, setUsername }) {
 		const success = (response) => {
 			setToken(response.token);
 			setUsername(response.username);
+			setIsUserSuper(response.super);
 			setProcessing(false);
 		}
 		const error = (response) => {

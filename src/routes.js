@@ -34,7 +34,7 @@ export default function Routes({ context }) {
 							
 									return (
 										project ?
-										<Macro {...props} project={project} saveMacro={context.saveMacro} getTask={context.getTask} getBuild={context.getBuild} />
+										<Macro {...props} project={project} saveMacro={context.saveMacro} getTask={context.getTask} getBuild={context.getBuild} isUserSuper={context.isUserSuper} />
 										:''
 									)
 
