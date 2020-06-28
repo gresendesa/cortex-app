@@ -238,6 +238,7 @@ class Macro extends React.Component {
 			'description': this.state.description,
 			'pname': this.state.pname,
 			'entrypoint': this.state.entrypoint,
+			'endpoint': this.state.endpoint,
 			'csid': this.state.csid,
 			'unsafe': this.state.unsafe,
 			'debug': this.state.debug,
