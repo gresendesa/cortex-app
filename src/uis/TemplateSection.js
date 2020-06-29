@@ -226,7 +226,7 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
-                  primary="Add new template"
+                  primary="New template"
                   
                 />
               </ListItem>

@@ -36,6 +36,8 @@ const useStyles = makeStyles((theme) => ({
   orange: {
     color: theme.palette.getContrastText(deepOrange[500]),
     backgroundColor: deepOrange[500],
+    width: theme.spacing(4),
+    height: theme.spacing(4),
   },
 
 }));
@@ -145,7 +147,7 @@ export default function TriggerList({ task, group, hookTask }) {
                 <AddIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="Create" secondary="new action" />
+            <ListItemText primary="New action" />
           </ListItem>
           <TriggerCreateDialog open={open} setOpen={setOpen} group={group} hookTrigger={hookTrigger} alert={alert} />
         </List>

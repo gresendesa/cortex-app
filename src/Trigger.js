@@ -13,6 +13,36 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import BlockIcon from '@material-ui/icons/Block';
 import CheckIcon from '@material-ui/icons/Check';
 import DeleteButton from './uis/DeleteButton';
+import { deepOrange, green, blueGrey, gray } from '@material-ui/core/colors';
+import { makeStyles } from '@material-ui/core/styles';
+
+function TriggerAvatar({ active }) {
+	const useStyles = makeStyles((theme) => ({
+	  avatar: {
+	    width: theme.spacing(4),
+	    height: theme.spacing(4),
+	    color: theme.palette.getContrastText(blueGrey[500]),
+	    backgroundColor: blueGrey[500],
+	  },
+	   avatarInactive: {
+	    width: theme.spacing(4),
+	    height: theme.spacing(4),
+	  },
+	}));
+
+	const classes = useStyles();
+
+	return (
+		<ListItemAvatar>
+			{active && <Avatar className={classes.avatar}>
+				<CodeIcon />
+			</Avatar>}
+			{!active && <Avatar className={classes.avatarInactive}>
+				<CodeIcon />
+			</Avatar>}
+		</ListItemAvatar>
+	)
+}
 
 class Trigger extends React.Component {
 
@@ -88,11 +118,7 @@ class Trigger extends React.Component {
 		return (
 			<React.Fragment>
 				<ListItem button onClick={this.handleClick} >
-					<ListItemAvatar>
-						<Avatar>
-							<CodeIcon />
-						</Avatar>
-					</ListItemAvatar>
+					<TriggerAvatar active={this.props.trigger.active} />
 					<ListItemText primary={
 						this.props.trigger.active ?
 						this.state.trigger.name
@@ -100,7 +126,7 @@ class Trigger extends React.Component {
 						<Typography color="textSecondary">
 							<strike>{this.state.trigger.name}</strike>
 						</Typography>
-					} secondary="action" />
+					} />
 
 					
 						<ListItemSecondaryAction>
