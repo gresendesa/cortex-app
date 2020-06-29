@@ -16,7 +16,7 @@ import TemplateCreateDialog from './TemplateCreateDialog';
 import NamespaceEditDialog from './NamespaceEditDialog';
 import TemplateEditor from './TemplateEditor';
 import { namespaceModel, templateModel } from '../mock/models';
-import { deepOrange, green, blueGrey } from '@material-ui/core/colors';
+import { deepOrange, green, blueGrey, indigo } from '@material-ui/core/colors';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -89,8 +89,8 @@ const useStyles = makeStyles((theme) => ({
   avatarTemplate: {
     width: theme.spacing(4),
     height: theme.spacing(4),
-    color: theme.palette.getContrastText(green[500]),
-    backgroundColor: green[500],
+    color: theme.palette.getContrastText(blueGrey[500]),
+    backgroundColor: blueGrey[500],
   },
 
   avatarNewTemplate: {
@@ -103,8 +103,7 @@ const useStyles = makeStyles((theme) => ({
   avatarNamespace: {
     width: theme.spacing(4),
     height: theme.spacing(4),
-    color: theme.palette.getContrastText(blueGrey[500]),
-    backgroundColor: blueGrey[500],
+    color: blueGrey[500],
   },
 
 }));
@@ -115,7 +114,7 @@ const ExpansionPanelDetails = withStyles((theme) => ({
   },
 }))(MuiExpansionPanelDetails);
 
-const TemplateItem = ({ index, template, namespace, moveUp, deleteTemplate, updateTemplate }) => {
+const TemplateItem = ({ index, template, namespace, moveUp, deleteTemplate, updateTemplate, showAlert }) => {
 
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -151,7 +150,7 @@ const TemplateItem = ({ index, template, namespace, moveUp, deleteTemplate, upda
 
         </ListItemSecondaryAction>
       </ListItem>
-      <TemplateEditor open={open} setOpen={setOpen} template={template} namespace={namespace} saveTemplate={updateTemplate} />
+      <TemplateEditor open={open} setOpen={setOpen} template={template} namespace={namespace} saveTemplate={updateTemplate} showAlert={showAlert} />
     </div>
   )
 
@@ -252,9 +251,7 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
         >
 
           <Grid item>
-            <Avatar variant="rounded" className={classes.avatarNamespace}>
-              <FolderIcon />
-            </Avatar>
+            <FolderIcon className={classes.avatarNamespace} />
           </Grid>
 
           <Grid item>
@@ -281,7 +278,7 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
 
                 namespace.templates.map((template, i) => {
                   return (
-                    <TemplateItem key={i} index={i} namespace={namespace} template={template} moveUp={moveUp} deleteTemplate={deleteTemplate} updateTemplate={updateTemplate} />
+                    <TemplateItem key={i} index={i} namespace={namespace} template={template} moveUp={moveUp} deleteTemplate={deleteTemplate} updateTemplate={updateTemplate} showAlert={showAlert} />
                   )
                 })
 
@@ -370,6 +367,7 @@ export default function TemplateSection({ namespaces, templatesHook }) {
       if(!itemExists({ item:model })){
         const copyNamespaces = Object.assign([], namespaces);
         copyNamespaces.push(model);
+        console.log(model);
         setNamespaces(copyNamespaces);
         setOpen(false);
         return true
@@ -414,8 +412,13 @@ export default function TemplateSection({ namespaces, templatesHook }) {
 
   const handleSave = () => {
 
-    const callback = () => {
+    const callback = (ok, message) => {
       setProcessing(false);
+      if(ok){
+        showAlert({message: "Saved", severity: "success"});
+      } else {
+        showAlert({message, severity: "error"});
+      }
     }
     setProcessing(true);
     setNamespaces(namespaces, true, callback);

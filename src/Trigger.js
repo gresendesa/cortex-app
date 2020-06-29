@@ -21,8 +21,8 @@ function TriggerAvatar({ active }) {
 	  avatar: {
 	    width: theme.spacing(4),
 	    height: theme.spacing(4),
-	    color: theme.palette.getContrastText(blueGrey[500]),
-	    backgroundColor: blueGrey[500],
+	    color: theme.palette.getContrastText(green[500]),
+	    backgroundColor: green[500],
 	  },
 	   avatarInactive: {
 	    width: theme.spacing(4),

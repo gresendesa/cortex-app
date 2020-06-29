@@ -214,7 +214,7 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} >
-        <AppBar className={classes.appBar} color="secondary">
+        <AppBar className={classes.appBar} style={{ background: '#357a38' }}>
           <Toolbar>
             <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
               <CloseIcon />

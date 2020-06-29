@@ -82,7 +82,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TemplateEditor({ open, setOpen, template, namespace, saveTemplate }) {
+export default function TemplateEditor({ open, setOpen, template, namespace, saveTemplate, showAlert }) {
   
   const classes = useStyles();
   const [openConfig, setOpenConfig] = useState(false);
@@ -138,7 +138,12 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
     copyTemplate.description = description;
 
     setProcessing(true);
-    const callback = () => {
+    const callback = (ok, message) => {
+      if(ok){
+        showAlert({message: "Saved", severity: "success"});
+      } else {
+        showAlert({message, severity: "error"});
+      }
       setProcessing(false);
     }
 
@@ -159,13 +164,10 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
             <Box className={classes.breadCrumb}>
               {namespace.name}
             </Box>
-
-            
             <IconButton edge="end" disabled={processing} color="inherit" onClick={handleSave} aria-label="close">
               <SaveIcon />
             </IconButton>
-            
-
+          
           </Toolbar>
         </AppBar>
 

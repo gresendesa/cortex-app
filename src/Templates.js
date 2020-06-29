@@ -1,11 +1,14 @@
 import React, { Fragment } from 'react';
 import TemplateSection from './uis/TemplateSection';
 import { alltemplates } from './mock/templates';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 
 class Templates extends React.Component {
 
 	state = {
 		namespaces: [],
+		alert: {},
 	}
 
 	setNamespaces = (namespaces, save=false, callback=()=>{}) => {
@@ -16,7 +19,6 @@ class Templates extends React.Component {
 				}
 				const error = (response) => {
 					callback(false, response);
-					alert(response);
 				}
 				this.props.saveTemplates({ templates: namespaces, success, error })
 			}
@@ -43,7 +45,7 @@ class Templates extends React.Component {
 			this.setState({'namespaces': response.templates});
 		}
 		const error = (response) => {
-			alert(response);
+			this.setState({'alert':{message:response, severity:'error', popUp:true}});
 		}
 		this.props.getTemplates({ success, error })
 	}
@@ -51,7 +53,14 @@ class Templates extends React.Component {
 	render(){
 
 		return (
-			<TemplateSection namespaces={this.state.namespaces} templatesHook={this.templatesHook} />
+			<Fragment>
+				<TemplateSection namespaces={this.state.namespaces} templatesHook={this.templatesHook} />
+				<Snackbar open={this.state.alert.popUp} autoHideDuration={4000} onClose={() => this.setState({alert: {...this.state.alert, popUp: false}})} >
+					<MuiAlert elevation={6} variant="filled" severity={this.state.alert.severity}>
+						{this.state.alert.message}
+					</MuiAlert>
+				</Snackbar>
+			</Fragment>
 		)
 
 	}
