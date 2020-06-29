@@ -120,7 +120,6 @@ export default function TemplateEditor({ open, setOpen, template, setTemplate, n
     setCode(value);
   }
 
-  //<Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} >

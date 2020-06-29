@@ -12,12 +12,25 @@ class Templates extends React.Component {
 		this.setState({ namespaces });
 	}
 
+	deleteNamespace = (namespace) => {
+		const copyNamespaces = Object.assign([],this.state.namespaces);
+		const filtered = copyNamespaces.filter(n => {
+			return n.id !== namespace.id;
+		})
+		this.setNamespaces(filtered);
+	}
+
+	templatesHook = () => {
+		return {
+			setNamespaces: this.setNamespaces,
+			deleteNamespace: this.deleteNamespace,
+		}
+	}
+
 	render(){
 
 		return (
-				
-			<TemplateSection namespaces={this.state.namespaces} setNamespaces={this.setNamespaces} />
-
+			<TemplateSection namespaces={this.state.namespaces} templatesHook={this.templatesHook} />
 		)
 
 	}

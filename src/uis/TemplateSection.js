@@ -9,8 +9,10 @@ import Grid from '@material-ui/core/Grid';
 import { Box } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
+import DeleteButtonTask from './DeleteButton';
 
 import NamespaceCreateDialog from './NamespaceCreateDialog';
+import NamespaceEditDialog from './NamespaceEditDialog';
 import TemplateEditor from './TemplateEditor';
 import { namespaceModel, templateModel } from '../mock/models';
 import { deepOrange, green, blueGrey } from '@material-ui/core/colors';
@@ -27,6 +29,11 @@ import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CodeIcon from '@material-ui/icons/Code';
 import SaveIcon from '@material-ui/icons/Save';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import EditIcon from '@material-ui/icons/Edit';
 
 const ExpansionPanel = withStyles({
   root: {
@@ -102,7 +109,7 @@ const ExpansionPanelDetails = withStyles((theme) => ({
   },
 }))(MuiExpansionPanelDetails);
 
-const TemplateItem = ({ template, namespace }) => {
+const TemplateItem = ({ index, template, namespace }) => {
 
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -124,9 +131,20 @@ const TemplateItem = ({ template, namespace }) => {
           
         />
         <ListItemSecondaryAction>
+
+          {
+            index>0 ?
+            <IconButton edge="end" aria-label="move-up">
+              <ArrowUpwardIcon size="small" />
+            </IconButton>
+            :
+            ""
+          }
+        
           <IconButton edge="end" aria-label="delete">
             <DeleteIcon />
           </IconButton>
+
         </ListItemSecondaryAction>
       </ListItem>
       <TemplateEditor open={open} setOpen={setOpen} template={template} namespace={namespace} />
@@ -135,7 +153,7 @@ const TemplateItem = ({ template, namespace }) => {
 
 }
 
-const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange }) => {
+const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, namespaceHook }) => {
 
 
   const classes = useStyles();
@@ -146,6 +164,10 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange }
       setExpanded(null);
     }
   }
+
+  const { deleteNamespace, moveNamespaceUp, updateNamespace } = namespaceHook();
+
+  const [open, setOpen] = useState(false);
 
   return (
 
@@ -175,30 +197,55 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange }
         
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
-        <TemplateList>
-          { 
+        
 
-            namespace.templates.map((template, index) => {
-              return (
-                <TemplateItem key={index} namespace={namespace} template={template} />
-              )
-            })
+        <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="stretch"
+          >
+          <Grid item>
+            
+            <TemplateList>
+              { 
 
-          }
+                namespace.templates.map((template, i) => {
+                  return (
+                    <TemplateItem key={i} index={i} namespace={namespace} template={template} />
+                  )
+                })
 
-          <ListItem button>
-            <ListItemAvatar>
-              <Avatar className={classes.avatarNewTemplate}>
-                <AddIcon  />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary="Add new template"
-              
-            />
-          </ListItem>
+              }
 
-        </TemplateList>
+              <ListItem button>
+                <ListItemAvatar>
+                  <Avatar className={classes.avatarNewTemplate}>
+                    <AddIcon  />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary="Add new template"
+                  
+                />
+              </ListItem>
+
+            </TemplateList>
+
+          </Grid>
+          <Grid item>
+            <BottomNavigation >
+              {
+                index>0 ?
+                <BottomNavigationAction label="Move Up" onClick={() => moveNamespaceUp(namespace)} icon={<ArrowUpwardIcon />} />
+                : ""
+              }
+              <BottomNavigationAction label="Edit" onClick={() => setOpen(true)} icon={<EditIcon />} />
+              <DeleteButtonTask type='task' callback={() => deleteNamespace(namespace)} />
+            </BottomNavigation>
+            <NamespaceEditDialog open={open} setOpen={setOpen} namespace={namespace} updateNamespace={() => updateNamespace(namespace)} />
+          </Grid>
+        </Grid>
 
       </ExpansionPanelDetails>
     </ExpansionPanel>
@@ -206,7 +253,9 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange }
   )
 }
 
-export default function TemplateSection({ namespaces, setNamespaces }) {
+export default function TemplateSection({ namespaces, templatesHook }) {
+
+  const { setNamespaces, deleteNamespace } = templatesHook();
 
   const [expanded, setExpanded] = useState(null);
   const [open, setOpen] = useState(false);
@@ -219,16 +268,68 @@ export default function TemplateSection({ namespaces, setNamespaces }) {
     setOpen(true);
   }
 
+  const nameSpaceExists = ({ namespace, list=namespaces }) => {
+    return list.some(n => {
+      return (n.id == namespace.id || n.name == namespace.name);
+    });
+    return false;
+  }
+
   const createNamespace = ({ name, description }) => {
     const copyNamespaces = Object.assign([], namespaces);
     copyNamespaces.push(namespaceModel({ name, description }));
-    console.log(copyNamespaces);
     setNamespaces(copyNamespaces);
     setOpen(false);
   }
 
+  const updateNamespace = (namespace) => {
+    const copyNamespaces = Object.assign([], namespaces);
+    const index = copyNamespaces.findIndex(n => {
+      return n.id == namespace.id;
+    });
+    if (index>=0){
+      const namespacesExceptItself = copyNamespaces.filter(n => {
+        return n.id !== namespace.id;
+      });
+      if(!nameSpaceExists({ namespace, list:namespacesExceptItself })){
+        copyNamespaces[index] = namespace;
+        setNamespaces(copyNamespaces);
+        return true;
+      }
+    }
+    return false;
+  }
+
   const saveTemplate = (namespace, template) => {
 
+  }
+
+  const moveNamespaceUp = (namespace) => {
+    const copyNamespaces = Object.assign([], namespaces);
+    const index = copyNamespaces.findIndex(n => {
+      return n.id == namespace.id;
+    });
+    if(index>0){
+      const aboveItem = copyNamespaces[index-1];
+      copyNamespaces[index-1] = copyNamespaces[index];
+      copyNamespaces[index] = aboveItem;
+      setNamespaces(copyNamespaces);
+      setExpanded(expanded-1);
+    }
+  }
+
+  const handleDeleteNamespace = (namespace) => {
+    deleteNamespace(namespace);
+    setExpanded(null);
+  }
+
+  const namespaceHook = () => {
+    return {
+      createNamespace,
+      updateNamespace,
+      moveNamespaceUp,
+      deleteNamespace: handleDeleteNamespace,
+    }
   }
 
   useEffect(() => {
@@ -268,15 +369,16 @@ export default function TemplateSection({ namespaces, setNamespaces }) {
         </Grid>
 
       {
-        namespaces.map((namespace, index) => {
+        namespaces.map((namespace, i) => {
           return (
             <TemplatePanel 
-              key={index} 
-              index={index} 
+              key={i} 
+              index={i} 
               namespace={namespace} 
               expanded={expanded} 
               setExpanded={setExpanded} 
               handleChange={handleChange}
+              namespaceHook={namespaceHook}
             />
           )
         })
