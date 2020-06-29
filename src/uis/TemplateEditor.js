@@ -23,7 +23,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import translateTriggerGroup from './utils';
-import { triggerModel } from '../mock/models'
+import { templateModel, triggerModel } from '../mock/models'
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
@@ -82,7 +82,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TemplateEditor({ open, setOpen, template, setTemplate, namespace, saveTemplate }) {
+export default function TemplateEditor({ open, setOpen, template, namespace, saveTemplate }) {
   
   const classes = useStyles();
   const [openConfig, setOpenConfig] = useState(false);
@@ -90,6 +90,7 @@ export default function TemplateEditor({ open, setOpen, template, setTemplate, n
   const [name, setName] = useState(template.name);
   const [code, setCode] = useState(template.code);
   const [description, setDescription] = useState(template.description); 
+  const [processing, setProcessing] = useState(false);
 
   const handleIndent = () => {
     const lines = [];
@@ -124,6 +125,15 @@ export default function TemplateEditor({ open, setOpen, template, setTemplate, n
     setCode(value);
   }
 
+  const handleSave = () => {
+    const copyTemplate = Object.assign({}, template);
+    copyTemplate.name = name;
+    copyTemplate.code = code;
+    copyTemplate.description = description;
+    saveTemplate(copyTemplate);
+    setProcessing(false);
+  }
+
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} >
@@ -140,7 +150,7 @@ export default function TemplateEditor({ open, setOpen, template, setTemplate, n
             </Box>
 
             <ButtonGroup color="primary" aria-label="outlined primary button group">
-              <IconButton edge="end" disabled={false} color="inherit" onClick={() => {}} aria-label="close">
+              <IconButton edge="end" disabled={processing} color="inherit" onClick={handleSave} aria-label="close">
                 <SaveIcon />
               </IconButton>
             </ButtonGroup>

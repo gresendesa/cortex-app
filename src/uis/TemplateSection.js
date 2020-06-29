@@ -113,7 +113,7 @@ const ExpansionPanelDetails = withStyles((theme) => ({
   },
 }))(MuiExpansionPanelDetails);
 
-const TemplateItem = ({ index, template, namespace, moveUp,deleteTemplate }) => {
+const TemplateItem = ({ index, template, namespace, moveUp, deleteTemplate, updateTemplate }) => {
 
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -149,7 +149,7 @@ const TemplateItem = ({ index, template, namespace, moveUp,deleteTemplate }) => 
 
         </ListItemSecondaryAction>
       </ListItem>
-      <TemplateEditor open={open} setOpen={setOpen} template={template} namespace={namespace} />
+      <TemplateEditor open={open} setOpen={setOpen} template={template} namespace={namespace} saveTemplate={updateTemplate} />
     </div>
   )
 
@@ -186,6 +186,34 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
       showAlert({message:"Invalid name!"});
     }
     return false;
+  }
+
+  const updateTemplate = (template) => {
+    if(isValidName(template.name)){
+
+      const templatesExceptItself = namespace.templates.filter(t => {
+        return template.id !== t.id;
+      })
+      if(!itemExists({item:template, list:templatesExceptItself})){
+        const copyNamespace = Object.assign({}, namespace);
+        const index = copyNamespace.templates.findIndex(t => {
+          return t.id == template.id;
+        });
+        if (index>=0){
+          copyNamespace.templates[index] = template;
+          updateNamespace(copyNamespace);
+          console.log(copyNamespace);
+          return true;
+        } else {
+          showAlert({message:"Cannot updated something that not exists"});
+        }
+      }
+      showAlert({message:"This template name is already taken!"});
+      return false
+    } else {
+      showAlert({message:"Invalid name"});
+      return false;
+    }
   }
 
   const moveUp = (template) => {
@@ -252,7 +280,7 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
 
                 namespace.templates.map((template, i) => {
                   return (
-                    <TemplateItem key={i} index={i} namespace={namespace} template={template} moveUp={moveUp} deleteTemplate={deleteTemplate} />
+                    <TemplateItem key={i} index={i} namespace={namespace} template={template} moveUp={moveUp} deleteTemplate={deleteTemplate} updateTemplate={updateTemplate} />
                   )
                 })
 
