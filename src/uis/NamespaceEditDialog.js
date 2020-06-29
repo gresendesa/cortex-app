@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -16,6 +16,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function NamespaceEditDialog({ open, setOpen, namespace, updateNamespace }) {
+
+  useEffect(() => {
+    setName(namespace.name);
+    setDescription(namespace.description);
+  }, [namespace])
 
   const classes = useStyles();
   const [name, setName] = useState(namespace.name);

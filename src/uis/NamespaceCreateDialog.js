@@ -29,8 +29,9 @@ export default function NamespaceCreateDialog({ open, setOpen, createNamespace }
   };
 
   const handleSave = (e) => {
-    createNamespace({ name, description });
-    handleClose();
+    if(createNamespace({ name, description })){
+      handleClose();
+    }
   }
 
   return (

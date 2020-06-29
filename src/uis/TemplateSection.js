@@ -35,6 +35,9 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import EditIcon from '@material-ui/icons/Edit';
 
+import { Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
+
 const ExpansionPanel = withStyles({
   root: {
     border: '1px solid rgba(0, 0, 0, .125)',
@@ -165,9 +168,7 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
     }
   }
 
-  const { deleteNamespace, moveNamespaceUp, updateNamespace } = namespaceHook();
-
-  const [open, setOpen] = useState(false);
+  const { deleteNamespace, moveNamespaceUp, editNamespace } = namespaceHook();
 
   return (
 
@@ -240,10 +241,9 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
                 <BottomNavigationAction label="Move Up" onClick={() => moveNamespaceUp(namespace)} icon={<ArrowUpwardIcon />} />
                 : ""
               }
-              <BottomNavigationAction label="Edit" onClick={() => setOpen(true)} icon={<EditIcon />} />
+              <BottomNavigationAction label="Edit" onClick={() => editNamespace(namespace)} icon={<EditIcon />} />
               <DeleteButtonTask type='task' callback={() => deleteNamespace(namespace)} />
             </BottomNavigation>
-            <NamespaceEditDialog open={open} setOpen={setOpen} namespace={namespace} updateNamespace={() => updateNamespace(namespace)} />
           </Grid>
         </Grid>
 
@@ -259,13 +259,36 @@ export default function TemplateSection({ namespaces, templatesHook }) {
 
   const [expanded, setExpanded] = useState(null);
   const [open, setOpen] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [editingNamespace, setEditingNamespace] = useState(false);
+  const [popUpAlert, setPopUpAlert] = useState(false);
+  const [alert, setAlert] = useState({ message:'', severity:'warning'})
+
+  useEffect(() => {
+    //console.log(editingNamespace);
+  }, [editingNamespace]);
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
 
+  const showAlert = ({ message, severity='warning' }) => {
+    setAlert({
+      message,
+      severity
+    });
+    setPopUpAlert(true);
+  } 
+
   const handleClick = () => {
     setOpen(true);
+  }
+
+  const isValidName = (name) => {
+    if(name.match(/^[.a-zA-Z0-9_-áéíóúçÁÉÍÓÚÇàèìòùÀÈÌÒÙ]+$/)){
+      return true;
+    }
+    return false;
   }
 
   const nameSpaceExists = ({ namespace, list=namespaces }) => {
@@ -276,32 +299,59 @@ export default function TemplateSection({ namespaces, templatesHook }) {
   }
 
   const createNamespace = ({ name, description }) => {
-    const copyNamespaces = Object.assign([], namespaces);
-    copyNamespaces.push(namespaceModel({ name, description }));
-    setNamespaces(copyNamespaces);
-    setOpen(false);
+    if(isValidName(name)){
+      const model = namespaceModel({ name, description });
+      if(!nameSpaceExists({ namespace:model })){
+        const copyNamespaces = Object.assign([], namespaces);
+        copyNamespaces.push(model);
+        setNamespaces(copyNamespaces);
+        setOpen(false);
+        return true
+      }
+      showAlert({message: "Namespace already exists"});
+    } else {
+      showAlert({message: "Invalid name"});
+    }
+    return false;
+      
   }
 
   const updateNamespace = (namespace) => {
-    const copyNamespaces = Object.assign([], namespaces);
-    const index = copyNamespaces.findIndex(n => {
-      return n.id == namespace.id;
-    });
-    if (index>=0){
-      const namespacesExceptItself = copyNamespaces.filter(n => {
-        return n.id !== namespace.id;
+    if(isValidName(namespace.name)){
+      const copyNamespaces = Object.assign([], namespaces);
+      const index = copyNamespaces.findIndex(n => {
+        return n.id == namespace.id;
       });
-      if(!nameSpaceExists({ namespace, list:namespacesExceptItself })){
-        copyNamespaces[index] = namespace;
-        setNamespaces(copyNamespaces);
-        return true;
+      if (index>=0){
+        const namespacesExceptItself = copyNamespaces.filter(n => {
+          return n.id !== namespace.id;
+        });
+        if(!nameSpaceExists({ namespace, list:namespacesExceptItself })){
+          copyNamespaces[index] = namespace;
+          setNamespaces(copyNamespaces);
+          return true;
+        }
+        showAlert({message: "Namespace already exists"});
       }
+      return false;
+    } else {
+      showAlert({message: "Invalid name"});
+      return false;
     }
-    return false;
+      
+  }
+
+  const editNamespace = (namespace) => {
+    setEditingNamespace(namespace);
+    setOpenEdit(true);
   }
 
   const saveTemplate = (namespace, template) => {
 
+  }
+
+  const handleSave = () => {
+    console.log(namespaces);
   }
 
   const moveNamespaceUp = (namespace) => {
@@ -329,12 +379,10 @@ export default function TemplateSection({ namespaces, templatesHook }) {
       updateNamespace,
       moveNamespaceUp,
       deleteNamespace: handleDeleteNamespace,
+      editNamespace,
+      showAlert
     }
   }
-
-  useEffect(() => {
-    console.log(expanded);
-  },[expanded])
 
   return (
     <div>
@@ -355,7 +403,7 @@ export default function TemplateSection({ namespaces, templatesHook }) {
           <Grid item>
             <Box component="span" m={1}>
               <Typography>
-                <IconButton aria-label="save templates" >
+                <IconButton onClick={handleSave} aria-label="save templates" >
                   <SaveIcon />
                 </IconButton>
                 <IconButton onClick={handleClick} aria-label="add namespace" >
@@ -384,6 +432,12 @@ export default function TemplateSection({ namespaces, templatesHook }) {
         })
       }
       <NamespaceCreateDialog open={open} setOpen={setOpen} createNamespace={createNamespace} />
+      <NamespaceEditDialog open={openEdit} setOpen={setOpenEdit} namespace={editingNamespace} updateNamespace={updateNamespace} />
+      <Snackbar open={popUpAlert} autoHideDuration={4000} onClose={() => setPopUpAlert(false)} >
+        <MuiAlert elevation={6} variant="filled" severity={alert.severity}>
+          {alert.message}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }
