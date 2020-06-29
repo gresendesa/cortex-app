@@ -92,6 +92,12 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
   const [description, setDescription] = useState(template.description); 
   const [processing, setProcessing] = useState(false);
 
+  useEffect(() => {
+    setName(template.name);
+    setCode(template.code);
+    setDescription(template.description);
+  }, [template]);
+
   const handleIndent = () => {
     const lines = [];
     const indenter = new Indenter(lines);
@@ -130,8 +136,13 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
     copyTemplate.name = name;
     copyTemplate.code = code;
     copyTemplate.description = description;
-    saveTemplate(copyTemplate);
-    setProcessing(false);
+
+    setProcessing(true);
+    const callback = () => {
+      setProcessing(false);
+    }
+
+    saveTemplate(copyTemplate, true, callback);
   }
 
   return (
@@ -149,11 +160,11 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
               {namespace.name}
             </Box>
 
-            <ButtonGroup color="primary" aria-label="outlined primary button group">
-              <IconButton edge="end" disabled={processing} color="inherit" onClick={handleSave} aria-label="close">
-                <SaveIcon />
-              </IconButton>
-            </ButtonGroup>
+            
+            <IconButton edge="end" disabled={processing} color="inherit" onClick={handleSave} aria-label="close">
+              <SaveIcon />
+            </IconButton>
+            
 
           </Toolbar>
         </AppBar>

@@ -42,7 +42,13 @@ export default function Routes({ context }) {
 									}}
 								/>
 
-								<Route exact path="/templates" component={Templates} />
+								<Route exact path="/templates" render={(props) => (
+									<Templates {...props} 
+										getTemplates={context.getTemplates} 
+										saveTemplates={context.saveTemplates} 
+										component={Templates}
+									/>
+								)} />
 								<Route render={(props) => (
 									<Projects {...props} 
 										fetchMacros={context.fetchMacros} 

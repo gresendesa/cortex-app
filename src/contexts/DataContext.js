@@ -103,8 +103,8 @@ class DataContextProvider extends Component {
 	}
 
 	getTask = ({ dev, project, task, success=()=>{}, error=()=>{} }) => {
-		this.setState({'processing': true});
 		if(this.state.token!==null){
+			this.setState({'processing': true});
 			const server = new Server({ token: this.state.token });
 			const onOk = (response) => {
 				success(response);
@@ -121,8 +121,8 @@ class DataContextProvider extends Component {
 	}
 
 	getBuild = ({ id, success=()=>{}, error=()=>{} }) => {
-		this.setState({'processing': true});
 		if(this.state.token!==null){
+			this.setState({'processing': true});
 			const server = new Server({ token: this.state.token });
 			const onOk = (response) => {
 				success(response);
@@ -133,6 +133,33 @@ class DataContextProvider extends Component {
 				this.setState({'processing': false});
 			}
 			server.getBuild({ id, success: onOk, error: onIssue })
+		} else {
+			error("sem token");
+		}
+	}
+
+	getTemplates = ({ success=()=>{}, error=()=>{} }) => {
+		if(this.state.token!==null){
+			this.setState({'processing': true});
+			const server = new Server({ token: this.state.token });
+			const onOk = (response) => {
+				success(response);
+				this.setState({'processing': false});
+			}
+			const onIssue = (response) => {
+				error(response);
+				this.setState({'processing': false});
+			}
+			server.getTemplates({ success: onOk, error: onIssue })
+		} else {
+			error("sem token");
+		}
+	}
+
+	saveTemplates = ({ templates, success=()=>{}, error=()=>{} }) => {
+		if(this.state.token!==null){
+			const server = new Server({ token: this.state.token });
+			server.saveTemplates({ templates, success, error })
 		} else {
 			error("sem token");
 		}
@@ -163,7 +190,9 @@ class DataContextProvider extends Component {
 											saveMacro: this.saveMacro,
 											getTask: this.getTask,
 											processing: this.state.processing,
-											getBuild: this.getBuild
+											getBuild: this.getBuild,
+											getTemplates: this.getTemplates,
+											saveTemplates: this.saveTemplates
 
 										}}>
 				{this.props.children}

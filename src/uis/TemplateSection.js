@@ -38,6 +38,8 @@ import EditIcon from '@material-ui/icons/Edit';
 
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import { Alert, AlertTitle } from '@material-ui/lab';
 
 const ExpansionPanel = withStyles({
   root: {
@@ -188,7 +190,7 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
     return false;
   }
 
-  const updateTemplate = (template) => {
+  const updateTemplate = (template, save=false, callback=()=>{}) => {
     if(isValidName(template.name)){
 
       const templatesExceptItself = namespace.templates.filter(t => {
@@ -201,19 +203,18 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
         });
         if (index>=0){
           copyNamespace.templates[index] = template;
-          updateNamespace(copyNamespace);
-          console.log(copyNamespace);
+          updateNamespace(copyNamespace, save, callback);
           return true;
         } else {
           showAlert({message:"Cannot updated something that not exists"});
         }
       }
       showAlert({message:"This template name is already taken!"});
-      return false
     } else {
       showAlert({message:"Invalid name"});
-      return false;
     }
+    callback(false);
+    return false
   }
 
   const moveUp = (template) => {
@@ -330,11 +331,8 @@ export default function TemplateSection({ namespaces, templatesHook }) {
   const [openEdit, setOpenEdit] = useState(false);
   const [editingNamespace, setEditingNamespace] = useState(false);
   const [popUpAlert, setPopUpAlert] = useState(false);
-  const [alert, setAlert] = useState({ message:'', severity:'warning'})
-
-  useEffect(() => {
-    //console.log(editingNamespace);
-  }, [editingNamespace]);
+  const [alert, setAlert] = useState({ message:'', severity:'warning'});
+  const [processing, setProcessing] = useState(false);
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
@@ -384,7 +382,7 @@ export default function TemplateSection({ namespaces, templatesHook }) {
       
   }
 
-  const updateNamespace = (namespace) => {
+  const updateNamespace = (namespace, save=false, callback=()=>{}) => {
     if(isValidName(namespace.name)){
       const copyNamespaces = Object.assign([], namespaces);
       const index = copyNamespaces.findIndex(n => {
@@ -396,16 +394,16 @@ export default function TemplateSection({ namespaces, templatesHook }) {
         });
         if(!itemExists({ item:namespace, list:namespacesExceptItself })){
           copyNamespaces[index] = namespace;
-          setNamespaces(copyNamespaces);
+          setNamespaces(copyNamespaces, save, callback);
           return true;
         }
         showAlert({message: "Namespace already exists"});
       }
-      return false;
     } else {
       showAlert({message: "Invalid name"});
-      return false;
     }
+    callback(false);
+    return false;
       
   }
 
@@ -414,12 +412,13 @@ export default function TemplateSection({ namespaces, templatesHook }) {
     setOpenEdit(true);
   }
 
-  const saveTemplate = (namespace, template) => {
-
-  }
-
   const handleSave = () => {
-    console.log(namespaces);
+
+    const callback = () => {
+      setProcessing(false);
+    }
+    setProcessing(true);
+    setNamespaces(namespaces, true, callback);
   }
 
   const moveItemUp = ({ item, list, callback }) => {
@@ -468,7 +467,7 @@ export default function TemplateSection({ namespaces, templatesHook }) {
 
   return (
     <div>
-
+      {processing && <LinearProgress color="secondary" />}
       <Grid container
           direction="row"
           justify="space-between"
@@ -485,10 +484,10 @@ export default function TemplateSection({ namespaces, templatesHook }) {
           <Grid item>
             <Box component="span" m={1}>
               <Typography>
-                <IconButton onClick={handleSave} aria-label="save templates" >
+                <IconButton disabled={processing} onClick={handleSave} aria-label="save templates" >
                   <SaveIcon />
                 </IconButton>
-                <IconButton onClick={handleClick} aria-label="add namespace" >
+                <IconButton disabled={processing} onClick={handleClick} aria-label="add namespace" >
                   <AddIcon  />
                 </IconButton>
               </Typography>
@@ -499,6 +498,7 @@ export default function TemplateSection({ namespaces, templatesHook }) {
         </Grid>
 
       {
+        namespaces.length > 0 ?
         namespaces.map((namespace, i) => {
           return (
             <TemplatePanel 
@@ -512,6 +512,10 @@ export default function TemplateSection({ namespaces, templatesHook }) {
             />
           )
         })
+        :
+        <Alert severity="info">
+          <AlertTitle>No templates loaded</AlertTitle>
+        </Alert>
       }
       <NamespaceCreateDialog open={open} setOpen={setOpen} createNamespace={createNamespace} />
       <NamespaceEditDialog open={openEdit} setOpen={setOpenEdit} namespace={editingNamespace} updateNamespace={updateNamespace} />

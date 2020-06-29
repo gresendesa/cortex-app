@@ -5,11 +5,22 @@ import { alltemplates } from './mock/templates';
 class Templates extends React.Component {
 
 	state = {
-		namespaces: alltemplates,
+		namespaces: [],
 	}
 
-	setNamespaces = (namespaces) => {
-		this.setState({ namespaces });
+	setNamespaces = (namespaces, save=false, callback=()=>{}) => {
+		this.setState({ namespaces }, () => {
+			if (save) {
+				const success = (response) => {
+					callback(true, response);
+				}
+				const error = (response) => {
+					callback(false, response);
+					alert(response);
+				}
+				this.props.saveTemplates({ templates: namespaces, success, error })
+			}
+		});
 	}
 
 	deleteNamespace = (namespace) => {
@@ -25,6 +36,16 @@ class Templates extends React.Component {
 			setNamespaces: this.setNamespaces,
 			deleteNamespace: this.deleteNamespace,
 		}
+	}
+
+	componentWillMount(){
+		const success = (response) => {
+			this.setState({'namespaces': response.templates});
+		}
+		const error = (response) => {
+			alert(response);
+		}
+		this.props.getTemplates({ success, error })
 	}
 
 	render(){

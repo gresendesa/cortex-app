@@ -50,6 +50,38 @@ class Server {
 
 	}
 
+	getTemplates({ success, error }) {
+
+		const conn = this.getConnection();
+
+		conn.get('/templates').then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			try {
+				error(e.response.data.detail);
+			} catch {
+				error(e.message);
+			}
+		})
+
+	}
+
+	saveTemplates({ templates, success, error }) {
+
+		const conn = this.getConnection();
+
+		conn.post('/templates', templates).then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			try {
+				error(e.response.data.detail);
+			} catch {
+				error(e.message);
+			}
+		})
+
+	}
+
 	createMacro({ macro, success, error }) {
 
 		const conn = this.getConnection();
