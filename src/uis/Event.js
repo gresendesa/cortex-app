@@ -49,10 +49,10 @@ export default function Event({ event, deleteEvent, updateEvent }) {
 		<div>
 			<List aria-label="main mailbox folders">
 				<ListItem>
-					<TextField small="small" fullWidth label="Argument" value={argument} onChange={handleArgumentChange} variant="outlined" />
+					<TextField margin="dense" small="small" fullWidth label="Argument" value={argument} onChange={handleArgumentChange} variant="outlined" />
 				</ListItem>
 				<ListItem>
-					<TextField small="small" fullWidth label="Rule" value={rule} onChange={handleRuleChange} variant="filled" />
+					<TextField margin="dense" small="small" fullWidth label="Rule" value={rule} onChange={handleRuleChange} variant="filled" />
 				</ListItem>
 				<ListItem>
 					

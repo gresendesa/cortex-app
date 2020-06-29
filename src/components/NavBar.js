@@ -21,6 +21,8 @@ import Projects from '../Projects';
 import logo from '../images/logo512.png';
 import Avatar from '@material-ui/core/Avatar';
 import FilterFramesIcon from '@material-ui/icons/FilterFrames';
+import FolderIcon from '@material-ui/icons/Folder';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,11 +48,11 @@ export default function ButtonAppBar({ logged, setToken, username }) {
 
   const mudarCor = () => {
     setOpenMenu(!openMenu);
-    if (cor=="primary"){
+    /*if (cor=="primary"){
       setCor("secondary");
     } else {
       setCor("primary");
-    }
+    }*/
   }
 
   const history = useHistory();
@@ -107,7 +109,7 @@ export default function ButtonAppBar({ logged, setToken, username }) {
           </ListItem>
           <ListItem button onClick={() => {handleRedirect("/templates")}}>
             <ListItemIcon>
-              <FilterFramesIcon size="small" />
+              <FolderIcon size="small" />
             </ListItemIcon>
             <ListItemText primary="My Templates" />
           </ListItem>

@@ -82,10 +82,11 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 
 			<List aria-label="main mailbox folders">
 				<ListItem>
-					<TextField small="small" fullWidth label="Macro name" value={config.name} onChange={(e) => {handleChange("name", e.target.value)}} variant="outlined" />
+					<TextField margin="dense" small="small" fullWidth label="Macro name" value={config.name} onChange={(e) => {handleChange("name", e.target.value)}} variant="outlined" />
 				</ListItem>
 				<ListItem>
 					<TextField
+						margin="dense"
 						id="outlined-textarea"
 						label="Description"
 						small="small"
@@ -99,7 +100,7 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 					/>
 				</ListItem>
 				<ListItem>
-					<TextField small="small" fullWidth label="pname" value={config.pname} onChange={(e) => {handleChange("pname", e.target.value)}} variant="outlined" />
+					<TextField margin="dense" small="small" fullWidth label="pname" value={config.pname} onChange={(e) => {handleChange("pname", e.target.value)}} variant="outlined" />
 				</ListItem>
 			</List>
 			<Divider />
@@ -114,6 +115,7 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 
 						<Grid item xs={6}>
 							<TextField
+								margin="dense"
 								label="Unsafe"
 								type="number"
 								value={unsafeValue}
@@ -143,16 +145,16 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 			<Divider />
 			<List aria-label="main mailbox folders">
 				<ListItem>
-					<TextField small="small" fullWidth label="Task entrypoint" value={config.entrypoint} onChange={(e) => {handleChange("entrypoint", e.target.value)}} variant="outlined" />
+					<TextField margin="dense" small="small" fullWidth label="Task entrypoint" value={config.entrypoint} onChange={(e) => {handleChange("entrypoint", e.target.value)}} variant="outlined" />
 				</ListItem>
 				<ListItem>
-					<TextField small="small" fullWidth label="Task endpoint" value={config.endpoint} onChange={(e) => {handleChange("endpoint", e.target.value)}} variant="outlined" />
+					<TextField margin="dense" small="small" fullWidth label="Task endpoint" value={config.endpoint} onChange={(e) => {handleChange("endpoint", e.target.value)}} variant="outlined" />
 				</ListItem>
 			</List>
 			<Divider />
 			<List aria-label="main mailbox folders">
 				<ListItem>
-					<TextField small="small" fullWidth label="CloudScript id" value={config.csid} 
+					<TextField margin="dense" small="small" fullWidth label="CloudScript id" value={config.csid} 
 							   onChange={(e) => {handleChange("csid", e.target.value)}} 
 							   variant="outlined"
 					/>

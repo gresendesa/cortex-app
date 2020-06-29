@@ -297,7 +297,7 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
 
               <List aria-label="main mailbox folders">
                 <ListItem>
-                  <TextField value={name} small="small" onChange={(e) => { setName(e.target.value) }} label="Action name" variant="outlined" />  
+                  <TextField margin="dense" value={name} small="small" onChange={(e) => { setName(e.target.value) }} label="Action name" variant="outlined" />  
                 </ListItem>
                 <ListItem>
                   <FormControlLabel

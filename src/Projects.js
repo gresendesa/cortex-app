@@ -18,7 +18,40 @@ import ProjectCreateDialog from './uis/ProjectCreateDialog';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { useHistory } from 'react-router-dom';
 import DeleteButton from './uis/DeleteButton';
+import { makeStyles } from '@material-ui/core/styles';
+import { deepOrange, green, teal } from '@material-ui/core/colors';
 
+function ProjectItem({ p, redirectToProject, removeProject }) {
+
+	const useStyles = makeStyles((theme) => ({
+	  avatarProject: {
+	    width: theme.spacing(5),
+	    height: theme.spacing(5),
+	    color: theme.palette.getContrastText(teal[500]),
+	    backgroundColor: teal[500],
+	  },
+	}));
+
+	const classes = useStyles();
+
+	return (
+		<ListItem button onClick={() => {redirectToProject(p.id)}}>
+			<ListItemAvatar>
+				<Avatar className={classes.avatarProject}>
+					<SportsEsportsIcon />
+				</Avatar>
+			</ListItemAvatar>
+			<ListItemText
+				primary={p.macro.name}
+				secondary={p.macro.description}
+				/>
+			<ListItemSecondaryAction>
+				<DeleteButton type='project' callback={() => {removeProject(p.id)}} />
+			</ListItemSecondaryAction>
+		</ListItem>
+	)
+
+}
 
 class Projects extends React.Component {
 
@@ -105,20 +138,7 @@ class Projects extends React.Component {
 						this.props.macros.length > 0 ?
 						this.props.macros.map(p => {
 							return (
-								<ListItem button key={p.id} onClick={() => {this.redirectToProject(p.id)}}>
-									<ListItemAvatar>
-										<Avatar>
-											<SportsEsportsIcon />
-										</Avatar>
-									</ListItemAvatar>
-									<ListItemText
-										primary={p.macro.name}
-										secondary={p.macro.description}
-										/>
-									<ListItemSecondaryAction>
-										<DeleteButton type='project' callback={() => {this.removeProject(p.id)}} />
-									</ListItemSecondaryAction>
-								</ListItem>
+								<ProjectItem key={p.id} p={p} redirectToProject={this.redirectToProject} removeProject={this.removeProject} />
 							)
 						})
 						:

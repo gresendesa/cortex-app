@@ -72,6 +72,9 @@ const useStyles = makeStyles((theme) => ({
   },
   breadCrumb: {
     marginRight: theme.spacing(1),
+  },
+  textarea: {
+    resize: "both",
   }
 }));
 
@@ -86,6 +89,7 @@ export default function TemplateEditor({ open, setOpen, template, setTemplate, n
 
   const [name, setName] = useState(template.name);
   const [code, setCode] = useState(template.code);
+  const [description, setDescription] = useState(template.description); 
 
   const handleIndent = () => {
     const lines = [];
@@ -200,7 +204,21 @@ export default function TemplateEditor({ open, setOpen, template, setTemplate, n
 
               <List aria-label="main mailbox folders">
                 <ListItem>
-                  <TextField value={name} small="small" onChange={handleTemplateNameChange} label="Action name" variant="outlined" />  
+                  <TextField margin="dense" value={name} small="small" onChange={handleTemplateNameChange} label="Action name" variant="outlined" />  
+                </ListItem>
+                <ListItem>
+                  <TextField
+                    margin="dense"
+                    id="name"
+                    label="Description"
+                    type="text"
+                    value={description}
+                    onChange={(e) => {setDescription(e.target.value)}}
+                    fullWidth
+                    multiline
+                    variant="outlined"
+                    inputProps={{ className: classes.textarea }}
+                  />
                 </ListItem>
               </List>
 
