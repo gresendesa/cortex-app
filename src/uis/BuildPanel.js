@@ -119,6 +119,8 @@ export default function BuildPanel({ open, setOpen, code, projectName }) {
               editorProps={{ $blockScrolling: true }}
               fontSize={20}
               tabSize={2}
+              readOnly={true}
+              showPrintMargin={false}
               width="100%"
               setOptions={{
                 animatedScroll: true

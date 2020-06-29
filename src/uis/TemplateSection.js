@@ -9,9 +9,10 @@ import Grid from '@material-ui/core/Grid';
 import { Box } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
-import DeleteButtonTask from './DeleteButton';
+import DeleteButton from './DeleteButton';
 
 import NamespaceCreateDialog from './NamespaceCreateDialog';
+import TemplateCreateDialog from './TemplateCreateDialog';
 import NamespaceEditDialog from './NamespaceEditDialog';
 import TemplateEditor from './TemplateEditor';
 import { namespaceModel, templateModel } from '../mock/models';
@@ -112,7 +113,7 @@ const ExpansionPanelDetails = withStyles((theme) => ({
   },
 }))(MuiExpansionPanelDetails);
 
-const TemplateItem = ({ index, template, namespace }) => {
+const TemplateItem = ({ index, template, namespace, moveUp,deleteTemplate }) => {
 
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -137,16 +138,14 @@ const TemplateItem = ({ index, template, namespace }) => {
 
           {
             index>0 ?
-            <IconButton edge="end" aria-label="move-up">
+            <IconButton edge="end" aria-label="move-up" onClick={() => moveUp(template)}>
               <ArrowUpwardIcon size="small" />
             </IconButton>
             :
             ""
           }
         
-          <IconButton edge="end" aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
+          <DeleteButton type='trigger' callback={() => deleteTemplate(template)} />
 
         </ListItemSecondaryAction>
       </ListItem>
@@ -168,7 +167,47 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
     }
   }
 
-  const { deleteNamespace, moveNamespaceUp, editNamespace } = namespaceHook();
+  const [open, setOpen] = useState(false);
+
+  const { deleteNamespace, moveNamespaceUp, editNamespace, isValidName, itemExists, showAlert, updateNamespace, moveItemUp } = namespaceHook();
+
+  const createTemplate = ({ name, description }) => {
+    const model = templateModel({ name, description });
+    const templates = namespace.templates;
+    if(isValidName(name)){
+      if(!itemExists({item:model, list:templates})){
+        const copyNamespace = Object.assign({}, namespace);
+        copyNamespace.templates.push(model);
+        updateNamespace(copyNamespace);
+        return true;
+      }
+      showAlert({message:"This template name is already taken!"});
+    } else {
+      showAlert({message:"Invalid name!"});
+    }
+    return false;
+  }
+
+  const moveUp = (template) => {
+    moveItemUp({
+      item: template,
+      list: namespace.templates,
+      callback: (reodered_templates) => {
+        const copyNamespace = Object.assign({}, namespace);
+        copyNamespace.templates = reodered_templates;
+        updateNamespace(copyNamespace);
+      }
+    })
+  }
+
+  const deleteTemplate = (template) => {
+    const filtered_templates = namespace.templates.filter(t => {
+      return t.id !== template.id;
+    });
+    const copyNamespace = Object.assign({}, namespace);
+    copyNamespace.templates = filtered_templates;
+    updateNamespace(copyNamespace);
+  }
 
   return (
 
@@ -213,13 +252,13 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
 
                 namespace.templates.map((template, i) => {
                   return (
-                    <TemplateItem key={i} index={i} namespace={namespace} template={template} />
+                    <TemplateItem key={i} index={i} namespace={namespace} template={template} moveUp={moveUp} deleteTemplate={deleteTemplate} />
                   )
                 })
 
               }
 
-              <ListItem button>
+              <ListItem button onClick={() => setOpen(true)}>
                 <ListItemAvatar>
                   <Avatar className={classes.avatarNewTemplate}>
                     <AddIcon  />
@@ -227,11 +266,12 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
                 </ListItemAvatar>
                 <ListItemText
                   primary="New template"
-                  
                 />
               </ListItem>
 
             </TemplateList>
+            <TemplateCreateDialog open={open} setOpen={setOpen} namespace={namespace} createTemplate={createTemplate} />
+
 
           </Grid>
           <Grid item>
@@ -242,7 +282,7 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
                 : ""
               }
               <BottomNavigationAction label="Edit" onClick={() => editNamespace(namespace)} icon={<EditIcon />} />
-              <DeleteButtonTask type='task' callback={() => deleteNamespace(namespace)} />
+              <DeleteButton type='task' callback={() => deleteNamespace(namespace)} />
             </BottomNavigation>
           </Grid>
         </Grid>
@@ -291,9 +331,9 @@ export default function TemplateSection({ namespaces, templatesHook }) {
     return false;
   }
 
-  const nameSpaceExists = ({ namespace, list=namespaces }) => {
+  const itemExists = ({ item, list=namespaces }) => {
     return list.some(n => {
-      return (n.id == namespace.id || n.name == namespace.name);
+      return (n.id == item.id || n.name == item.name);
     });
     return false;
   }
@@ -301,7 +341,7 @@ export default function TemplateSection({ namespaces, templatesHook }) {
   const createNamespace = ({ name, description }) => {
     if(isValidName(name)){
       const model = namespaceModel({ name, description });
-      if(!nameSpaceExists({ namespace:model })){
+      if(!itemExists({ item:model })){
         const copyNamespaces = Object.assign([], namespaces);
         copyNamespaces.push(model);
         setNamespaces(copyNamespaces);
@@ -326,7 +366,7 @@ export default function TemplateSection({ namespaces, templatesHook }) {
         const namespacesExceptItself = copyNamespaces.filter(n => {
           return n.id !== namespace.id;
         });
-        if(!nameSpaceExists({ namespace, list:namespacesExceptItself })){
+        if(!itemExists({ item:namespace, list:namespacesExceptItself })){
           copyNamespaces[index] = namespace;
           setNamespaces(copyNamespaces);
           return true;
@@ -354,18 +394,28 @@ export default function TemplateSection({ namespaces, templatesHook }) {
     console.log(namespaces);
   }
 
-  const moveNamespaceUp = (namespace) => {
-    const copyNamespaces = Object.assign([], namespaces);
-    const index = copyNamespaces.findIndex(n => {
-      return n.id == namespace.id;
+  const moveItemUp = ({ item, list, callback }) => {
+    const copyList = Object.assign([], list);
+    const index = copyList.findIndex(n => {
+      return n.id == item.id;
     });
     if(index>0){
-      const aboveItem = copyNamespaces[index-1];
-      copyNamespaces[index-1] = copyNamespaces[index];
-      copyNamespaces[index] = aboveItem;
-      setNamespaces(copyNamespaces);
-      setExpanded(expanded-1);
+      const aboveItem = copyList[index-1];
+      copyList[index-1] = copyList[index];
+      copyList[index] = aboveItem;
+      callback(copyList);
     }
+  }
+
+  const moveNamespaceUp = (namespace) => {
+    moveItemUp({
+      item: namespace,
+      list: namespaces,
+      callback: (reodered_namespaces) => {
+        setNamespaces(reodered_namespaces);
+        setExpanded(expanded-1);
+      }
+    });
   }
 
   const handleDeleteNamespace = (namespace) => {
@@ -380,7 +430,11 @@ export default function TemplateSection({ namespaces, templatesHook }) {
       moveNamespaceUp,
       deleteNamespace: handleDeleteNamespace,
       editNamespace,
-      showAlert
+      showAlert,
+      isValidName,
+      itemExists,
+      setNamespaces,
+      moveItemUp
     }
   }
 

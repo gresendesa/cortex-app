@@ -224,7 +224,7 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
             </Typography>
             <Box className={classes.breadCrumb}>
               {task.name} • {translateTriggerGroup(group)}
-              </Box>
+            </Box>
 
             <ButtonGroup color="primary" aria-label="outlined primary button group">
               <IconButton edge="end" disabled={deploying} color="inherit" onClick={() => {onSave()}} aria-label="close">
@@ -281,6 +281,7 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
               editorProps={{ $blockScrolling: true }}
               fontSize={20}
               tabSize={2}
+              showPrintMargin={false}
               width="100%"
               setOptions={{
                 enableBasicAutocompletion: [CortexCompleter],

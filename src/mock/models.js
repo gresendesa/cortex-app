@@ -52,7 +52,7 @@ export function namespaceModel({ name, description, id=Math.random(), templates=
 	}
 }
 
-export function templateModel({ name, description, code, id=Math.random() }){
+export function templateModel({ name, description, code='', id=Math.random() }){
 	return {
 		id,
 		name,

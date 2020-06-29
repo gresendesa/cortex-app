@@ -131,6 +131,9 @@ export default function TemplateEditor({ open, setOpen, template, setTemplate, n
             <Typography variant="subtitle1" className={classes.title} >
               {name}
             </Typography>
+            <Box className={classes.breadCrumb}>
+              {namespace.name}
+            </Box>
 
             <ButtonGroup color="primary" aria-label="outlined primary button group">
               <IconButton edge="end" disabled={false} color="inherit" onClick={() => {}} aria-label="close">
@@ -182,6 +185,7 @@ export default function TemplateEditor({ open, setOpen, template, setTemplate, n
               fontSize={20}
               tabSize={2}
               width="100%"
+              showPrintMargin={false}
               setOptions={{
                 enableBasicAutocompletion: [CortexCompleter],
                 enableLiveAutocompletion: true,
