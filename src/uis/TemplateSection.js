@@ -41,6 +41,8 @@ import MuiAlert from '@material-ui/lab/Alert';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { Alert, AlertTitle } from '@material-ui/lab';
 
+import AssignmentIcon from '@material-ui/icons/Assignment';
+
 const ExpansionPanel = withStyles({
   root: {
     border: '1px solid rgba(0, 0, 0, .125)',
@@ -128,7 +130,7 @@ const TemplateItem = ({ index, template, namespace, moveUp, deleteTemplate, upda
       <ListItem button onClick={handleClick} >
         <ListItemAvatar>
           <Avatar className={classes.avatarTemplate}>
-            <CodeIcon  />
+            <AssignmentIcon fontSize='small' />
           </Avatar>
         </ListItemAvatar>
         <ListItemText
