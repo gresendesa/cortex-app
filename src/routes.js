@@ -32,7 +32,7 @@ export default function Routes({ context }) {
 
 									//const macro = context.macros.some
 									const project = context.macros.find(m => m.id == props.match.params.id)
-							
+
 									return (
 										project ?
 										<Macro {...props} project={project} saveMacro={context.saveMacro} getTask={context.getTask} getBuild={context.getBuild} isUserSuper={context.isUserSuper} />
@@ -63,7 +63,7 @@ export default function Routes({ context }) {
 								<Route exact path="/editor" component={TemplateForm} />
 								<Route 
 									render={(props) => (
-										<Login {...props} setToken={context.setToken} setUsername={context.setUsername} /> 
+										<Login {...props} setToken={context.setToken} setUsername={context.setUsername} setIsUserSuper={context.setIsUserSuper} /> 
 									)} />
 							</Switch>
 								

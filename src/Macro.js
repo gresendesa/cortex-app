@@ -246,59 +246,64 @@ class Macro extends React.Component {
 		}
 
 		return (
-
 			<React.Fragment>
 
 				
 				{this.state.deployLoading && <LinearProgress color="secondary" />}
 
-				<Grid container
-				  direction="row"
-				  justify="space-between"
-				  alignItems="center">
-					
+				<Grid
+					container
+					direction="column"
+					justify="center"
+					alignItems="stretch"
+				>
 					<Grid item>
-						<Box component="span" m={1}>
-							<Typography color="textSecondary">
-								{this.state.name}
-								<IconButton aria-label="add task" onClick={() => {this.setOpenConfig(true)}}>
-									<SettingsIcon fontSize="small" />
-								</IconButton>
-
-								<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.deployMacro({ launch:false })}}>
-									<SaveIcon fontSize="small" />
-								</IconButton>
-
-								<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.getBuidCode(this.props.project.id)}}>
-									<CodeIcon name='rocket' size='small' />
-								</IconButton>
-
-								<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.deployMacro({ launch:true })}}>
-									<Icon name='rocket' size='small' />
-								</IconButton>
-							</Typography> 
-							<Typography variant="h5">
-								Tasks
-							</Typography>
+						<Box mt={2} fontWeight="fontWeightMedium" fontFamily="Monospace" fontSize={16}>
+							{this.state.name}
 						</Box>
 					</Grid>
-
 					<Grid item>
-						<Box component="span" m={1}>
+						<IconButton aria-label="add task" onClick={() => {this.setOpenConfig(true)}}>
+							<SettingsIcon fontSize="small" />
+						</IconButton>
+						<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.deployMacro({ launch:false })}}>
+							<SaveIcon fontSize="small" />
+						</IconButton>
+						{this.props.isUserSuper && <IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.getBuidCode(this.props.project.id)}}>
+							<CodeIcon name='rocket' size='small' />
+						</IconButton>}
+						<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.deployMacro({ launch:true })}}>
+							<Icon name='rocket' size='small' />
+						</IconButton>
+					</Grid>
+					
+
+					<Grid item
+						container
+						direction="row"
+						justify="space-between"
+						alignItems="center"
+					>
+
+						<Grid item>
+							<Typography variant="h5" style={{color: '#357a38'}}>
+								Tasks
+							</Typography>
+						</Grid>
+						<Grid item>
 							<Typography>
 								<IconButton aria-label="add task" onClick={toggleCreateDialog}>
 									<AddIcon fontSize="large" />
 								</IconButton>
 							</Typography>
-						</Box>
-
-						<TaskCreateDialog hookTask={this.hookTask}/>
+						</Grid>
 
 					</Grid>
 
 				</Grid>
 
 				<TasksSection tasks={this.state.tasks} hookTask={this.hookTask} />
+				<TaskCreateDialog hookTask={this.hookTask}/>
 
 				<DependenciesSection dependencies={this.state.dependencies} hookTask={this.hookTask} />
 

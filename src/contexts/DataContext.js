@@ -122,17 +122,8 @@ class DataContextProvider extends Component {
 
 	getBuild = ({ id, success=()=>{}, error=()=>{} }) => {
 		if(this.state.token!==null){
-			this.setState({'processing': true});
 			const server = new Server({ token: this.state.token });
-			const onOk = (response) => {
-				success(response);
-				this.setState({'processing': false});
-			}
-			const onIssue = (response) => {
-				error(response);
-				this.setState({'processing': false});
-			}
-			server.getBuild({ id, success: onOk, error: onIssue })
+			server.getBuild({ id, success, error })
 		} else {
 			error("sem token");
 		}
@@ -166,14 +157,9 @@ class DataContextProvider extends Component {
 	}
 
 	componentWillMount(){
-
-		const token = localStorage.getItem('cortex-token');
-		this.setToken(token);
-		const username = localStorage.getItem('cortex-username');
-		this.setUsername(username);	
-		const isSuper = localStorage.getItem('cortex-super');
-		this.setIsUserSuper(isSuper);	
-
+		this.setToken(localStorage.getItem('cortex-token'));
+		this.setUsername(localStorage.getItem('cortex-username'));	
+		this.setIsUserSuper(localStorage.getItem('cortex-is-user-super'));
 	}
 
 	render() {
@@ -183,7 +169,7 @@ class DataContextProvider extends Component {
 											...this.state, 
 											setToken: this.setToken,
 											setUsername: this.setUsername,
-											isUserSuper: this.isUserSuper,
+											isUserSuper: this.state.isUserSuper,
 											fetchMacros: this.fetchMacros,
 											addMacro: this.addMacro,
 											delMacro: this.delMacro,
@@ -192,7 +178,8 @@ class DataContextProvider extends Component {
 											processing: this.state.processing,
 											getBuild: this.getBuild,
 											getTemplates: this.getTemplates,
-											saveTemplates: this.saveTemplates
+											saveTemplates: this.saveTemplates,
+											setIsUserSuper: this.setIsUserSuper,
 
 										}}>
 				{this.props.children}

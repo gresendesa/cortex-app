@@ -350,7 +350,7 @@ export default function TemplateSection({ namespaces, templatesHook }) {
   }
 
   const isValidName = (name) => {
-    if(name.match(/^[.a-zA-Z0-9_-áéíóúçÁÉÍÓÚÇàèìòùÀÈÌÒÙ]+$/)){
+    if(name.match(/^[a-zA-Z0-9_-áéíóúçÁÉÍÓÚÇàèìòùÀÈÌÒÙ]+$/)){
       return true;
     }
     return false;
