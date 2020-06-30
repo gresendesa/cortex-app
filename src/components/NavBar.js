@@ -107,11 +107,11 @@ export default function ButtonAppBar({ logged, setToken, username }) {
             </ListItemIcon>
             <ListItemText primary="My Projects" />
           </ListItem>
-          <ListItem button onClick={() => {handleRedirect("/templates")}}>
+          <ListItem button onClick={() => {handleRedirect("/libs")}}>
             <ListItemIcon>
               <FolderIcon size="small" />
             </ListItemIcon>
-            <ListItemText primary="My Templates" />
+            <ListItemText primary="My Libraries" />
           </ListItem>
           <ListItem button onClick={logOut}>
             <ListItemIcon>

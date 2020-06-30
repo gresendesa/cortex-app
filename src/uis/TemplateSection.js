@@ -479,7 +479,7 @@ export default function TemplateSection({ namespaces, templatesHook }) {
           <Grid item>
             <Box component="span" m={1}>
               <Typography variant="h5" color="secondary">
-                My Templates
+                My Libraries
               </Typography>
             </Box>
           </Grid>
@@ -490,7 +490,7 @@ export default function TemplateSection({ namespaces, templatesHook }) {
                 <IconButton disabled={processing} onClick={handleSave} aria-label="save templates" >
                   <SaveIcon />
                 </IconButton>
-                <IconButton disabled={processing} onClick={handleClick} aria-label="add namespace" >
+                <IconButton disabled={processing} onClick={handleClick} aria-label="add library" >
                   <AddIcon  />
                 </IconButton>
               </Typography>

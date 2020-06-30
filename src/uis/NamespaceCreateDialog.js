@@ -37,16 +37,16 @@ export default function NamespaceCreateDialog({ open, setOpen, createNamespace }
   return (
     <div>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Create new namespace</DialogTitle>
+        <DialogTitle id="form-dialog-title">Create new library</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Create a namespace to put your templates!
+            Create a library to put your templates!
           </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="Namespace"
+            label="Library name"
             type="text"
             value={name}
             onChange={(e) => {setName(e.target.value)}}

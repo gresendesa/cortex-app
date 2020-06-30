@@ -49,10 +49,10 @@ export default function NamespaceEditDialog({ open, setOpen, namespace, updateNa
   return (
     <div>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Create new namespace</DialogTitle>
+        <DialogTitle id="form-dialog-title">Edit your library</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Create a namespace to put your templates!
+            Choose new props to your library.
           </DialogContentText>
           
           <Grid container
@@ -67,7 +67,7 @@ export default function NamespaceEditDialog({ open, setOpen, namespace, updateNa
                 autoFocus
                 margin="dense"
                 id="name"
-                label="Namespace"
+                label="Library name"
                 type="text"
                 value={name}
                 onChange={(e) => {setName(e.target.value)}}
