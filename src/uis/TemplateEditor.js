@@ -99,9 +99,10 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
   }, [template]);
 
   const handleIndent = () => {
-    const lines = [];
+    const lines = code.split('\n');
     const indenter = new Indenter(lines);
     const result = indenter.indent();
+    setCode(result);
   }
 
   var CortexCompleter = {
