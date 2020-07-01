@@ -19,6 +19,12 @@ export const cortexMacroModCommands = [
   },
 
   {
+    "value": '{* extends "library.template" *}',
+    "score": 2,
+    "meta": "import snippet"
+  },
+
+  {
     "value": '{* include "library.template" *}',
     "score": 2,
     "meta": "import snippet"
