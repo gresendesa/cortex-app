@@ -13,21 +13,15 @@ export const cortexMacroModCommands = [
   },
 
   {
-    "value": '{* import "library.template" as ALIAS  *}',
+    "value": '{* import "library.template" as ALIAS *}',
     "score": 2,
     "meta": "import snippet"
   },
 
   {
-    "value": '{* include "library.template"  *}',
+    "value": '{* include "library.template" *}',
     "score": 2,
     "meta": "import snippet"
-  },
-
-  {
-    "value": '{{ block blockname }}\n{{ endblock }}',
-    "score": 2,
-    "meta": "Templating block"
   },
 
   {
