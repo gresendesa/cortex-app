@@ -1,6 +1,36 @@
 export const cortexMacroModCommands = [
 
   {
+    "value": '{* block blockname *}\n{* endblock *}',
+    "score": 2,
+    "meta": "Templating block"
+  },
+
+  {
+    "value": '{* macro mymacro() *}\n{* endmacro *}',
+    "score": 2,
+    "meta": "Templating block"
+  },
+
+  {
+    "value": '{* import "library.template" as ALIAS  *}',
+    "score": 2,
+    "meta": "import snippet"
+  },
+
+  {
+    "value": '{* include "library.template"  *}',
+    "score": 2,
+    "meta": "import snippet"
+  },
+
+  {
+    "value": '{{ block blockname }}\n{{ endblock }}',
+    "score": 2,
+    "meta": "Templating block"
+  },
+
+  {
     "value": '{{ inform("msg") }}',
     "score": 2,
     "meta": "Set the status message"
