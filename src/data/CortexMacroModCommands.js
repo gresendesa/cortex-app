@@ -31,6 +31,18 @@ export const cortexMacroModCommands = [
   },
 
   {
+    "value": '{{ restart_on() }}',
+    "score": 2,
+    "meta": "Turns on the restart mode"
+  },
+
+  {
+    "value": '{{ restart_off() }}',
+    "score": 2,
+    "meta": "Turns off the restart mode"
+  },
+
+  {
     "value": '{{ inform("msg") }}',
     "score": 2,
     "meta": "Set the status message"
