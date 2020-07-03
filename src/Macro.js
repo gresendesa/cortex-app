@@ -17,6 +17,7 @@ import { Icon } from 'semantic-ui-react';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
 import BuildPanel from './uis/BuildPanel';
+import translateTriggerGroup from './uis/utils';
 
 class Macro extends React.Component {
 
@@ -29,11 +30,11 @@ class Macro extends React.Component {
 		'devName': 'Federal',
 		'deployLoading': false,
 		'openBuild': false,
+		'buildName': null,
 		'build': ''
 	}
 
 	componentWillMount(){
-		//console.log("vou montar bitch", this.props);
 		this.setState({ 'project': this.props.project, ...this.props.project.macro });
 	}
 
@@ -169,7 +170,8 @@ class Macro extends React.Component {
 			'getFocus': this.getFocus,
 			'hasMacroUnsafe': () => { return this.state.unsafe!=null },
 			'deployMacro': this.deployMacro,
-			'getForeingTask': this.getForeingTask
+			'getForeingTask': this.getForeingTask,
+			'getActionCode': this.getActionCode,
 		}
 	}
 
@@ -183,7 +185,6 @@ class Macro extends React.Component {
 
 		const macro = macroModel(this.state);
 		const success = (response) => {
-			//console.log("ok deploy", response);
 			this.setState({'deployLoading': false}, () => {
 				if (launch){
 					this.showAlert(`Launched as ${macro.csid}`, "success");
@@ -194,7 +195,6 @@ class Macro extends React.Component {
 			});
 		}
 		const error = (response) => {
-			//console.log("erro deploy", response);
 			this.setState({'deployLoading': false}, () => {
 				this.showAlert(`${response}`, "error");
 			});
@@ -209,24 +209,58 @@ class Macro extends React.Component {
 		this.setState({openBuild: value});
 	} 
 
-	getBuidCode = (id) => {
+	getBuildCode = (id, callback=()=>{}) => {
 
 		const success = (response) => {
-			console.log(response);
 			this.setState({'deployLoading': false}, () => {
-				this.setState({'build': response.build}, () => {
-					this.setState({'openBuild': true});
+				this.setState({'buildName': this.state.name}, () => {
+					this.setState({'build': response.build}, () => {
+						this.setState({'openBuild': true}, () => {
+							callback(true);
+						});
+					})
 				})
 			});
 		}
 		const error = (response) => {
 			this.setState({'deployLoading': false}, () => {
 				this.showAlert(`${response}`, "warning");
+				callback(false);
 			});
 		}
 
 		this.setState({'deployLoading': true});
 		this.props.getBuild({ id, success, error });
+	}
+
+	getActionCode = ({ id, name, project_id, task_name, section, callback=()=>{} }) => {
+
+		const success = (response) => {
+			this.setState({'deployLoading': false}, () => {
+				this.setState({'buildName': name + ` • ${task_name} • ${translateTriggerGroup(section)}`}, () => {
+					this.setState({'build': response.build}, () => {
+						this.setState({'openBuild': true}, () => {
+							callback(true);
+						});
+					})
+				});
+			});
+		}
+		const error = (response) => {
+			this.setState({'deployLoading': false}, () => {
+				this.showAlert(`${response}`, "warning");
+				callback(false);
+			});
+		}
+
+		this.setState({'deployLoading': true});
+		this.deployMacro({ 
+			launch:false, 
+			callback:()=>{
+				this.props.getActionCode({ id, name, project_id, task_name, section, success, error });
+			} 
+		})
+		
 	}
 
 	render(){
@@ -269,7 +303,7 @@ class Macro extends React.Component {
 						<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.deployMacro({ launch:false })}}>
 							<SaveIcon fontSize="small" />
 						</IconButton>
-						{this.props.isUserSuper && <IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.getBuidCode(this.props.project.id)}}>
+						{this.props.isUserSuper && <IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.getBuildCode(this.props.project.id)}}>
 							<CodeIcon name='rocket' size='small' />
 						</IconButton>}
 						<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.deployMacro({ launch:true })}}>
@@ -313,7 +347,7 @@ class Macro extends React.Component {
 					</MuiAlert>
 				</Snackbar>
 
-				<BuildPanel open={this.state.openBuild} setOpen={this.setOpenBuild} code={this.state.build} projectName={this.state.name} />
+				<BuildPanel open={this.state.openBuild} setOpen={this.setOpenBuild} code={this.state.build} projectName={this.state.buildName} />
 
 				<MacroSettings openConfig={this.state.openConfig} settings={settings} hookTask={this.hookTask} devName={this.state.devName} />
 

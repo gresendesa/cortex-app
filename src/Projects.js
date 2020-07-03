@@ -64,10 +64,10 @@ class Projects extends React.Component {
 	componentWillMount(){
 
 		const success = (response) => {
-			console.log("ok", response.projects);
+			
 		}
 		const error = (response) => {
-			console.log(response);
+			
 		}
 		this.props.fetchMacros({ success, error });
 
@@ -75,20 +75,20 @@ class Projects extends React.Component {
 
 	createProject = (project) => {
 		const success = (response) => {
-			console.log("ok", response);
+			
 		}
 		const error = (response) => {
-			console.log(response);
+			
 		}
 		this.props.addMacro({ macro:project, success, error });
 	}
 
 	removeProject = (id) => {
 		const success = (response) => {
-			console.log("ok", response);
+			
 		}
 		const error = (response) => {
-			console.log(response);
+		
 		}
 		this.props.delMacro({ id:id, success, error });
 	}

@@ -83,7 +83,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TriggerForm({ task, trigger, open, toggleEditor, group, saveTrigger, alert, setFocus, deployMacro, active }) {
+export default function TriggerForm({ task, trigger, open, toggleEditor, group, saveTrigger, alert, setFocus, deployMacro, active, getActionCode }) {
   const classes = useStyles();
 
   const [events, setEvents] = useState(Object.assign([], trigger.events));
@@ -121,7 +121,7 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
     return has;
   }
 
-  const onSave = (publish) => {
+  const onSave = (publish, callback=()=>{}) => {
 
     setDeploying(true);
 
@@ -145,7 +145,8 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
   }
 
   const getCode = () => {
-    console.log(task.name, group, trigger.id, trigger.name)
+    setDeploying(true);
+    getActionCode({ id: trigger.id, name: trigger.name, project_id:22, task_name: task.name, section:group, callback:() => {setDeploying(false);} });
   }
 
   const onEventsClose = () => {
@@ -184,29 +185,12 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
     setEvents(copyEvents);
   }
 
-  var CortexCompleter ={
-      getCompletions: function(editor, session, pos, prefix, callback) {
-          var completions = [
-            {value: '{{ jump(\'taskname\') }}', score: 2, meta: 'Jump to task'},
-            {value: '{{ call(\'taskname\') }}', score: 2, meta: 'Call task'},
-            {value: '{{ return(\'value\') }}', score: 2, meta: 'Return some value'},
-            {value: 'LOG("§5");', score: 1, meta: 'Print things'},
-            {value: 'IF(#var==10);\nELSE;\nENDIF', score: 10, meta: 'If with regex'},
-            {value: 'IFMATCHES(%&subject%,"^regex");\nENDIF;', score: 9, meta: 'If with regex'},
-            {value: 'FOR(#i,0,10);\nNEXT;', score: 2, meta: 'Controled loop'},
-            {value: 'DO(10);\nLOOP;', score: 2, meta: 'Controled loop'},
-          ];
-          callback(null, completions);
-      }
-  }
-
   const handleIndent = () => {
     const lines = action.split('\n');
     const indenter = new Indenter(lines);
     const result = indenter.indent();
     setAction(result);
   }
-
 
   var CortexCompleter ={
       getCompletions: function(editor, session, pos, prefix, callback) {

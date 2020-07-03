@@ -151,6 +151,21 @@ class Server {
 		})
 	}
 
+	getTriggerBuild({ id, name, project_id, task_name, section, success, error }) {
+
+		const conn = this.getConnection();
+
+		conn.get(`/trigger/build/get/${id}/${name}/project/${project_id}/task/${task_name}/section/${section}`).then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			try {
+				error(e.response.data.detail);
+			} catch {
+				error(e.message);
+			}
+		})
+	}
+
 }
 
 export default Server;

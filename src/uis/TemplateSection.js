@@ -369,7 +369,6 @@ export default function TemplateSection({ namespaces, templatesHook }) {
       if(!itemExists({ item:model })){
         const copyNamespaces = Object.assign([], namespaces);
         copyNamespaces.push(model);
-        console.log(model);
         setNamespaces(copyNamespaces);
         setOpen(false);
         return true

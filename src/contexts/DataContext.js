@@ -129,6 +129,15 @@ class DataContextProvider extends Component {
 		}
 	}
 
+	getActionCode = ({ id, name, project_id, task_name, section, success=()=>{}, error=()=>{} }) => {
+		if(this.state.token!==null){
+			const server = new Server({ token: this.state.token });
+			server.getTriggerBuild({ id, name, project_id, task_name, section, success, error })
+		} else {
+			error("sem token");
+		}
+	}
+
 	getTemplates = ({ success=()=>{}, error=()=>{} }) => {
 		if(this.state.token!==null){
 			this.setState({'processing': true});
@@ -177,6 +186,7 @@ class DataContextProvider extends Component {
 											getTask: this.getTask,
 											processing: this.state.processing,
 											getBuild: this.getBuild,
+											getActionCode: this.getActionCode,
 											getTemplates: this.getTemplates,
 											saveTemplates: this.saveTemplates,
 											setIsUserSuper: this.setIsUserSuper,

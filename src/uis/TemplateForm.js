@@ -84,7 +84,7 @@ export default function TemplateForm() {
     return false;
   });
 
-  console.log(arr.filter(i => i !== null));*/
+*/
 
   var CortexCompleter ={
       getCompletions: function(editor, session, pos, prefix, callback) {

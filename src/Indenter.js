@@ -71,7 +71,6 @@ class Indenter {
 		this.statements.forEach(statement => {
 			const pattern = new RegExp(`^[ \t\n]*(${statement[0]})\\b.*`,'gi');
 			const groups = pattern.exec(line);
-			//console.log(pattern, line, groups);
 			if (groups !== null){
 				if((groups.length) && (groups[1].toLowerCase() == statement[0].toLowerCase())){
 					result = statement[0];

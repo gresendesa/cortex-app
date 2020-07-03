@@ -17,7 +17,7 @@ export function taskModel({ name, description='', id=Math.random(), delay=1, uns
 export function triggerModel({ name, id=Math.random(), blocking=false, action='', events=[], active=true }){
 	return {
 		"name": name,
-		"id":id,
+		"id": id,
 		"blocking": blocking,
 		"events": events,
 		"action": action,

@@ -65,7 +65,6 @@ export default function ButtonAppBar({ logged, setToken, username }) {
   const logOut = () => {
     setToken(null);
     setOpenMenu(false);
-    console.log('access token lost');
   }
 
   return (
