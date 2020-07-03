@@ -48,7 +48,7 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 			alert("Project name should have just [a-zA-Z0-9\_-]", "error");
 		} else if(config.pname.match(/[^a-zA-Z0-9\_]|^$/)){
 			alert("pname should have just [a-zA-Z0-9\_]", "error");
-		} else if(config.csid.match(/[^a-zA-Z0-9\_]|^$/)){
+		} else if(config.csid.match(/[^a-zA-Z0-9\_.-]|^$/)){
 			alert("CloudScript id should have just [a-zA-Z0-9\_-]");
 		} else {
 			setOpenConfig(false);
