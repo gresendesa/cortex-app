@@ -80,7 +80,7 @@ export default function ButtonAppBar({ logged, setToken, username }) {
             : ''
           }
           <Typography variant="h6" className={classes.title}>
-            Cortex
+            Rocket
           </Typography> 
           {
             logged ?
