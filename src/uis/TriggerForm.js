@@ -146,7 +146,7 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
 
   const getCode = () => {
     setDeploying(true);
-    getActionCode({ id: trigger.id, name: trigger.name, project_id:22, task_name: task.name, section:group, callback:() => {setDeploying(false);} });
+    getActionCode({ id: trigger.id, name: trigger.name, task_name: task.name, section:group, callback:() => {setDeploying(false);} });
   }
 
   const onEventsClose = () => {

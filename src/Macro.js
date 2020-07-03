@@ -233,7 +233,7 @@ class Macro extends React.Component {
 		this.props.getBuild({ id, success, error });
 	}
 
-	getActionCode = ({ id, name, project_id, task_name, section, callback=()=>{} }) => {
+	getActionCode = ({ id, name, task_name, section, callback=()=>{} }) => {
 
 		const success = (response) => {
 			this.setState({'deployLoading': false}, () => {
@@ -257,7 +257,7 @@ class Macro extends React.Component {
 		this.deployMacro({ 
 			launch:false, 
 			callback:()=>{
-				this.props.getActionCode({ id, name, project_id, task_name, section, success, error });
+				this.props.getActionCode({ id, name, project_id:this.state.project.id, task_name, section, success, error });
 			} 
 		})
 		
