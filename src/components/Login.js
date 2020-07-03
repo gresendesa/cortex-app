@@ -16,6 +16,9 @@ import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import logo from '../images/logo512.png';
 
+import { Icon } from 'semantic-ui-react';
+
+
 import Server from '../server';
 
 const useStyles = makeStyles((theme) => ({
@@ -76,8 +79,9 @@ export default function SignIn({ setToken, setUsername, setIsUserSuper }) {
 			{processing && <LinearProgress color="secondary" />}
 			<Container component="main" maxWidth="xs">
 				<div className={classes.paper}>
-					<Avatar className={classes.avatar} src={logo} />
-					
+					<Box mb={2}>
+						<Icon name='rocket' style={{color:'#357a38'}} size='huge' />
+					</Box>
 					<Typography component="h1" variant="h5">
 						Log in
 					</Typography>
