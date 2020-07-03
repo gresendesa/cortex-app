@@ -8,7 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { taskModel, macroModel } from '../mock/models';
 
-export default function ProjectCreateDialog({ open, setOpen, createProject }) {
+export default function ProjectCreateDialog({ open, setOpen, createProject, alert }) {
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -30,20 +30,25 @@ export default function ProjectCreateDialog({ open, setOpen, createProject }) {
       
     }
 
-    const model = macroModel({ 
-                                name, 
-                                description, 
-                                debug: false, 
-                                production: true, 
-                                pname:name.replace(' ','').toLowerCase(), 
-                                entrypoint: 'main', 
-                                unsafe: null,
-                                csid: name.replace(' ','').toLowerCase() + String(Math.random()).replace('.',''), 
-                                dependencies: [], 
-                                tasks: []
-                              });
-    createProject(model);
-    handleClose();
+    if(name.match(/[^a-zA-Z0-9\_-]|^$/)){
+      window.alert("Project name should have just [a-zA-Z0-9\_-]", "error");
+    } else {
+      const model = macroModel({ 
+                                  name, 
+                                  description, 
+                                  debug: false, 
+                                  production: true, 
+                                  pname:name.replace(' ','').toLowerCase(), 
+                                  entrypoint: 'main', 
+                                  unsafe: null,
+                                  csid: name.replace(' ','').toLowerCase() + String(Math.random()).replace('.',''), 
+                                  dependencies: [], 
+                                  tasks: []
+                                });
+      createProject(model);
+      handleClose();
+    }
+      
   }
 
   return (

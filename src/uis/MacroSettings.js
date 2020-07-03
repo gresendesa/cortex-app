@@ -26,7 +26,7 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 
 	const classes = useStyles();
 
-	const { setOpenConfig, setMacroState, deployMacro } = hookTask();
+	const { setOpenConfig, setMacroState, deployMacro, alert } = hookTask();
 
 	const [unsafeMode, setUnsafeMode] = useState(settings.unsafe!==null);
 	const [unsafeValue, setUnsafeValue] = useState(settings.unsafe==null ? 100 : settings.unsafe);
@@ -44,10 +44,18 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 	});
 
 	const handleClose = () => {
-		setOpenConfig(false);
-		setMacroState(config, () => {
-			deployMacro({ launch:false })
-		});
+		if(config.name.match(/[^a-zA-Z0-9\_-]|^$/)){
+			alert("Project name should have just [a-zA-Z0-9\_-]", "error");
+		} else if(config.pname.match(/[^a-zA-Z0-9\_]|^$/)){
+			alert("pname should have just [a-zA-Z0-9\_]", "error");
+		} else if(config.csid.match(/[^a-zA-Z0-9\_]|^$/)){
+			alert("CloudScript id should have just [a-zA-Z0-9\_-]");
+		} else {
+			setOpenConfig(false);
+			setMacroState(config, () => {
+				deployMacro({ launch:false })
+			});
+		}
 	}
 
 	const handleChange = (item, value) => {
