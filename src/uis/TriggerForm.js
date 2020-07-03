@@ -42,6 +42,7 @@ import Event from './Event';
 import DrawerHeader from './DrawerHeader';
 import Indenter from '../Indenter';
 import EventIcon from '@material-ui/icons/Event';
+import CodeIcon from '@material-ui/icons/Code';
 
 
 import { eventModel } from '../mock/models';
@@ -143,6 +144,10 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
     }
   }
 
+  const getCode = () => {
+    console.log(task.name, group, trigger.id, trigger.name)
+  }
+
   const onEventsClose = () => {
     setOpenEvents(false);
   }
@@ -229,6 +234,9 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
             <ButtonGroup color="primary" aria-label="outlined primary button group">
               <IconButton edge="end" disabled={deploying} color="inherit" onClick={() => {onSave()}} aria-label="close">
                 <SaveIcon />
+              </IconButton>
+              <IconButton edge="end" disabled={deploying} color="inherit" onClick={() => {getCode()}} aria-label="close">
+                <CodeIcon />
               </IconButton>
               <IconButton edge="end" disabled={deploying} color="inherit" onClick={() => {onSave(true)}} aria-label="close">
                 <Icon name='rocket' size='small' />
