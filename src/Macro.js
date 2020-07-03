@@ -301,7 +301,7 @@ class Macro extends React.Component {
 							<CodeIcon name='rocket' size='small' />
 						</IconButton>}
 						<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.deployMacro({ launch:true })}}>
-							<Icon name='rocket' size='small' />
+							<Icon name='rocket' style={{color:'#357a38'}} size='small' />
 						</IconButton>
 					</Grid>
 					
