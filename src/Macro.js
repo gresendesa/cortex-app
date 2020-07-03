@@ -254,13 +254,7 @@ class Macro extends React.Component {
 		}
 
 		this.setState({'deployLoading': true});
-		this.deployMacro({ 
-			launch:false, 
-			callback:()=>{
-				this.props.getActionCode({ id, name, project_id:this.state.project.id, task_name, section, success, error });
-			} 
-		})
-		
+		this.props.getActionCode({ id, name, project_id:this.state.project.id, task_name, section, success, error });
 	}
 
 	render(){
