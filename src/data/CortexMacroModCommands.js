@@ -37,6 +37,30 @@ export const cortexMacroModCommands = [
   },
 
   {
+    "value": '{{ has_error("boolvarname") }}',
+    "score": 2,
+    "meta": "Checks if there's error on the last task"
+  },
+
+  {
+    "value": '{{ is_callback("boolvarname") }}',
+    "score": 2,
+    "meta": "Checks if the current task were called as a callback"
+  },
+
+  {
+    "value": '{{ has_error }}',
+    "score": 3,
+    "meta": "Checks if there's error on the last task"
+  },
+
+  {
+    "value": '{{ is_callback }}',
+    "score": 3,
+    "meta": "Checks if the current task were called as a callback"
+  },
+
+  {
     "value": '{{ inform("msg") }}',
     "score": 2,
     "meta": "Set the status message"
@@ -112,6 +136,13 @@ export const cortexMacroModCommands = [
     "score": 2,
     "meta": "Put returned value into a var"
   },
+
+  {
+    "value": '{{ value }}',
+    "score": 3,
+    "meta": "Get the returned value"
+  },
+
   {
     "value": '{{ last_task("&outvar") }}',
     "score": 2,
