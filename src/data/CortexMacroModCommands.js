@@ -37,21 +37,9 @@ export const cortexMacroModCommands = [
   },
 
   {
-    "value": '{{ has_error("boolvarname") }}',
-    "score": 2,
-    "meta": "Checks if there's error on the last task"
-  },
-
-  {
     "value": '{{ is_callback("boolvarname") }}',
     "score": 2,
     "meta": "Checks if the current task were called as a callback"
-  },
-
-  {
-    "value": '{{ has_error }}',
-    "score": 3,
-    "meta": "Checks if there's error on the last task"
   },
 
   {
