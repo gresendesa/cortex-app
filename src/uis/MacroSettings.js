@@ -189,19 +189,6 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 							label="Debug"
 							/>
 						</Grid>
-
-						<Grid item xs={6}>
-						  	<FormControlLabel
-							control={
-								<Switch
-									checked={config.production}
-									onChange={(e) => {handleChange("production", !config.production)}}
-									color="primary"
-							  	/>
-								}
-							label="Production"
-							/>
-						</Grid>
 					
 					</Grid>
 
