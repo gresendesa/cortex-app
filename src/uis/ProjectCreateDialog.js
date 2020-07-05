@@ -41,7 +41,7 @@ export default function ProjectCreateDialog({ open, setOpen, createProject, aler
                                   pname:name.replace(' ','').toLowerCase(), 
                                   entrypoint: 'main', 
                                   unsafe: null,
-                                  csid: name.replace(' ','').toLowerCase() + String(Math.random()).replace('.',''), 
+                                  csid: name.replace(/[\s.-]*/g,'').toLowerCase() + String(Math.random()).replace('.',''), 
                                   dependencies: [], 
                                   tasks: []
                                 });
