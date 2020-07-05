@@ -1,6 +1,24 @@
 export const cortexMacroModCommands = [
 
   {
+    "value": '{* raise("message") *}',
+    "score": 2,
+    "meta": "Raise an Cortex exception"
+  },
+
+  {
+    "value": '{{ exception }}',
+    "score": 2,
+    "meta": "Access the exception value directly"
+  },
+
+  {
+    "value": '{{ catch("&outvar") }}',
+    "score": 2,
+    "meta": "Extracts the exception value and stores on a variable"
+  },
+
+  {
     "value": '{* block blockname *}\n{* endblock *}',
     "score": 2,
     "meta": "Templating block"
