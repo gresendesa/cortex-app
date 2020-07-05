@@ -68,7 +68,7 @@ export default function DependencieInfoDialog({ open, setOpen, dependencie, task
 
   return (
     <div>
-      <Dialog maxWidth='xs' fullWidth onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} TransitionComponent={Transition}>
+      <Dialog maxWidth='md' fullWidth onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} TransitionComponent={Transition}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
             
           <Grid
