@@ -177,7 +177,7 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 						alignItems="center"
 						spacing={3}>
 
-						<Grid item xs={6}>
+						<Grid item xs={12}>
 						  	<FormControlLabel
 							control={
 								<Switch
