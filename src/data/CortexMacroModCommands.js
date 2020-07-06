@@ -49,9 +49,9 @@ export const cortexMacroModCommands = [
   },
 
   {
-    "value": '{{ restart }}',
+    "value": '{{ start_forced }}',
     "score": 2,
-    "meta": "True if restarted"
+    "meta": "True if restarted or started on forced mode"
   },
 
   {
