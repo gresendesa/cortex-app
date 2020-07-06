@@ -1,7 +1,7 @@
 export const cortexMacroModCommands = [
 
   {
-    "value": '{* raise("message") *}',
+    "value": '{{ raise("message") }}',
     "score": 2,
     "meta": "Raise an Cortex exception"
   },
