@@ -96,6 +96,12 @@ export const cortexMacroModCommands = [
     "meta": "Reads the message from the OUT foreign process"
   },
 
+  {
+    "value": '{{ read_status("pname", "&outvar") }}',
+    "score": 2,
+    "meta": "Reads the message from the STATUS foreign process"
+  },
+
 
   {
     "value": '{{ pause("msg") }}',
