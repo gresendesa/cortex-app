@@ -1,6 +1,12 @@
 export const cortexMacroModCommands = [
 
   {
+    "value": '{{ block() }}',
+    "score": 2,
+    "meta": "Abort the following actions execution"
+  },
+
+  {
     "value": '{{ raise("message") }}',
     "score": 2,
     "meta": "Raise an Cortex exception"
