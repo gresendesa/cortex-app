@@ -1,6 +1,18 @@
 export const cortexMacroModCommands = [
 
   {
+    "value": '{{ entrypoint("task") }}',
+    "score": 2,
+    "meta": "Defines the entrypoint process"
+  },
+
+  {
+    "value": '{{ endpoint("task") }}',
+    "score": 2,
+    "meta": "Defines the endpoint process"
+  },
+  
+  {
     "value": '{{ block() }}',
     "score": 2,
     "meta": "Abort the following actions execution"
