@@ -93,7 +93,11 @@ class Macro extends React.Component {
 	}
 
 	pushDependencie = (dependencie) => {
-		this.setState({'dependencies': [...this.state.dependencies, dependencie]})
+		if(dependencie instanceof Array){
+			this.setState({'dependencies': [...this.state.dependencies, ...dependencie]})
+		} else {
+			this.setState({'dependencies': [...this.state.dependencies, dependencie]})
+		}
 	}
 
 	hasTask = (task, except=false) => {
@@ -171,12 +175,17 @@ class Macro extends React.Component {
 			'hasMacroUnsafe': () => { return this.state.unsafe!=null },
 			'deployMacro': this.deployMacro,
 			'getForeingTask': this.getForeingTask,
+			'getForeingTasks': this.getForeingTasks,
 			'getActionCode': this.getActionCode,
 		}
 	}
 
 	getForeingTask = ({ dev, project, task, success, error }) => {
 		this.props.getTask({ dev, project, task, success, error });
+	}
+
+	getForeingTasks = ({ dev, project, success, error }) => {
+		this.props.getTasks({ dev, project, success, error });
 	}
 
 	deployMacro = ({ launch, callback=()=>{} }) => {

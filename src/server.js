@@ -136,6 +136,21 @@ class Server {
 		})
 	}
 
+	getTasks({ dev, project, success, error }) {
+
+		const conn = this.getConnection();
+
+		conn.get(`/tasks/${dev}/${project}`).then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			try {
+				error(e.response.data.detail);
+			} catch {
+				error(e.message);
+			}
+		})
+	}
+
 	getBuild({ id, success, error }) {
 
 		const conn = this.getConnection();

@@ -12,7 +12,7 @@ import { taskModel, dependencieModel } from '../mock/models';
 
 export default function TaskCreateDialog({ hookTask }) {
 
-  var { open, toggleCreateDialog, pushTask, hasTask, alert, pushDependencie, hasDependencie, getForeingTask } = hookTask();
+  var { open, toggleCreateDialog, pushTask, hasTask, alert, pushDependencie, hasDependencie, getForeingTask, getForeingTasks } = hookTask();
   var [value, setValue] = useState('');
 
   const handleClose = () => {
@@ -21,19 +21,21 @@ export default function TaskCreateDialog({ hookTask }) {
 
   const handleImport = (e) => {
 
-    const [dev, project] = value.split('.',2);
+    const parse_dependencie = (str) => {
 
-    const nameItems = value.split('.');
-    nameItems.splice(0, 2);
-    const taskName = nameItems.join('.');
-    var dependencie = dependencieModel({ dev, project, taskName });
+      const [dev, project] = str.split('.',2);
 
-    if((dependencie.dev) && (dependencie.dev.length>0) &&
-       (dependencie.project) && (dependencie.project.length>0) &&
-       (dependencie.taskName) && (dependencie.taskName.length>0)){
+      const nameItems = str.split('.');
+      nameItems.splice(0, 2);
+      const taskName = nameItems.join('.');
+      return dependencieModel({ dev, project, taskName });
 
+    }
+
+    const push_dependencie = (dependencie) => {
       if(dependencie.taskName.match(/ |"|'|;|^$/)){
         alert("Don't use spaces or especial chars!");
+        return false;
       } else if((!hasTask({name:dependencie.taskName})) && (!hasDependencie(dependencie))){
         
         const success = () => {
@@ -44,9 +46,45 @@ export default function TaskCreateDialog({ hookTask }) {
           alert(response);
         }
         getForeingTask({ dev: dependencie.dev, project: dependencie.project, task:dependencie.taskName, success, error })
-        
+        return true;
       } else {
-        alert("This name is already taken from other task!");
+        return false;
+      }
+    }
+
+    const dependencie = parse_dependencie(value);
+
+    if((dependencie.dev) && (dependencie.dev.length>0) &&
+       (dependencie.project) && (dependencie.project.length>0)){
+
+      if((dependencie.taskName) && (dependencie.taskName.length>0)){
+        if(!push_dependencie(dependencie)){
+          alert(`'${dependencie.taskName}' name is already taken from other task!`);
+        }
+      } else {
+
+        const success = (data) => {
+          var not_imported = [];
+          var imported = [];
+          data.tasks.map(dependencie_str => {
+            const dependencie = parse_dependencie(dependencie_str);
+            if((!hasTask({name:dependencie.taskName})) && (!hasDependencie(dependencie))){
+              imported.push(dependencie)
+            } else {
+              not_imported.push(dependencie.taskName);
+            }
+          })
+          pushDependencie(imported);
+          if(not_imported.length > 0){
+            alert(`'${not_imported.join(',')}' tasks names are already taken!`);
+          }
+          toggleCreateDialog();
+        }
+        const error = (response) => {
+          alert(response);
+        }
+
+        getForeingTasks({ dev:dependencie.dev, project:dependencie.project, success, error })
       }
 
     } else {

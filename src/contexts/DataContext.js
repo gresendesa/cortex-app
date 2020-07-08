@@ -120,6 +120,24 @@ class DataContextProvider extends Component {
 		}
 	}
 
+	getTasks = ({ dev, project, success=()=>{}, error=()=>{} }) => {
+		if(this.state.token!==null){
+			this.setState({'processing': true});
+			const server = new Server({ token: this.state.token });
+			const onOk = (response) => {
+				success(response);
+				this.setState({'processing': false});
+			}
+			const onIssue = (response) => {
+				error(response);
+				this.setState({'processing': false});
+			}
+			server.getTasks({ dev, project, success:onOk, error:onIssue })
+		} else {
+			error("sem token");
+		}
+	}
+
 	getBuild = ({ id, success=()=>{}, error=()=>{} }) => {
 		if(this.state.token!==null){
 			const server = new Server({ token: this.state.token });
@@ -184,6 +202,7 @@ class DataContextProvider extends Component {
 											delMacro: this.delMacro,
 											saveMacro: this.saveMacro,
 											getTask: this.getTask,
+											getTasks: this.getTasks,
 											processing: this.state.processing,
 											getBuild: this.getBuild,
 											getActionCode: this.getActionCode,
