@@ -107,7 +107,6 @@ export default function NamespaceEditDialog({ open, setOpen, namespace, updateNa
             fullWidth
             multiline
             inputProps={{ className: classes.textarea }}
-            onKeyPress={handleKeyPressed}
           />
 
         </DialogContent>

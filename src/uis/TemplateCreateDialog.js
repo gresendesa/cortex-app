@@ -69,7 +69,6 @@ export default function TemplateCreateDialog({ open, setOpen, namespace, createT
             fullWidth
             multiline
             inputProps={{ className: classes.textarea }}
-            onKeyPress={handleKeyPressed}
           />
         </DialogContent>
         <DialogActions>

@@ -191,7 +191,6 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
                 multiline
                 inputProps={{ className: classes.textarea }}
                 fullWidth
-                onKeyPress={handleKeyPressed}
               />
             </Grid>
 

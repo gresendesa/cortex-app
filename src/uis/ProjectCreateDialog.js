@@ -86,7 +86,6 @@ export default function ProjectCreateDialog({ open, setOpen, createProject, aler
             onChange={(e) => {setDescription(e.target.value)}}
             fullWidth
             draggable
-            onKeyPress={handleKeyPressed}
           />
         </DialogContent>
         <DialogActions>
