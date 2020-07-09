@@ -339,7 +339,7 @@ class Macro extends React.Component {
 
 				</Grid>
 
-				<TasksSection tasks={this.state.tasks} hookTask={this.hookTask} />
+				<TasksSection tasks={this.state.tasks} hasDependencies={this.state.dependencies.length} hookTask={this.hookTask} />
 				<TaskCreateDialog hookTask={this.hookTask}/>
 
 				<DependenciesSection dependencies={this.state.dependencies} hookTask={this.hookTask} />

@@ -4,7 +4,7 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 import TaskPanel from './TaskPanel';
 import uuid from 'uuid';
 
-export default function TasksSection({ tasks, hookTask }) {
+export default function TasksSection({ tasks, hasDependencies, hookTask }) {
 
 	return (
 
@@ -17,10 +17,10 @@ export default function TasksSection({ tasks, hookTask }) {
 				)
 			})
 			:
-			<Alert severity="info">
+			(!hasDependencies ? <Alert severity="info">
 				<AlertTitle>No tasks yet</AlertTitle>
 				Use the <strong> button above!</strong>
-			</Alert>
+			</Alert>:'')
 		}
 		</Box>
 	);
