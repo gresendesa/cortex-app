@@ -46,7 +46,7 @@ function ProjectItem({ p, redirectToProject, removeProject }) {
 				secondary={p.macro.description}
 				/>
 			<ListItemSecondaryAction>
-				<DeleteButton type='project' callback={() => {removeProject(p.id)}} />
+				<DeleteButton type='project' confirmString={p.macro.name} callback={() => {removeProject(p.id)}} />
 			</ListItemSecondaryAction>
 		</ListItem>
 	)

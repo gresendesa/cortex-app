@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import DeleteTwoToneIcon from '@material-ui/icons/DeleteTwoTone';
 
-export default function DeleteButton({ type='task', callback }) {
+export default function DeleteButton({ type='task', callback, confirmString }) {
 
 	const [tryDel, setTryDel] = useState(false);
 
@@ -26,9 +26,13 @@ export default function DeleteButton({ type='task', callback }) {
 		}
 	}
 
-	const handleClickProject = () => {
+	const handleClickProject = (name) => {
+
 		if (tryDel) {
-			if(window.confirm("A deleted project cannot be restored!")){
+
+			var confirm = window.prompt(`Type '${confirmString}' to delete project`);
+
+			if(confirm==confirmString){
 				callback();
 			}
 		} else {
