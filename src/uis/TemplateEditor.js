@@ -214,6 +214,13 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
               tabSize={2}
               width="100%"
               showPrintMargin={false}
+              commands={[
+                {   
+                  name: 'save', 
+                  bindKey: {win: 'Ctrl-S', mac: 'Command-S'}, 
+                  exec: () => {handleSave()} 
+                },
+              ]}
               setOptions={{
                 enableBasicAutocompletion: [CortexCompleter],
                 enableLiveAutocompletion: true,

@@ -34,6 +34,12 @@ export default function TemplateCreateDialog({ open, setOpen, namespace, createT
     }
   }
 
+  const handleKeyPressed = (e) => {
+    if(e.key=='Enter'){
+      handleSave();
+    }
+  }
+
   return (
     <div>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -51,6 +57,7 @@ export default function TemplateCreateDialog({ open, setOpen, namespace, createT
             value={name}
             onChange={(e) => {setName(e.target.value)}}
             fullWidth
+            onKeyPress={handleKeyPressed}
           />
           <TextField
             margin="dense"
@@ -62,6 +69,7 @@ export default function TemplateCreateDialog({ open, setOpen, namespace, createT
             fullWidth
             multiline
             inputProps={{ className: classes.textarea }}
+            onKeyPress={handleKeyPressed}
           />
         </DialogContent>
         <DialogActions>

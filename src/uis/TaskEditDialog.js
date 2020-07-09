@@ -85,6 +85,12 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
 
   }
 
+  const handleKeyPressed = (e) => {
+    if(e.key=='Enter'){
+      handleSave();
+    }
+  }
+
   return (
     <div>
       <Dialog open={edit} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -112,6 +118,7 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
                 value={name}
                 onChange={handleName}
                 fullWidth
+                onKeyPress={handleKeyPressed}
               />
             </Grid>
 
@@ -122,6 +129,7 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
                 value={delay}
                 size="small"
                 onChange={handleDelay}
+                onKeyPress={handleKeyPressed}
               />
             </Grid>    
             
@@ -143,6 +151,7 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
                 size="small"
                 onChange={handleUnsafeNumber}
                 disabled={!unsafe}
+                onKeyPress={handleKeyPressed}
               />
             </Grid>
 
@@ -182,6 +191,7 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
                 multiline
                 inputProps={{ className: classes.textarea }}
                 fullWidth
+                onKeyPress={handleKeyPressed}
               />
             </Grid>
 

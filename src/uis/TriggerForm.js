@@ -275,6 +275,23 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
               tabSize={2}
               showPrintMargin={false}
               width="100%"
+              commands={[
+                {   
+                  name: 'save', 
+                  bindKey: {win: 'Ctrl-S', mac: 'Command-S'}, 
+                  exec: () => {onSave()} 
+                },
+                {   
+                  name: 'launch', 
+                  bindKey: {win: 'Ctrl-L', mac: 'Command-L'}, 
+                  exec: () => {onSave(true)} 
+                },
+                {   
+                  name: 'kode', 
+                  bindKey: {win: 'Ctrl-K', mac: 'Command-K'}, 
+                  exec: () => {getCode()} 
+                }
+              ]}
               setOptions={{
                 enableBasicAutocompletion: [CortexCompleter],
                 enableLiveAutocompletion: true,

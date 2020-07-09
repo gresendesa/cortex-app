@@ -34,6 +34,12 @@ export default function NamespaceCreateDialog({ open, setOpen, createNamespace }
     }
   }
 
+  const handleKeyPressed = (e) => {
+    if(e.key=='Enter'){
+      handleSave();
+    }
+  }
+
   return (
     <div>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -50,6 +56,7 @@ export default function NamespaceCreateDialog({ open, setOpen, createNamespace }
             type="text"
             value={name}
             onChange={(e) => {setName(e.target.value)}}
+            onKeyPress={handleKeyPressed}
             fullWidth
           />
           <TextField
@@ -62,6 +69,7 @@ export default function NamespaceCreateDialog({ open, setOpen, createNamespace }
             fullWidth
             multiline
             inputProps={{ className: classes.textarea }}
+            onKeyPress={handleKeyPressed}
           />
         </DialogContent>
         <DialogActions>

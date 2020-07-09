@@ -46,6 +46,12 @@ export default function NamespaceEditDialog({ open, setOpen, namespace, updateNa
     }
   }
 
+  const handleKeyPressed = (e) => {
+    if(e.key=='Enter'){
+      handleSave();
+    }
+  }
+
   return (
     <div>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -72,6 +78,7 @@ export default function NamespaceEditDialog({ open, setOpen, namespace, updateNa
                 value={name}
                 onChange={(e) => {setName(e.target.value)}}
                 fullWidth
+                onKeyPress={handleKeyPressed}
               />
             </Grid>
 
@@ -100,6 +107,7 @@ export default function NamespaceEditDialog({ open, setOpen, namespace, updateNa
             fullWidth
             multiline
             inputProps={{ className: classes.textarea }}
+            onKeyPress={handleKeyPressed}
           />
 
         </DialogContent>

@@ -51,6 +51,12 @@ export default function ProjectCreateDialog({ open, setOpen, createProject, aler
       
   }
 
+  const handleKeyPressed = (e) => {
+    if(e.key=='Enter'){
+      handleSave();
+    }
+  }
+
   return (
     <div>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -69,6 +75,7 @@ export default function ProjectCreateDialog({ open, setOpen, createProject, aler
             onChange={(e) => {setName(e.target.value)}}
             fullWidth
             draggable
+            onKeyPress={handleKeyPressed}
           />
           <TextField
             margin="dense"
@@ -79,6 +86,7 @@ export default function ProjectCreateDialog({ open, setOpen, createProject, aler
             onChange={(e) => {setDescription(e.target.value)}}
             fullWidth
             draggable
+            onKeyPress={handleKeyPressed}
           />
         </DialogContent>
         <DialogActions>

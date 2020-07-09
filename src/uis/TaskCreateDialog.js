@@ -106,6 +106,12 @@ export default function TaskCreateDialog({ hookTask }) {
 
   }
 
+  const handleKeyPressed = (e) => {
+    if(e.key=='Enter'){
+      handleSave();
+    }
+  }
+
   return (
     <div>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -123,6 +129,7 @@ export default function TaskCreateDialog({ hookTask }) {
             onChange={(e) => {setValue(e.target.value)}}
             fullWidth
             draggable
+            onKeyPress={handleKeyPressed}
           />
         </DialogContent>
         <DialogActions>

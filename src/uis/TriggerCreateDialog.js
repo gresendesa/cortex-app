@@ -36,6 +36,12 @@ export default function TriggerCreateDialog({ open, setOpen, group, hookTrigger,
 
   }
 
+  const handleKeyPressed = (e) => {
+    if(e.key=='Enter'){
+      handleSave();
+    }
+  }
+
   return (
     <div>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -53,6 +59,7 @@ export default function TriggerCreateDialog({ open, setOpen, group, hookTrigger,
             onChange={(e) => {setValue(e.target.value)}}
             fullWidth
             draggable
+            onKeyPress={handleKeyPressed}
           />
         </DialogContent>
         <DialogActions>
