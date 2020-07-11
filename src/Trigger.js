@@ -13,16 +13,22 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import BlockIcon from '@material-ui/icons/Block';
 import CheckIcon from '@material-ui/icons/Check';
 import DeleteButton from './uis/DeleteButton';
-import { deepOrange, green, blueGrey, gray } from '@material-ui/core/colors';
+import { deepOrange, green, blueGrey, gray, yellow } from '@material-ui/core/colors';
 import { makeStyles } from '@material-ui/core/styles';
 
-function TriggerAvatar({ active }) {
+function TriggerAvatar({ active, blocking }) {
 	const useStyles = makeStyles((theme) => ({
 	  avatar: {
 	    width: theme.spacing(4),
 	    height: theme.spacing(4),
 	    color: theme.palette.getContrastText(green[500]),
 	    backgroundColor: green[500],
+	  },
+	  avatarBlocking: {
+	    width: theme.spacing(4),
+	    height: theme.spacing(4),
+	    color: theme.palette.getContrastText(yellow[500]),
+	    backgroundColor: yellow[500],
 	  },
 	   avatarInactive: {
 	    width: theme.spacing(4),
@@ -34,7 +40,10 @@ function TriggerAvatar({ active }) {
 
 	return (
 		<ListItemAvatar>
-			{active && <Avatar className={classes.avatar}>
+			{active && blocking && <Avatar className={classes.avatarBlocking}>
+				<CodeIcon />
+			</Avatar>}
+			{active && !blocking && <Avatar className={classes.avatar}>
 				<CodeIcon />
 			</Avatar>}
 			{!active && <Avatar className={classes.avatarInactive}>
@@ -118,7 +127,7 @@ class Trigger extends React.Component {
 		return (
 			<React.Fragment>
 				<ListItem button onClick={this.handleClick} >
-					<TriggerAvatar active={this.props.trigger.active} />
+					<TriggerAvatar active={this.props.trigger.active} blocking={this.props.trigger.blocking} />
 					<ListItemText primary={
 						this.props.trigger.active ?
 						this.state.trigger.name
