@@ -1,12 +1,6 @@
 export const cortexMacroModCommands = [
 
   {
-    "value": '{{ id("outvar") }}',
-    "score": 2,
-    "meta": "Puts id on outvar"
-  },
-
-  {
     "value": '{{ id }}',
     "score": 2,
     "meta": "Gets the id resource directly"
