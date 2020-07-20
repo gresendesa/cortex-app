@@ -15,7 +15,7 @@ class DataContextProvider extends Component {
 
 	version = {
 		'number': '1.3',
-		'release_date': '20 october 2020',
+		'release_date': '20 July 2020',
 		'short': 'Editor height and verbose switcher'
 	}
 

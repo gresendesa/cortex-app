@@ -32,9 +32,9 @@ export default function Footer({ version }) {
 						
 					<Typography variant="caption" color="textSecondary" align="center">
 
-						<Tooltip title={version.release_date + ' • ' + version.short} aria-label="release date">
+						<Tooltip title={version.short + ' • ' + version.release_date} aria-label="release date">
 						  <Link color="inherit" href="#">
-							v.{version.number}
+							v{version.number}
 						  </Link>
 						</Tooltip>
 
