@@ -63,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
   },
   editor: {
     backgroundColor: 'green',
+    height:'90vh',
   },
   events: {
     backgroundColor: 'inherit',
@@ -213,6 +214,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
               fontSize={20}
               tabSize={2}
               width="100%"
+              height="100%"
               showPrintMargin={false}
               commands={[
                 {   

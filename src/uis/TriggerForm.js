@@ -67,6 +67,7 @@ const useStyles = makeStyles((theme) => ({
   },
   editor: {
     backgroundColor: 'green',
+    height:'90vh',
   },
   events: {
     backgroundColor: 'inherit',
@@ -275,6 +276,7 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
               tabSize={2}
               showPrintMargin={false}
               width="100%"
+              height="100%"
               commands={[
                 {   
                   name: 'save', 
