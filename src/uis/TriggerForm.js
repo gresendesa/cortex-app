@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -44,14 +44,13 @@ import Indenter from '../Indenter';
 import EventIcon from '@material-ui/icons/Event';
 import CodeIcon from '@material-ui/icons/Code';
 
-
 import { eventModel } from '../mock/models';
 
 import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 
 import { cortexMacroModCommands } from '../data/CortexMacroModCommands';
 
-
+import IconTipButton from './IconTipButton';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -121,6 +120,13 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
     });
     return has;
   }
+
+  const saveButtonRef = useRef(null);
+  const launchButtonRef = useRef(null);
+  const kodeButtonRef = useRef(null);
+  const indentButtonRef = useRef(null);
+  const eventsButtonRef = useRef(null);
+  const editButtonRef = useRef(null);
 
   const onSave = (publish, callback=()=>{}) => {
 
@@ -217,15 +223,15 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
             </Box>
 
             <ButtonGroup color="primary" aria-label="outlined primary button group">
-              <IconButton edge="end" disabled={deploying} color="inherit" onClick={() => {onSave()}} aria-label="close">
+              <IconTipButton edge="end" tip="Save CTRL+S" disabled={deploying} color="inherit" reference={saveButtonRef} onClick={() => {onSave()}}>
                 <SaveIcon />
-              </IconButton>
-              <IconButton edge="end" disabled={deploying} color="inherit" onClick={() => {getCode()}} aria-label="close">
+              </IconTipButton>
+              <IconTipButton edge="end" tip="See Kode CTRL+K" disabled={deploying} color="inherit" reference={kodeButtonRef} onClick={() => {getCode()}}>
                 <CodeIcon />
-              </IconButton>
-              <IconButton edge="end" disabled={deploying} color="inherit" onClick={() => {onSave(true)}} aria-label="close">
+              </IconTipButton>
+              <IconTipButton edge="end" tip="Launch CTRL+L" disabled={deploying} color="inherit" reference={launchButtonRef}  onClick={() => {onSave(true)}}>
                 <Icon name='rocket' size='small' />
-              </IconButton>
+              </IconTipButton>
             </ButtonGroup>
 
           </Toolbar>
@@ -240,18 +246,20 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
             sm={12}> 
             
             <Grid item>
-              <IconButton edge="start" color="inherit" onClick={handleOpenEvents} className={classes.actionButton} aria-label="close">
+              <IconTipButton edge="start" tip="Manage events CTRL+E" color="inherit" reference={eventsButtonRef} onClick={handleOpenEvents} className={classes.actionButton} aria-label="close">
                 <EventIcon />
-              </IconButton>
-              <IconButton edge="start" color="inherit" onClick={handleIndent} className={classes.actionButton} aria-label="close">
+              </IconTipButton>
+              <IconTipButton edge="start" tip="Indent code CTRL+I" color="inherit" reference={indentButtonRef} onClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
-              </IconButton>
+              </IconTipButton>
             </Grid>
 
             <Grid item>
-              <IconButton aria-label="add task" onClick={handleOpenConfig}>
-                <EditIcon fontSize="small" />
-              </IconButton>
+              <Box mr={1}>
+                <IconTipButton edge="end" tip="Edit props CTRL+P" aria-label="add task" reference={editButtonRef} onClick={handleOpenConfig}>
+                  <EditIcon fontSize="small" />
+                </IconTipButton>
+              </Box>
             </Grid>
 
           </Grid>
@@ -281,17 +289,32 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
                 {   
                   name: 'save', 
                   bindKey: {win: 'Ctrl-S', mac: 'Command-S'}, 
-                  exec: () => {onSave()} 
+                  exec: () => {saveButtonRef.current.click()} 
                 },
                 {   
                   name: 'launch', 
                   bindKey: {win: 'Ctrl-L', mac: 'Command-L'}, 
-                  exec: () => {onSave(true)} 
+                  exec: () => {launchButtonRef.current.click()} 
                 },
                 {   
                   name: 'kode', 
                   bindKey: {win: 'Ctrl-K', mac: 'Command-K'}, 
-                  exec: () => {getCode()} 
+                  exec: () => {kodeButtonRef.current.click()}
+                },
+                {   
+                  name: 'indent', 
+                  bindKey: {win: 'Ctrl-I', mac: 'Command-I'}, 
+                  exec: () => {indentButtonRef.current.click()}
+                },
+                {   
+                  name: 'events', 
+                  bindKey: {win: 'Ctrl-E', mac: 'Command-E'}, 
+                  exec: () => {eventsButtonRef.current.click()}
+                },
+                {   
+                  name: 'props', 
+                  bindKey: {win: 'Ctrl-P', mac: 'Command-P'}, 
+                  exec: () => {editButtonRef.current.click()}
                 }
               ]}
               setOptions={{

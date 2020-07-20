@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -37,6 +37,7 @@ import Add from '@material-ui/icons/Add';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Drawer from '@material-ui/core/Drawer';
+import IconTipButton from './IconTipButton'
 
 import Event from './Event';
 import DrawerHeader from './DrawerHeader';
@@ -99,6 +100,10 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
     setDescription(template.description);
   }, [template]);
 
+  const saveButtonRef = useRef(null);
+  const indentButtonRef = useRef(null);
+  const editButtonRef = useRef(null);
+
   const handleIndent = () => {
     const lines = code.split('\n');
     const indenter = new Indenter(lines);
@@ -133,10 +138,10 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
     setCode(value);
   }
 
-  const handleSave = () => {
+  const handleSave = (content) => {
     const copyTemplate = Object.assign({}, template);
     copyTemplate.name = name;
-    copyTemplate.code = code;
+    copyTemplate.code = content;
     copyTemplate.description = description;
 
     setProcessing(true);
@@ -166,9 +171,9 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
             <Box className={classes.breadCrumb}>
               {namespace.name}
             </Box>
-            <IconButton edge="end" disabled={processing} color="inherit" onClick={handleSave} aria-label="close">
+            <IconTipButton edge="end" tip="Save CTRL+S" disabled={processing} reference={saveButtonRef} color="inherit" onClick={() => handleSave(code)} aria-label="close">
               <SaveIcon />
-            </IconButton>
+            </IconTipButton>
           
           </Toolbar>
         </AppBar>
@@ -182,15 +187,17 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
             sm={12}> 
             
             <Grid item>
-              <IconButton edge="start" color="inherit" onClick={handleIndent} className={classes.actionButton} aria-label="close">
+              <IconTipButton edge="start" tip="Indent code CTRL+I" color="inherit" reference={indentButtonRef} onClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
-              </IconButton>
+              </IconTipButton>
             </Grid>
 
             <Grid item>
-              <IconButton aria-label="add task" onClick={handleOpenConfig}>
-                <EditIcon fontSize="small" />
-              </IconButton>
+              <Box mr={1}>
+                <IconTipButton aria-label="add task" tip="Edit props CTRL+P" reference={editButtonRef} onClick={handleOpenConfig}>
+                  <EditIcon fontSize="small" />
+                </IconTipButton>
+              </Box>
             </Grid>
 
           </Grid>
@@ -220,7 +227,17 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
                 {   
                   name: 'save', 
                   bindKey: {win: 'Ctrl-S', mac: 'Command-S'}, 
-                  exec: () => {handleSave()} 
+                  exec: editor => {saveButtonRef.current.click()}
+                },
+                {   
+                  name: 'indent', 
+                  bindKey: {win: 'Ctrl-I', mac: 'Command-I'}, 
+                  exec: editor => {indentButtonRef.current.click()}
+                },
+                {   
+                  name: 'props', 
+                  bindKey: {win: 'Ctrl-P', mac: 'Command-P'}, 
+                  exec: editor => {editButtonRef.current.click()}
                 },
               ]}
               setOptions={{

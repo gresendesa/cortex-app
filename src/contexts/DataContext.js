@@ -14,9 +14,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.3',
+		'number': '1.4',
 		'release_date': '20 July 2020',
-		'short': 'Editor height and verbose switcher'
+		'short': 'Shortcuts and buttom tips on editors'
 	}
 
 	setToken = (token) => {
