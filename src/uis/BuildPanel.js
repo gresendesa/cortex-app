@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
   editor: {
     backgroundColor: 'green',
-    height:'90vh'
+    height:'100vh'
   },
   events: {
     backgroundColor: 'inherit',
