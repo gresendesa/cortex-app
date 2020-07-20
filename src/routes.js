@@ -77,7 +77,7 @@ export default function Routes({ context }) {
 						}
 						
 					</Container>
-					<Footer />
+					<Footer version={context.version} />
 				</Router>
 			)
 		}}

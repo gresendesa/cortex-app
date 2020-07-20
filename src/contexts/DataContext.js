@@ -13,6 +13,12 @@ class DataContextProvider extends Component {
 		'isUserSuper': false
 	}
 
+	version = {
+		'number': '1.3',
+		'release_date': '20 october 2020',
+		'short': 'Editor height and verbose switcher'
+	}
+
 	setToken = (token) => {
 
 		if ((token == 'null') || (token == null)){
@@ -209,6 +215,7 @@ class DataContextProvider extends Component {
 											getTemplates: this.getTemplates,
 											saveTemplates: this.saveTemplates,
 											setIsUserSuper: this.setIsUserSuper,
+											version: this.version
 
 										}}>
 				{this.props.children}
