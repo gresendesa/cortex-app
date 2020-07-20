@@ -274,6 +274,10 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
 
           <Grid item xs={12} className={classes.editor}>
             <AceEditor 
+              onLoad={(editor) => {
+                editor.focus();
+                editor.setValue(editor.getValue(), -1);
+              }}
               mode="javascript"
               theme="monokai"
               value={action}

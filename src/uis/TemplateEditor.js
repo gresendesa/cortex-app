@@ -212,6 +212,10 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
 
           <Grid item xs={12} className={classes.editor}>
             <AceEditor 
+              onLoad={(editor) => {
+                editor.focus();
+                editor.setValue(editor.getValue(), -1);
+              }}
               mode="javascript"
               theme="monokai"
               value={code}
