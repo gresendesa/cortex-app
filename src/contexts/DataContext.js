@@ -16,7 +16,7 @@ class DataContextProvider extends Component {
 	version = {
 		'number': '1.4',
 		'release_date': '20 July 2020',
-		'short': 'Shortcuts and buttom tips on editors and markdown support on task description'
+		'short': 'Shortcuts and button tips on editors and markdown support on task description'
 	}
 
 	setToken = (token) => {

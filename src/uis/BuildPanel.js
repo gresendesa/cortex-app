@@ -66,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
   editor: {
     backgroundColor: 'green',
+    height:'90vh'
   },
   events: {
     backgroundColor: 'inherit',
@@ -122,6 +123,7 @@ export default function BuildPanel({ open, setOpen, code, projectName }) {
               readOnly={true}
               showPrintMargin={false}
               width="100%"
+              height="100%"
               setOptions={{
                 animatedScroll: true
               }}
