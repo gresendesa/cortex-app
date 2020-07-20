@@ -280,6 +280,7 @@ class Macro extends React.Component {
 			'unsafe': this.state.unsafe,
 			'debug': this.state.debug,
 			'production': this.state.production,
+			'verbose': this.state.verbose
 		}
 
 		return (

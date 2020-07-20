@@ -41,6 +41,7 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 		'unsafe': settings.unsafe,
 		'debug': settings.debug,
 		'production': settings.production,
+		'verbose': settings.verbose
 	});
 
 	const handleClose = () => {
@@ -177,7 +178,7 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 						alignItems="center"
 						spacing={3}>
 
-						<Grid item xs={12}>
+						<Grid item xs={6}>
 						  	<FormControlLabel
 							control={
 								<Switch
@@ -187,6 +188,19 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 							  	/>
 								}
 							label="Debug"
+							/>
+						</Grid>
+
+						<Grid item xs={6}>
+						  	<FormControlLabel
+							control={
+								<Switch
+									checked={config.verbose}
+									onChange={(e) => {handleChange("verbose", !config.verbose)}}
+									color="primary"
+							  	/>
+								}
+							label="Verbose"
 							/>
 						</Grid>
 					

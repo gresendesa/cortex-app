@@ -62,7 +62,7 @@ export function templateModel({ name, description, code='', id=Math.random() }){
 	}
 }
 
-export function macroModel({ name, description, debug=false, production=true, csid, pname, entrypoint, endpoint='', unsafe=null, dependencies=[], tasks }){
+export function macroModel({ name, description, debug=false, production=true, csid, pname, entrypoint, endpoint='', unsafe=null, dependencies=[], tasks, verbose=true }){
 	return {
 		'name': name,
 		'description': description,
@@ -77,6 +77,7 @@ export function macroModel({ name, description, debug=false, production=true, cs
 		'unsafe': unsafe,
 		'dependencies': dependencies,
 		'tasks': tasks,
+		'verbose': verbose
 	}
 }
 
