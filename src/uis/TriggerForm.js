@@ -64,9 +64,12 @@ const useStyles = makeStyles((theme) => ({
   actionButton: {
     marginLeft: theme.spacing(0.05),
   },
+  containerEditor: {
+    backgroundColor: '#272822',
+    height:'100vh',
+  },
   editor: {
-    backgroundColor: 'green',
-    height:'85vh',
+    height:'80vh',
   },
   events: {
     backgroundColor: 'inherit',
@@ -209,7 +212,7 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
   //<Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
   return (
     <div>
-      <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} >
+      <Dialog fullScreen open={open} onClose={handleClose} className={classes.dialog} TransitionComponent={Transition} >
         <AppBar className={classes.appBar} style={{ background: '#357a38' }}>
           <Toolbar>
             <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
@@ -270,6 +273,7 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
             direction="row"
             justify="center"
             alignItems="stretch"
+            className={classes.containerEditor}
           >
 
           <Grid item xs={12} className={classes.editor}>

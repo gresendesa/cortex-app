@@ -62,9 +62,12 @@ const useStyles = makeStyles((theme) => ({
   actionButton: {
     marginLeft: theme.spacing(0.05),
   },
+  containerEditor: {
+    backgroundColor: '#272822',
+    height:'100vh',
+  },
   editor: {
-    backgroundColor: 'green',
-    height:'85vh',
+    height:'80vh',
   },
   events: {
     backgroundColor: 'inherit',
@@ -208,6 +211,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
             direction="row"
             justify="center"
             alignItems="stretch"
+            className={classes.containerEditor}
           >
 
           <Grid item xs={12} className={classes.editor}>
