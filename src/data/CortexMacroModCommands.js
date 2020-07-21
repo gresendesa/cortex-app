@@ -1,6 +1,12 @@
 export const cortexMacroModCommands = [
 
   {
+    "value": '{{ wait(20) }} //Waits the specified ticks. 20 = 1sec',
+    "score": 2,
+    "meta": "Waits the specified ticks"
+  },
+
+  {
     "value": '{{ id }}',
     "score": 2,
     "meta": "Gets the id resource directly"
