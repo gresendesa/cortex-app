@@ -63,6 +63,7 @@ export default function Routes({ context }) {
 										delMacro={context.delMacro}
 										macros={context.macros} 
 										isUserSuper={context.isUserSuper} 
+										setIsUserSuper={context.setIsUserSuper}
 									/> 
 								)} />
 							</Switch>

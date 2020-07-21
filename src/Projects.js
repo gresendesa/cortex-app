@@ -64,7 +64,7 @@ class Projects extends React.Component {
 	componentWillMount(){
 
 		const success = (response) => {
-			
+			this.props.setIsUserSuper(response.super);
 		}
 		const error = (response) => {
 			
