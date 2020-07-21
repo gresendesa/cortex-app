@@ -191,12 +191,12 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
                 <FormatAlignRightIcon />
               </IconTipButton>
             </Grid>
-
+            
             <Grid item>
-              <Box mr={1}>
-                <IconTipButton aria-label="add task" tip="Edit props CTRL+P" reference={editButtonRef} onClick={handleOpenConfig}>
-                  <EditIcon fontSize="small" />
-                </IconTipButton>
+              <Box>
+                <IconButton ref={editButtonRef} onClick={handleOpenConfig}>
+                  <EditIcon fontSize="small"/>
+                </IconButton>
               </Box>
             </Grid>
 

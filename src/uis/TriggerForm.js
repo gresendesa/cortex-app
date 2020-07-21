@@ -255,10 +255,10 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
             </Grid>
 
             <Grid item>
-              <Box mr={1}>
-                <IconTipButton edge="end" tip="Edit props CTRL+P" aria-label="add task" reference={editButtonRef} onClick={handleOpenConfig}>
-                  <EditIcon fontSize="small" />
-                </IconTipButton>
+              <Box>
+                <IconButton ref={editButtonRef} onClick={handleOpenConfig}>
+                  <EditIcon fontSize="small"/>
+                </IconButton>
               </Box>
             </Grid>
 
