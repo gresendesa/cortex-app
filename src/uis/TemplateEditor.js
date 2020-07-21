@@ -187,7 +187,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
             sm={12}> 
             
             <Grid item>
-              <IconTipButton edge="start" tip="Indent code CTRL+I" color="inherit" reference={indentButtonRef} onClick={handleIndent} className={classes.actionButton} aria-label="close">
+              <IconTipButton edge="start" tip="Indent code" color="inherit" reference={indentButtonRef} onClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
               </IconTipButton>
             </Grid>
@@ -233,11 +233,11 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
                   bindKey: {win: 'Ctrl-S', mac: 'Command-S'}, 
                   exec: editor => {saveButtonRef.current.click()}
                 },
-                {   
+                /*{   
                   name: 'indent', 
                   bindKey: {win: 'Ctrl-I', mac: 'Command-I'}, 
                   exec: editor => {indentButtonRef.current.click()}
-                },
+                },*/
                 {   
                   name: 'props', 
                   bindKey: {win: 'Ctrl-P', mac: 'Command-P'}, 

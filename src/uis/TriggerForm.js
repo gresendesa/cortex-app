@@ -249,7 +249,7 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
               <IconTipButton edge="start" tip="Manage events CTRL+E" color="inherit" reference={eventsButtonRef} onClick={handleOpenEvents} className={classes.actionButton} aria-label="close">
                 <EventIcon />
               </IconTipButton>
-              <IconTipButton edge="start" tip="Indent code CTRL+I" color="inherit" reference={indentButtonRef} onClick={handleIndent} className={classes.actionButton} aria-label="close">
+              <IconTipButton edge="start" tip="Indent code" color="inherit" reference={indentButtonRef} onClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
               </IconTipButton>
             </Grid>
@@ -283,7 +283,7 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
               value={action}
               onChange={handleActionChange}
               name="UNIQUE_ID_OF_DIV"
-              editorProps={{ $blockScrolling: true }}
+              editorProps={{ $blockScrolling: Infinity }}
               fontSize={20}
               tabSize={2}
               showPrintMargin={false}
@@ -305,11 +305,11 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
                   bindKey: {win: 'Ctrl-K', mac: 'Command-K'}, 
                   exec: () => {kodeButtonRef.current.click()}
                 },
-                {   
+                /*{   
                   name: 'indent', 
                   bindKey: {win: 'Ctrl-I', mac: 'Command-I'}, 
                   exec: () => {indentButtonRef.current.click()}
-                },
+                },*/
                 {   
                   name: 'events', 
                   bindKey: {win: 'Ctrl-E', mac: 'Command-E'}, 
