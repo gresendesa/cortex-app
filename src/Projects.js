@@ -21,7 +21,7 @@ import DeleteButton from './uis/DeleteButton';
 import { makeStyles } from '@material-ui/core/styles';
 import { deepOrange, green, teal } from '@material-ui/core/colors';
 
-function ProjectItem({ p, redirectToProject, removeProject }) {
+function ProjectItem({ p, redirectToProject, removeProject, isUserSuper }) {
 
 	const useStyles = makeStyles((theme) => ({
 	  avatarProject: {
@@ -43,7 +43,7 @@ function ProjectItem({ p, redirectToProject, removeProject }) {
 			</ListItemAvatar>
 			<ListItemText
 				primary={p.macro.name}
-				secondary={p.macro.description}
+				secondary={isUserSuper ? (p.dev + (p.macro.description ? ' • ' + p.macro.description : '')) : (p.macro.description)}
 				/>
 			<ListItemSecondaryAction>
 				<DeleteButton type='project' confirmString={p.macro.name} callback={() => {removeProject(p.id)}} />
@@ -113,7 +113,7 @@ class Projects extends React.Component {
 					<Grid item>
 						<Box component="span" m={1}>
 							<Typography variant="h5" color="primary">
-								My Projects
+								{this.props.isUserSuper ? 'Rocket Projects' : 'My Projects'}
 							</Typography>
 						</Box>
 					</Grid>
@@ -138,7 +138,7 @@ class Projects extends React.Component {
 						this.props.macros.length > 0 ?
 						this.props.macros.map(p => {
 							return (
-								<ProjectItem key={p.id} p={p} redirectToProject={this.redirectToProject} removeProject={this.removeProject} />
+								<ProjectItem key={p.id} p={p} redirectToProject={this.redirectToProject} removeProject={this.removeProject} isUserSuper={this.props.isUserSuper} />
 							)
 						})
 						:

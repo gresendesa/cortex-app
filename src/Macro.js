@@ -297,7 +297,7 @@ class Macro extends React.Component {
 				>
 					<Grid item>
 						<Box mt={2} fontWeight="fontWeightMedium" fontFamily="Monospace" fontSize={16}>
-							{this.state.name}
+							{this.props.isUserSuper ? this.props.project.dev + ' • ' + this.state.name : this.state.name }
 						</Box>
 					</Grid>
 					<Grid item>
