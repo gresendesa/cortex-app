@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
   editor: {
     backgroundColor: 'green',
-    height:'90vh',
+    height:'85vh',
   },
   events: {
     backgroundColor: 'inherit',
@@ -191,7 +191,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
                 <FormatAlignRightIcon />
               </IconTipButton>
             </Grid>
-            
+
             <Grid item>
               <Box>
                 <IconButton ref={editButtonRef} onClick={handleOpenConfig}>
