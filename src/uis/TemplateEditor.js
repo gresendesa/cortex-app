@@ -219,7 +219,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
               onLoad={(editor) => {
                 editor.focus();
                 editor.setValue(editor.getValue(), -1);
-                editor.completers.push(CortexCompleter);
+                editor.completers = [editor.completers[0],editor.completers[1],CortexCompleter];
               }}
               mode="javascript"
               theme="monokai"
