@@ -281,6 +281,7 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
               onLoad={(editor) => {
                 editor.focus();
                 editor.setValue(editor.getValue(), -1);
+                editor.completers.push(CortexCompleter);
               }}
               mode="javascript"
               theme="monokai"
@@ -326,7 +327,6 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
                 }
               ]}
               setOptions={{
-                enableBasicAutocompletion: [CortexCompleter],
                 enableLiveAutocompletion: true,
                 enableSnippets: true,
                 animatedScroll: true

@@ -219,6 +219,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
               onLoad={(editor) => {
                 editor.focus();
                 editor.setValue(editor.getValue(), -1);
+                editor.completers.push(CortexCompleter);
               }}
               mode="javascript"
               theme="monokai"
@@ -249,7 +250,6 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
                 },
               ]}
               setOptions={{
-                enableBasicAutocompletion: [CortexCompleter],
                 enableLiveAutocompletion: true,
                 enableSnippets: true,
                 animatedScroll: true
