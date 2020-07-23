@@ -1,6 +1,12 @@
 export const cortexMacroModCommands = [
 
   {
+    "value": '{{ skip_endpoint() }}',
+    "score": 2,
+    "meta": "Executes interruptions imediately"
+  },
+
+  {
     "value": '{{ wait(20) }} //Waits the specified ticks. 20 = 1sec',
     "score": 2,
     "meta": "Waits the specified ticks"
