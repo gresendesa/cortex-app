@@ -31,14 +31,13 @@ class Macro extends React.Component {
 		'deployLoading': false,
 		'openBuild': false,
 		'buildName': null,
-		'build': ''
+		'build': '',
+		'isUserSuper': false,
 	}
 
 	componentWillMount(){
 		this.setState({ 'project': this.props.project, ...this.props.project.macro });
 	}
-
-	//{this.props.match.params.id}
 
 	constructor(){
 		super();
@@ -283,6 +282,9 @@ class Macro extends React.Component {
 			'verbose': this.state.verbose
 		}
 
+		//this.setState({ 'isUserSuper': localStorage.getItem('cortex-is-user-super') });
+
+
 		return (
 			<React.Fragment>
 
@@ -297,7 +299,7 @@ class Macro extends React.Component {
 				>
 					<Grid item>
 						<Box mt={2} fontWeight="fontWeightMedium" fontFamily="Monospace" fontSize={16}>
-							{this.props.isUserSuper ? this.props.project.dev + ' • ' + this.state.name : this.state.name }
+							{this.props.project.dev + ' • ' + this.state.name}
 						</Box>
 					</Grid>
 					<Grid item>
@@ -307,9 +309,9 @@ class Macro extends React.Component {
 						<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.deployMacro({ launch:false })}}>
 							<SaveIcon fontSize="small" />
 						</IconButton>
-						{this.props.isUserSuper && <IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.getBuildCode(this.props.project.id)}}>
+							<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.getBuildCode(this.props.project.id)}}>
 							<CodeIcon name='rocket' size='small' />
-						</IconButton>}
+						</IconButton>
 						<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.deployMacro({ launch:true })}}>
 							<Icon name='rocket' style={{color:'#357a38'}} size='small' />
 						</IconButton>

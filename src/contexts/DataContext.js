@@ -43,7 +43,7 @@ class DataContextProvider extends Component {
 	setIsUserSuper = (isSuper) => {
 		if ((isSuper == 'null') || (isSuper == null)){
 			localStorage.removeItem('cortex-is-user-super');
-			this.setState({'isUserSuper': null});
+			this.setState({'isUserSuper': false});
 		} else {
 			localStorage.setItem('cortex-is-user-super', isSuper);
 			this.setState({'isUserSuper': isSuper});
@@ -57,6 +57,7 @@ class DataContextProvider extends Component {
 			const onOk = (response) => {
 				this.setState({'macros': response.projects});
 				success(response);
+				this.setIsUserSuper(response.super);
 				this.setState({'processing': false});
 			}
 			const onIssue = (response) => {
@@ -192,11 +193,10 @@ class DataContextProvider extends Component {
 	componentWillMount(){
 		this.setToken(localStorage.getItem('cortex-token'));
 		this.setUsername(localStorage.getItem('cortex-username'));	
-		this.setIsUserSuper(localStorage.getItem('cortex-is-user-super'));
+		//this.setIsUserSuper(localStorage.getItem('cortex-is-user-super'));
 	}
 
 	render() {
-
 		return (
 			<DataContext.Provider value={{
 											...this.state, 
