@@ -29,7 +29,8 @@ import MuiAlert from '@material-ui/lab/Alert';
 
 import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 
-import { cortexMacroModCommands } from './data/CortexMacroModCommands';
+//import { cortexMacroModCommands } from './data/CortexMacroModCommands';
+import { plainCortexMacroModCommands } from './data/PlainCortexMacroModCommands';
 
 import BuildPanel from './uis/BuildPanel';
 
@@ -193,7 +194,7 @@ export function Editor({ project, saveMacro, getBuild, alert }) {
 
   var CortexCompleter = {
       getCompletions: function(editor, session, pos, prefix, callback) {
-          var completions = cortexMacroModCommands;
+          var completions = plainCortexMacroModCommands;
           callback(null, completions);
       }
   }
