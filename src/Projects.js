@@ -9,7 +9,9 @@ import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
-import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
+import PlayArrowRoundedIcon from '@material-ui/icons/PlayArrowRounded';
+import CodeIcon from '@material-ui/icons/Code';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import { Box } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { DataContext } from './contexts/DataContext';
@@ -19,7 +21,7 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 import { useHistory } from 'react-router-dom';
 import DeleteButton from './uis/DeleteButton';
 import { makeStyles } from '@material-ui/core/styles';
-import { deepOrange, green, teal } from '@material-ui/core/colors';
+import { deepOrange, green, indigo } from '@material-ui/core/colors';
 
 function ProjectItem({ p, redirectToProject, removeProject, isUserSuper }) {
 
@@ -27,19 +29,28 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper }) {
 	  avatarProject: {
 	    width: theme.spacing(5),
 	    height: theme.spacing(5),
-	    color: theme.palette.getContrastText(teal[500]),
-	    backgroundColor: teal[500],
+	    color: theme.palette.getContrastText(green[500]),
+	    backgroundColor: green[500],
 	  },
+	  avatarNoneProject: {
+	    width: theme.spacing(5),
+	    height: theme.spacing(5),
+	    color: theme.palette.getContrastText(indigo[500]),
+	    backgroundColor: indigo[500],
+	  }
 	}));
 
 	const classes = useStyles();
 
 	return (
-		<ListItem button onClick={() => {redirectToProject(p.id)}}>
+		<ListItem button onClick={() => {redirectToProject(p)}}>
 			<ListItemAvatar>
-				<Avatar className={classes.avatarProject}>
-					<SportsEsportsIcon />
-				</Avatar>
+				{p.macro.protocol == 'CTRL' && <Avatar className={classes.avatarProject}>
+					<PlayArrowRoundedIcon />
+				</Avatar>}
+				{p.macro.protocol == 'NONE' && <Avatar className={classes.avatarNoneProject}>
+					<CodeIcon /> 
+				</Avatar>}
 			</ListItemAvatar>
 			<ListItemText
 				primary={p.macro.name}
@@ -93,9 +104,13 @@ class Projects extends React.Component {
 		this.props.delMacro({ id:id, success, error });
 	}
 
-	redirectToProject = (id) => {
+	redirectToProject = (p) => {
 		const { history } = this.props;
-		history.push(`/project/${id}`);
+		if(p.macro.protocol == 'CTRL'){
+			history.push(`/project/${p.id}`);
+		} else if (p.macro.protocol == 'NONE'){
+			history.push(`/project/flat/${p.id}`);
+		}	
 	}
 
 	render(){

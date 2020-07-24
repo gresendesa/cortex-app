@@ -7,6 +7,7 @@ import Macro from './Macro';
 import Projects from './Projects';
 import Templates from './Templates';
 import Login from './components/Login';
+import PlainMacro from './PlainMacro';
 import Footer from './uis/Footer';
 import TemplateForm from './uis/TemplateForm';
 import { DataContext } from './contexts/DataContext';
@@ -27,6 +28,20 @@ export default function Routes({ context }) {
 						{
 							context.token !== null ?
 							<Switch>
+
+								<Route path="/project/flat/:id" render={(props) => {
+									//const macro = context.macros.some
+									const project = context.macros.find(m => m.id == props.match.params.id)
+
+									return (
+										project ?
+										<PlainMacro {...props} 
+											project={project} 
+											saveMacro={context.saveMacro} 
+											getBuild={context.getBuild} />
+										:''
+									)
+								}} />
 
 								<Route path="/project/:id" render={(props) => {
 

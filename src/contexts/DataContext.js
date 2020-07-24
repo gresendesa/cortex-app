@@ -14,9 +14,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.5',
-		'release_date': '22 July 2020',
-		'short': 'Local autocompletion added'
+		'number': '1.6',
+		'release_date': '23 July 2020',
+		'short': 'Flat projects added'
 	}
 
 	setToken = (token) => {

@@ -81,3 +81,13 @@ export function macroModel({ name, description, debug=false, production=true, cs
 	}
 }
 
+export function plainMacroModel({ name, csid, description='', code='$${\n\tLOG("§5Hello world!");\n}$$' }){
+	return {
+		'name': name,
+		'description': description,
+		'protocol': 'NONE',
+		'csid': csid,
+		'code': code
+	}
+}
+
