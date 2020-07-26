@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(0.05),
   },
   containerEditor: {
-    backgroundColor: '#272822',
+    backgroundColor: '#2f3129',
     height:'100vh',
   },
   editor: {
