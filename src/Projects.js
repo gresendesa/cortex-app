@@ -47,9 +47,9 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper }) {
 
 	const [lastSave, setLastSave] = useState(timeDifference(p.date));
 
-	setInterval(() => {
+	/*setInterval(() => {
 		setLastSave(timeDifference(p.date));
-	}, 1000);
+	}, 1000);*/
 
 	return (
 		<ListItem button onClick={() => {redirectToProject(p)}}>
