@@ -14,9 +14,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.6',
-		'release_date': '23 July 2020',
-		'short': 'Flat projects added'
+		'number': '1.7',
+		'release_date': '27 July 2020',
+		'short': 'Onchat support on flat projects'
 	}
 
 	setToken = (token) => {

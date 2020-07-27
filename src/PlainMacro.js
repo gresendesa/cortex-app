@@ -202,7 +202,8 @@ export function Editor({ project, saveMacro, getBuild, alert }) {
   }
 
   const saveButtonRef = useRef(null);
-  const indentButtonRef = useRef(null);
+  const kodeButtonRef = useRef(null);
+  const launchButtonRef = useRef(null);
   const editButtonRef = useRef(null);
 
   return (
@@ -225,10 +226,10 @@ export function Editor({ project, saveMacro, getBuild, alert }) {
               <IconTipButton edge="end" tip="Save CTRL+S" disabled={processing} color="inherit" reference={saveButtonRef} onClick={() => handleSave(false)}>
                 <SaveIcon />
               </IconTipButton>
-              <IconTipButton edge="end" tip="See Kode CTRL+K" disabled={processing} color="inherit" reference={null} onClick={() => {handleBuild()}}>
+              <IconTipButton edge="end" tip="See Kode CTRL+K" disabled={processing} color="inherit" reference={kodeButtonRef} onClick={() => {handleBuild()}}>
                 <CodeIcon />
               </IconTipButton>
-              <IconTipButton edge="end" tip="Launch CTRL+L" disabled={processing} color="inherit" reference={null}  onClick={() => handleSave(true)}>
+              <IconTipButton edge="end" tip="Launch CTRL+L" disabled={processing} color="inherit" reference={launchButtonRef}  onClick={() => handleSave(true)}>
                 <Icon name='rocket' size='small' />
               </IconTipButton>
             </ButtonGroup>
@@ -246,7 +247,7 @@ export function Editor({ project, saveMacro, getBuild, alert }) {
             sm={12}> 
             
             <Grid item>
-              <IconTipButton edge="start" tip="Indent code" color="inherit" reference={indentButtonRef} onClick={handleIndent} className={classes.actionButton} aria-label="close">
+              <IconTipButton edge="start" tip="Indent code" color="inherit" onClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
               </IconTipButton>
             </Grid>
@@ -288,6 +289,28 @@ export function Editor({ project, saveMacro, getBuild, alert }) {
               width="100%"
               height="100%"
               showPrintMargin={false}
+              commands={[
+                {   
+                  name: 'save', 
+                  bindKey: {win: 'Ctrl-S', mac: 'Command-S'}, 
+                  exec: () => {saveButtonRef.current.click()} 
+                },
+                {   
+                  name: 'launch', 
+                  bindKey: {win: 'Ctrl-L', mac: 'Command-L'}, 
+                  exec: () => {launchButtonRef.current.click()} 
+                },
+                {   
+                  name: 'kode', 
+                  bindKey: {win: 'Ctrl-K', mac: 'Command-K'}, 
+                  exec: () => {kodeButtonRef.current.click()}
+                },
+                {   
+                  name: 'props', 
+                  bindKey: {win: 'Ctrl-P', mac: 'Command-P'}, 
+                  exec: () => {editButtonRef.current.click()}
+                }
+              ]}
               setOptions={{
                 enableLiveAutocompletion: true,
                 enableSnippets: true,

@@ -42,7 +42,7 @@ export default function Footer({ version }) {
 						<Link color="inherit" href="https://cloudscript.bezouro.com.br/">
 							CloudScript
 						</Link>{' '}
-						{'technology • Bezouro '}
+						{'technology'}
 					</Typography>
 				</Box>
 

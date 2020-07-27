@@ -43,6 +43,7 @@ class Server {
 		const conn = this.getConnection();
 
 		conn.get('/project/getlist').then(r => {
+			console.log(r.data);
 			success(r.data)
 		}).catch(function(e) {
 			error(e.response);

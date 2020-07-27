@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
@@ -22,6 +22,9 @@ import { useHistory } from 'react-router-dom';
 import DeleteButton from './uis/DeleteButton';
 import { makeStyles } from '@material-ui/core/styles';
 import { deepOrange, green, indigo } from '@material-ui/core/colors';
+import Tooltip from '@material-ui/core/Tooltip';
+
+import { timeDifference } from './uis/utils';
 
 function ProjectItem({ p, redirectToProject, removeProject, isUserSuper }) {
 
@@ -42,6 +45,12 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper }) {
 
 	const classes = useStyles();
 
+	const [lastSave, setLastSave] = useState(timeDifference(p.date));
+
+	setInterval(() => {
+		setLastSave(timeDifference(p.date));
+	}, 1000);
+
 	return (
 		<ListItem button onClick={() => {redirectToProject(p)}}>
 			<ListItemAvatar>
@@ -52,10 +61,13 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper }) {
 					<CodeIcon /> 
 				</Avatar>}
 			</ListItemAvatar>
-			<ListItemText
-				primary={p.macro.name}
-				secondary={isUserSuper ? (p.dev + (p.macro.description ? ' • ' + p.macro.description : '')) : (p.macro.description)}
-				/>
+			<Tooltip title={"Saved " + lastSave + " before"}>
+				<ListItemText
+					primary={p.macro.name}
+					secondary={isUserSuper ? (p.dev + (p.macro.description ? ' • ' + p.macro.description : '')) : (p.macro.description)}
+					/>
+			</Tooltip>
+				
 			<ListItemSecondaryAction>
 				<DeleteButton type='project' confirmString={p.macro.name} callback={() => {removeProject(p.id)}} />
 			</ListItemSecondaryAction>
