@@ -90,6 +90,7 @@ export function Editor({ project, saveMacro, getBuild, alert }) {
   const [name, setName] = useState(project.macro.name);
   const [code, setCode] = useState(project.macro.code);
   const [csid, setCsid] = useState(project.macro.csid);
+  const [isOnChat, setIsOnChat] = useState(project.macro.type == 'onChat');
   const [description, setDescription] = useState(project.macro.description); 
   const [processing, setProcessing] = useState(false);
 
@@ -171,6 +172,7 @@ export function Editor({ project, saveMacro, getBuild, alert }) {
     copyMacro.code = code;
     copyMacro.csid = csid;
     copyMacro.description = description;
+    copyMacro.type = isOnChat ? 'onChat' : 'Main';
 
     setProcessing(true);
 
@@ -316,6 +318,19 @@ export function Editor({ project, saveMacro, getBuild, alert }) {
                     multiline
                     variant="outlined"
                     inputProps={{ className: classes.textarea }}
+                  />
+                </ListItem>
+
+                <ListItem>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={isOnChat}
+                        onChange={() => {setIsOnChat(!isOnChat)}}
+                        color="primary"
+                      />
+                    }
+                    label="onChat"
                   />
                 </ListItem>
               </List>

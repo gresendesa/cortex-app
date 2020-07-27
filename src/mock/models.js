@@ -62,7 +62,7 @@ export function templateModel({ name, description, code='', id=Math.random() }){
 	}
 }
 
-export function macroModel({ name, description, debug=false, production=true, csid, pname, entrypoint, endpoint='', unsafe=null, dependencies=[], tasks, verbose=true }){
+export function macroModel({ name, description, type='Main', debug=false, production=true, csid, pname, entrypoint, endpoint='', unsafe=null, dependencies=[], tasks, verbose=true }){
 	return {
 		'name': name,
 		'description': description,
@@ -71,6 +71,7 @@ export function macroModel({ name, description, debug=false, production=true, cs
 		'inner-protocol': 'TASK',
 		'protocol': 'CTRL',
 		'csid': csid,
+		'type': type,
 		'pname': pname,
 		'entrypoint': entrypoint,
 		'endpoint': endpoint,
@@ -81,12 +82,13 @@ export function macroModel({ name, description, debug=false, production=true, cs
 	}
 }
 
-export function plainMacroModel({ name, csid, description='', code='$${\n\tLOG("§5Hello world!");\n}$$' }){
+export function plainMacroModel({ name, csid, description='', type='Main', code='$${\n\tLOG("§5Hello world!");\n}$$' }){
 	return {
 		'name': name,
 		'description': description,
 		'protocol': 'NONE',
 		'csid': csid,
+		'type': type,
 		'code': code
 	}
 }
