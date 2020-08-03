@@ -14,9 +14,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.7',
-		'release_date': '27 July 2020',
-		'short': 'Onchat support on flat projects'
+		'number': '1.7.1',
+		'release_date': '2 Algust 2020',
+		'short': 'Project name affects running macro name. Flat project name, flat project CloudScript id and Template name validators added.'
 	}
 
 	setToken = (token) => {

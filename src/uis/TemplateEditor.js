@@ -149,7 +149,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
 
     if(copyTemplate.name.match(/[^a-zA-Z0-9\_-]|^$/)){
 
-      alert().show({message: "Template name should contain just [^a-zA-Z0-9\_-] chars", severity: "error"});
+      showAlert({message: "Template name should contain just [^a-zA-Z0-9\_-] chars", severity: "error"});
 
     } else {
 
