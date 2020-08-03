@@ -174,23 +174,35 @@ export function Editor({ project, saveMacro, getBuild, alert }) {
     copyMacro.description = description;
     copyMacro.type = isOnChat ? 'onChat' : 'Main';
 
-    setProcessing(true);
+    if(copyMacro.name.match(/[^a-zA-Z0-9\_-]|^$/)){
 
-    const success = (message) => {
-    	if(launch){
-    		alert().show({message: "Launched as "+csid, severity: "success"});
-    	} else {
-    		alert().show({message: "Saved", severity: "success"});
-    	}	
-    	setProcessing(false);
+      alert().show({message: "Project name should contain just [^a-zA-Z0-9\_-] chars", severity: "error"});
+
+    } else if (copyMacro.csid.match(/[^a-zA-Z0-9\_.-]|^$/)) {
+
+      alert().show({message: "CloudScript id should contain just [^a-zA-Z0-9\_.-] chars", severity: "error"});
+
+    } else {
+
+      setProcessing(true);
+
+      const success = (message) => {
+        if(launch){
+          alert().show({message: "Launched as "+csid, severity: "success"});
+        } else {
+          alert().show({message: "Saved", severity: "success"});
+        } 
+        setProcessing(false);
+      }
+
+      const error = (message) => {
+        alert().show({message, severity: "error"});
+        setProcessing(false);
+      }
+
+      saveMacro({ id: project.id, macro: copyMacro, launch:launch, success, error });
+
     }
-
-    const error = (message) => {
-    	alert().show({message, severity: "error"});
-    	setProcessing(false);
-    }
-
-    saveMacro({ id: project.id, macro: copyMacro, launch:launch, success, error });
 
   }
 

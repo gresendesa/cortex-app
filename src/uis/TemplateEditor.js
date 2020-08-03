@@ -147,17 +147,26 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
     copyTemplate.code = content;
     copyTemplate.description = description;
 
-    setProcessing(true);
-    const callback = (ok, message) => {
-      if(ok){
-        showAlert({message: "Saved", severity: "success"});
-      } else {
-        showAlert({message, severity: "error"});
-      }
-      setProcessing(false);
-    }
+    if(copyTemplate.name.match(/[^a-zA-Z0-9\_-]|^$/)){
 
-    saveTemplate(copyTemplate, true, callback);
+      alert().show({message: "Template name should contain just [^a-zA-Z0-9\_-] chars", severity: "error"});
+
+    } else {
+
+      setProcessing(true);
+      const callback = (ok, message) => {
+        if(ok){
+          showAlert({message: "Saved", severity: "success"});
+        } else {
+          showAlert({message, severity: "error"});
+        }
+        setProcessing(false);
+      }
+
+      saveTemplate(copyTemplate, true, callback);
+
+    }
+      
   }
 
   return (
