@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default function TriggerList({ task, group, hookTask }) {
+export default function TriggerList({ task, group, hookTask, editorMode }) {
 
   const classes = useStyles();
   const history = useHistory();
@@ -135,7 +135,18 @@ export default function TriggerList({ task, group, hookTask }) {
 
             triggers.map((trigger, indice) => {
               return (
-                <Trigger indice={indice} moveUp={moveUp} group={group} task={task} trigger={trigger} key={trigger.id} hookTask={hookTask} deleteTrigger={deleteTrigger} toggleActiveTrigger={toggleActiveTrigger} />
+                <Trigger 
+                  indice={indice} 
+                  moveUp={moveUp} 
+                  group={group} 
+                  task={task} 
+                  trigger={trigger} 
+                  key={trigger.id} 
+                  hookTask={hookTask} 
+                  deleteTrigger={deleteTrigger} 
+                  toggleActiveTrigger={toggleActiveTrigger} 
+                  editorMode={editorMode} 
+                />
               ) 
             })
 

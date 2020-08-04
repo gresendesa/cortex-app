@@ -54,7 +54,7 @@ class Templates extends React.Component {
 
 		return (
 			<Fragment>
-				<TemplateSection namespaces={this.state.namespaces} templatesHook={this.templatesHook} />
+				<TemplateSection namespaces={this.state.namespaces} templatesHook={this.templatesHook} editorMode={this.props.editorMode} />
 				<Snackbar open={this.state.alert.popUp} autoHideDuration={4000} onClose={() => this.setState({alert: {...this.state.alert, popUp: false}})} >
 					<MuiAlert elevation={6} variant="filled" severity={this.state.alert.severity}>
 						{this.state.alert.message}

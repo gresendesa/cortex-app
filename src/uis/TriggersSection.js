@@ -38,7 +38,7 @@ function a11yProps(index) {
   };
 }
 
-export default function TriggersSection({ task, hookTask }) {
+export default function TriggersSection({ task, hookTask, editorMode }) {
 
   const { setFocus, hasFocus, focus, getFocus } = hookTask();
 
@@ -78,13 +78,13 @@ export default function TriggersSection({ task, hookTask }) {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <TriggerList group="opening" task={task} hookTask={hookTask} />
+        <TriggerList group="opening" task={task} hookTask={hookTask} editorMode={editorMode} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <TriggerList group="main" task={task} hookTask={hookTask} />
+        <TriggerList group="main" task={task} hookTask={hookTask} editorMode={editorMode} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <TriggerList group="ending" task={task} hookTask={hookTask} />
+        <TriggerList group="ending" task={task} hookTask={hookTask} editorMode={editorMode} />
       </TabPanel>
     </Box>
   );

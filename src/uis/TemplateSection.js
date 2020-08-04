@@ -116,7 +116,7 @@ const ExpansionPanelDetails = withStyles((theme) => ({
   },
 }))(MuiExpansionPanelDetails);
 
-const TemplateItem = ({ index, template, namespace, moveUp, deleteTemplate, updateTemplate, showAlert }) => {
+const TemplateItem = ({ index, template, namespace, moveUp, deleteTemplate, updateTemplate, showAlert, editorMode }) => {
 
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -152,13 +152,21 @@ const TemplateItem = ({ index, template, namespace, moveUp, deleteTemplate, upda
 
         </ListItemSecondaryAction>
       </ListItem>
-      <TemplateEditor open={open} setOpen={setOpen} template={template} namespace={namespace} saveTemplate={updateTemplate} showAlert={showAlert} />
+      <TemplateEditor 
+        open={open} 
+        setOpen={setOpen} 
+        template={template} 
+        namespace={namespace} 
+        saveTemplate={updateTemplate} 
+        showAlert={showAlert} 
+        editorMode={editorMode}
+      />
     </div>
   )
 
 }
 
-const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, namespaceHook }) => {
+const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, namespaceHook, editorMode }) => {
 
 
   const classes = useStyles();
@@ -280,7 +288,17 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
 
                 namespace.templates.map((template, i) => {
                   return (
-                    <TemplateItem key={i} index={i} namespace={namespace} template={template} moveUp={moveUp} deleteTemplate={deleteTemplate} updateTemplate={updateTemplate} showAlert={showAlert} />
+                    <TemplateItem 
+                      key={i} 
+                      index={i} 
+                      namespace={namespace} 
+                      template={template} 
+                      moveUp={moveUp} 
+                      deleteTemplate={deleteTemplate} 
+                      updateTemplate={updateTemplate} 
+                      showAlert={showAlert} 
+                      editorMode={editorMode}
+                    />
                   )
                 })
 
@@ -321,7 +339,7 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
   )
 }
 
-export default function TemplateSection({ namespaces, templatesHook }) {
+export default function TemplateSection({ namespaces, templatesHook, editorMode }) {
 
   const { setNamespaces, deleteNamespace } = templatesHook();
 
@@ -513,6 +531,7 @@ export default function TemplateSection({ namespaces, templatesHook }) {
               setExpanded={setExpanded} 
               handleChange={handleChange}
               namespaceHook={namespaceHook}
+              editorMode={editorMode}
             />
           )
         })

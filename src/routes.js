@@ -13,10 +13,18 @@ import TemplateForm from './uis/TemplateForm';
 import { DataContext } from './contexts/DataContext';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
+import brace from 'brace';
+import AceEditor from 'react-ace';
+import MacroModHighlight from './acemode/MacroMod.js'
+
+import 'brace/theme/github';
+
 export default function Routes({ context }) {
 
+	const editorMode = new MacroModHighlight();
+
 	return(
-		
+
 		<DataContext.Consumer>{(context) => {
 
 			return(
@@ -38,7 +46,8 @@ export default function Routes({ context }) {
 										<PlainMacro {...props} 
 											project={project} 
 											saveMacro={context.saveMacro} 
-											getBuild={context.getBuild} />
+											getBuild={context.getBuild}
+											editorMode={editorMode} />
 										:''
 									)
 								}} />
@@ -57,7 +66,8 @@ export default function Routes({ context }) {
 											getTasks={context.getTasks} 
 											getBuild={context.getBuild} 
 											isUserSuper={context.isUserSuper} 
-											getActionCode={context.getActionCode} />
+											getActionCode={context.getActionCode}
+											editorMode={editorMode} />
 										:''
 									)
 
@@ -69,6 +79,7 @@ export default function Routes({ context }) {
 										getTemplates={context.getTemplates} 
 										saveTemplates={context.saveTemplates} 
 										component={Templates}
+										editorMode={editorMode}
 									/>
 								)} />
 								<Route render={(props) => (

@@ -175,7 +175,8 @@ class Trigger extends React.Component {
 	            			 alert={alert}
 	            			 deployMacro={deployMacro}
 	            			 active={this.state.trigger.active}
-	            			 getActionCode={getActionCode} />
+	            			 getActionCode={getActionCode} 
+	            			 editorMode={this.props.editorMode} />
 			</React.Fragment>
 		);
 

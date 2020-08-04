@@ -6,13 +6,10 @@ import { DataContext } from './contexts/DataContext';
 class App extends React.Component {
 
 	render(){
-
-		
-
 		return (
 			<DataContextProvider>
-				
-					<Routes />	
+			
+				<Routes/>	
 				
 			</DataContextProvider>
 		);

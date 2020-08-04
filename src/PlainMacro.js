@@ -81,7 +81,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export function Editor({ project, saveMacro, getBuild, alert }) {
+export function Editor({ project, saveMacro, getBuild, alert, editorMode }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
 
@@ -289,6 +289,7 @@ export function Editor({ project, saveMacro, getBuild, alert }) {
                 editor.focus();
                 editor.setValue(editor.getValue(), -1);
                 editor.completers = [editor.completers[0],editor.completers[1],CortexCompleter];
+                editor.getSession().setMode(editorMode);
               }}
               mode="javascript"
               theme="monokai"
@@ -425,6 +426,7 @@ class PlainMacro extends React.Component {
 					saveMacro={this.props.saveMacro} 
 					getBuild={this.props.getBuild} 
 					alert={alertHook}
+          editorMode={this.props.editorMode}
 				/>
 				<Snackbar open={this.state.alert.popUp} autoHideDuration={4000} onClose={alertHook().close} >
 					<MuiAlert elevation={6} variant="filled" severity={this.state.alert.severity}>

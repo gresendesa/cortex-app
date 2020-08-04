@@ -87,7 +87,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TemplateEditor({ open, setOpen, template, namespace, saveTemplate, showAlert }) {
+export default function TemplateEditor({ open, setOpen, template, namespace, saveTemplate, showAlert, editorMode }) {
   
   const classes = useStyles();
   const [openConfig, setOpenConfig] = useState(false);
@@ -229,6 +229,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
                 editor.focus();
                 editor.setValue(editor.getValue(), -1);
                 editor.completers = [editor.completers[0],editor.completers[1],CortexCompleter];
+                editor.getSession().setMode(editorMode);
               }}
               mode="javascript"
               theme="monokai"

@@ -14,9 +14,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.7.1',
-		'release_date': '2 Algust 2020',
-		'short': 'Project name affects running macro name. Flat project name, flat project CloudScript id and Template name validators added.'
+		'number': '1.8',
+		'release_date': '4 August 2020',
+		'short': 'MacroMod code highlight 💖'
 	}
 
 	setToken = (token) => {

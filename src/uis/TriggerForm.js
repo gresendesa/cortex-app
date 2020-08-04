@@ -86,7 +86,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TriggerForm({ task, trigger, open, toggleEditor, group, saveTrigger, alert, setFocus, deployMacro, active, getActionCode }) {
+export default function TriggerForm({ task, trigger, open, toggleEditor, group, saveTrigger, alert, setFocus, deployMacro, active, getActionCode, editorMode }) {
   const classes = useStyles();
 
   const [events, setEvents] = useState(Object.assign([], trigger.events));
@@ -282,6 +282,7 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
                 editor.focus();
                 editor.setValue(editor.getValue(), -1);
                 editor.completers = [editor.completers[0],editor.completers[1],CortexCompleter];
+                editor.getSession().setMode(editorMode);
               }}
               mode="javascript"
               theme="monokai"
