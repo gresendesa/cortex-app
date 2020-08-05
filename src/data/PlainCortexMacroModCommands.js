@@ -1,6 +1,12 @@
 export const plainCortexMacroModCommands = [
 
   {
+    "value": '{{ build }}',
+    "score": 2,
+    "meta": "Shows the build number"
+  },
+
+  {
     "value": '{* block blockname *}\n{* endblock *}',
     "score": 2,
     "meta": "Templating block"

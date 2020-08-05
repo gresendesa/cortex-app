@@ -1,6 +1,12 @@
 export const cortexMacroModCommands = [
 
   {
+    "value": '{{ build }}',
+    "score": 2,
+    "meta": "Shows the build number"
+  },
+  
+  {
     "value": '{{ skip_endpoint() }}',
     "score": 2,
     "meta": "Executes interruptions imediately"
