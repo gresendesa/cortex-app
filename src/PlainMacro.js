@@ -35,6 +35,8 @@ import { plainCortexMacroModCommands } from './data/PlainCortexMacroModCommands'
 import InfoButton from './uis/InfoButton';
 import BuildPanel from './uis/BuildPanel';
 
+import { onLoadAce } from './uis/utils';
+
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
@@ -294,29 +296,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, alert, e
 
           <Grid item xs={12} className={classes.editor}>
             <AceEditor 
-              onLoad={(editor) => {
-                editor.focus();
-                editor.setValue(editor.getValue(), -1);
-                editor.completers = [editor.completers[0],editor.completers[1],CortexCompleter];
-                editor.getSession().setMode(editorMode);
-
-                editor.getSession().getSelection().on('changeSelection',(delta)=>{
-
-                  setTimeout(() => {
-                    const selectedText = editor.getSession().getTextRange();
-                    if(selectedText.length!=0){
-                      const start = editor.getSelectionRange().start.row;
-                      const end = editor.getSelectionRange().end.row;
-                      if(start==end){
-                        var wholelinetxt = editor.session.getLine(start);
-                        setInfoButtonSubject({text: wholelinetxt});
-                      }
-                    }
-                  }, 50);
-
-                });
-
-              }}
+              onLoad={ onLoadAce({ editorMode, setInfoButtonSubject, completer: CortexCompleter }) }
               mode="javascript"
               theme="monokai"
               value={code}

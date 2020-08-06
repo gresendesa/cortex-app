@@ -44,6 +44,8 @@ import Indenter from '../Indenter';
 import EventIcon from '@material-ui/icons/Event';
 import CodeIcon from '@material-ui/icons/Code';
 
+import { onLoadAce } from './utils';
+
 import { eventModel } from '../mock/models';
 
 import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
@@ -288,29 +290,7 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
 
           <Grid item xs={12} className={classes.editor}>
             <AceEditor 
-              onLoad={(editor) => {
-                editor.focus();
-                editor.setValue(editor.getValue(), -1);
-                editor.completers = [editor.completers[0],editor.completers[1],CortexCompleter];
-                editor.getSession().setMode(editorMode);
-
-                editor.getSession().getSelection().on('changeSelection',(delta)=>{
-
-                  setTimeout(() => {
-                    const selectedText = editor.getSession().getTextRange();
-                    if(selectedText.length!=0){
-                      const start = editor.getSelectionRange().start.row;
-                      const end = editor.getSelectionRange().end.row;
-                      if(start==end){
-                        var wholelinetxt = editor.session.getLine(start);
-                        setInfoButtonSubject({text: wholelinetxt});
-                      }
-                    }
-                  }, 50);
-
-                });
-
-              }}
+              onLoad={ onLoadAce({ editorMode, setInfoButtonSubject, completer: CortexCompleter }) }
               mode="javascript"
               theme="monokai"
               value={action}
