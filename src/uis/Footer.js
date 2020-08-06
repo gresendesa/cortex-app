@@ -32,17 +32,11 @@ export default function Footer({ version }) {
 						
 					<Typography variant="caption" color="textSecondary" align="center">
 
-						<Tooltip title={version.short + ' • ' + version.release_date} aria-label="release date">
-						  <Link color="inherit" href="#">
-							v{version.number}
-						  </Link>
-						</Tooltip>
-
-						{' • supported by '}
+						{'Supported by '}
 						<Link color="inherit" href="https://cloudscript.bezouro.com.br/">
 							CloudScript
 						</Link>{' '}
-						{'technology'}
+						{'technology • Bezouro'}
 					</Typography>
 				</Box>
 

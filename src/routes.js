@@ -29,7 +29,7 @@ export default function Routes({ context }) {
 
 			return(
 				<Router history={history}>
-					<ButtonAppBar logged={context.token !== null} setToken={context.setToken} username={context.username} />
+					<ButtonAppBar logged={context.token !== null} setToken={context.setToken} username={context.username} version={context.version} />
 					<Container maxWidth="sm">
 
 						{context.processing && <LinearProgress color="secondary" />}

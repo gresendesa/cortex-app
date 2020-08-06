@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import InfoIcon from '@material-ui/icons/Info';
+
+import InfoTwoToneIcon from '@material-ui/icons/InfoTwoTone';
 import IconTipButton from './IconTipButton';
 import BuildPanel from './BuildPanel';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import TemplateInfoDialog from './TemplateInfoDialog';
 
@@ -10,6 +12,8 @@ export default function InfoButton({ subject, sourcesHook, editorMode, error_ale
 	const [infoTemplateOpen, setInfoTemplateOpen] = useState(false);
 	const [infoTemplateCodeOpen, setInfoTemplateCodeOpen] = useState(false);
 	const [infoTemplate, setInfoTemplate] = useState({});
+	const [processing, setProcessing] = useState(false);
+
 
 	const onTemplateCode = (code) => {
 		setInfoTemplateCodeOpen(true);
@@ -39,7 +43,7 @@ export default function InfoButton({ subject, sourcesHook, editorMode, error_ale
 					type: infoRoutes[i].type,
 					argument: groups[1]
 				});
-				setTip(`See info about '${groups[1]}' template!`);
+				setTip(`Details about '${groups[1]}' template!`);
 				return true;
 			}
 		}
@@ -57,6 +61,7 @@ export default function InfoButton({ subject, sourcesHook, editorMode, error_ale
 
 	const handleClick = () => {
 		setPopUp(false);
+		setProcessing(true);
 		//callback(target);
 		const { getTemplateInfo } = sourcesHook();
 
@@ -67,11 +72,13 @@ export default function InfoButton({ subject, sourcesHook, editorMode, error_ale
 	      var template_name = null;
 
 	      const success = (message) => {
+	      	setProcessing(false);
 	        setInfoTemplate(message.detail);
-	        setInfoTemplateOpen(true);
+	        setInfoTemplateOpen(true); 
 	      }
 
 	      const error = (message) => {
+	      	setProcessing(false);
 	        error_alert(message);
 	      }
 
@@ -94,8 +101,10 @@ export default function InfoButton({ subject, sourcesHook, editorMode, error_ale
 	return (
 		<React.Fragment>
 			{popUp && <IconTipButton edge="start" tip={tip} color="inherit" onClick={handleClick} aria-label="close">
-				<InfoIcon />
+				<InfoTwoToneIcon />
 			</IconTipButton>}
+
+			{processing && <CircularProgress size={30} />}
 
 			<TemplateInfoDialog open={infoTemplateOpen} setOpen={setInfoTemplateOpen} template={infoTemplate} showCodeHandler={onTemplateCode} />
 

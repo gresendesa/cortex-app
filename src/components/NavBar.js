@@ -22,6 +22,8 @@ import logo from '../images/logo512.png';
 import Avatar from '@material-ui/core/Avatar';
 import FilterFramesIcon from '@material-ui/icons/FilterFrames';
 import FolderIcon from '@material-ui/icons/Folder';
+import Link from '@material-ui/core/Link';
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -37,9 +39,13 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     margin: theme.spacing(1),
   },
+  tiny: {
+    color: '#C0C0C0',
+    fontSize: '12px',
+  }
 }));
 
-export default function ButtonAppBar({ logged, setToken, username }) {
+export default function ButtonAppBar({ logged, setToken, username, version }) {
   const classes = useStyles();
 
   var [cor, setCor] = useState("primary");
@@ -80,7 +86,12 @@ export default function ButtonAppBar({ logged, setToken, username }) {
             : ''
           }
           <Typography variant="h6" className={classes.title}>
-            Rocket
+            Rocket {' '}
+            <Tooltip title={version.short + ' • ' + version.release_date} aria-label="release date">
+              <Link color="inherit" href="#">
+              <small className={classes.tiny}>v{version.number}</small>
+              </Link>
+            </Tooltip>
           </Typography> 
           {
             logged ?

@@ -118,7 +118,7 @@ class Trigger extends React.Component {
 
 	render(){
 
-		const { setFocus, alert, getActionCode } = this.props.hookTask();
+		const { setFocus, alert, getActionCode, getTemplateInfo } = this.props.hookTask();
 
 		const { deployMacro } = this.props.hookTask();
 
@@ -176,6 +176,7 @@ class Trigger extends React.Component {
 	            			 deployMacro={deployMacro}
 	            			 active={this.state.trigger.active}
 	            			 getActionCode={getActionCode} 
+	            			 getTemplateInfo={getTemplateInfo}
 	            			 editorMode={this.props.editorMode} />
 			</React.Fragment>
 		);

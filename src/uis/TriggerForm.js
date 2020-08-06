@@ -51,6 +51,7 @@ import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 import { cortexMacroModCommands } from '../data/CortexMacroModCommands';
 
 import IconTipButton from './IconTipButton';
+import InfoButton from './InfoButton';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -86,7 +87,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TriggerForm({ task, trigger, open, toggleEditor, group, saveTrigger, alert, setFocus, deployMacro, active, getActionCode, editorMode }) {
+export default function TriggerForm({ task, trigger, open, toggleEditor, group, saveTrigger, alert, setFocus, deployMacro, active, getActionCode, getTemplateInfo, editorMode }) {
   const classes = useStyles();
 
   const [events, setEvents] = useState(Object.assign([], trigger.events));
@@ -100,6 +101,13 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
   const [blocking, setBlocking] = useState(trigger.blocking);
 
   const [deploying, setDeploying] = useState(false);
+
+  const [infoButtonSubject, setInfoButtonSubject] = useState(null);
+  const infoSourcesHook = () => {
+    return {
+      getTemplateInfo:getTemplateInfo
+    }
+  }
 
   const handleClose = () => {
     toggleEditor();
@@ -255,6 +263,8 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
               <IconTipButton edge="start" tip="Indent code" color="inherit" reference={indentButtonRef} onClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
               </IconTipButton>
+              <InfoButton editorMode={editorMode} subject={infoButtonSubject} sourcesHook={infoSourcesHook} error_alert={(message) => alert(message, 'error')}/>
+
             </Grid>
 
             <Grid item>
@@ -283,6 +293,23 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
                 editor.setValue(editor.getValue(), -1);
                 editor.completers = [editor.completers[0],editor.completers[1],CortexCompleter];
                 editor.getSession().setMode(editorMode);
+
+                editor.getSession().getSelection().on('changeSelection',(delta)=>{
+
+                  setTimeout(() => {
+                    const selectedText = editor.getSession().getTextRange();
+                    if(selectedText.length!=0){
+                      const start = editor.getSelectionRange().start.row;
+                      const end = editor.getSelectionRange().end.row;
+                      if(start==end){
+                        var wholelinetxt = editor.session.getLine(start);
+                        setInfoButtonSubject({text: wholelinetxt});
+                      }
+                    }
+                  }, 50);
+
+                });
+
               }}
               mode="javascript"
               theme="monokai"
