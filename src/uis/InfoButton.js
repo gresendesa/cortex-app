@@ -104,7 +104,9 @@ export default function InfoButton({ subject, sourcesHook, editorMode, error_ale
 				<InfoTwoToneIcon />
 			</IconTipButton>}
 
-			{processing && <CircularProgress size={30} />}
+			{processing && <IconTipButton edge="start" tip={'wait a moment'} color="inherit" onClick={() => {}} aria-label="close">
+					<CircularProgress size={30} />
+				</IconTipButton>}
 
 			<TemplateInfoDialog open={infoTemplateOpen} setOpen={setInfoTemplateOpen} template={infoTemplate} showCodeHandler={onTemplateCode} />
 
