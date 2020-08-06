@@ -46,3 +46,8 @@ export const timeDifference = (timestamp) => {
 
    	return `${daysPart}${hoursPart}${minutesPart}${secondsDifference}sec`;
 }
+
+export const infoHandler = () => {
+
+  
+}

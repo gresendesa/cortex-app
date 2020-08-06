@@ -1,8 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import InfoIcon from '@material-ui/icons/Info';
 import IconTipButton from './IconTipButton';
+import BuildPanel from './BuildPanel';
 
-export default function InfoButton({ subject, callback }) {
+import TemplateInfoDialog from './TemplateInfoDialog';
+
+export default function InfoButton({ subject, sourcesHook, editorMode, error_alert=(window.alert) }) {
+
+	const [infoTemplateOpen, setInfoTemplateOpen] = useState(false);
+	const [infoTemplateCodeOpen, setInfoTemplateCodeOpen] = useState(false);
+	const [infoTemplate, setInfoTemplate] = useState({});
+
+	const onTemplateCode = (code) => {
+		setInfoTemplateCodeOpen(true);
+	}
+
 
 	const [popUp, setPopUp] = useState(false);
 	const [target, setTarget] = useState(null);
@@ -15,7 +27,7 @@ export default function InfoButton({ subject, callback }) {
 
 		const infoRoutes = [
 			{
-				pattern: /[^"']*(?:[{*]+)\s* (?:import|include|extends) ["'](.+)["']\s*(?:[}*]+).*/,
+				pattern: /[^"']*(?:[{*]+)\s* (?:import|include|extends) ["'](.+)["']\s*.*\s*(?:[}*]+).*/,
 				type: 'template'
 			}
 		]
@@ -45,7 +57,38 @@ export default function InfoButton({ subject, callback }) {
 
 	const handleClick = () => {
 		setPopUp(false);
-		callback(target);
+		//callback(target);
+		const { getTemplateInfo } = sourcesHook();
+
+		if(target.type=="template"){
+
+	      const parts = target.argument.split('.');
+	      var library_name = null;
+	      var template_name = null;
+
+	      const success = (message) => {
+	        setInfoTemplate(message.detail);
+	        setInfoTemplateOpen(true);
+	      }
+
+	      const error = (message) => {
+	        error_alert(message);
+	      }
+
+	      if(parts.length==3){
+	        library_name = `${parts[0]}.${parts[1]}`;
+	        template_name = parts[2];
+	        getTemplateInfo({library: library_name, name: template_name, success, error });
+	      } else if(parts.length==2) {
+	        library_name = parts[0];
+	        template_name = parts[1];
+	        getTemplateInfo({library: library_name, name: template_name, success, error });
+	      } else {
+	        error_alert('Invalid template name');
+	      }
+
+	    }
+
 	}
 
 	return (
@@ -53,6 +96,11 @@ export default function InfoButton({ subject, callback }) {
 			{popUp && <IconTipButton edge="start" tip={tip} color="inherit" onClick={handleClick} aria-label="close">
 				<InfoIcon />
 			</IconTipButton>}
+
+			<TemplateInfoDialog open={infoTemplateOpen} setOpen={setInfoTemplateOpen} template={infoTemplate} showCodeHandler={onTemplateCode} />
+
+			<BuildPanel editorMode={editorMode} open={infoTemplateCodeOpen} setOpen={setInfoTemplateCodeOpen} code={infoTemplate.code} projectName={infoTemplate.dev + ' • ' + infoTemplate.library + ' • ' + infoTemplate.name}/>
+		
 		</React.Fragment>
 	);
 

@@ -44,6 +44,8 @@ import DrawerHeader from './DrawerHeader';
 import Indenter from '../Indenter';
 import EventIcon from '@material-ui/icons/Event';
 
+import InfoButton from './InfoButton';
+
 import { eventModel } from '../mock/models';
 
 import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
@@ -87,7 +89,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TemplateEditor({ open, setOpen, template, namespace, saveTemplate, showAlert, editorMode }) {
+export default function TemplateEditor({ open, setOpen, template, namespace, saveTemplate, getTemplateInfo, showAlert, editorMode }) {
   
   const classes = useStyles();
   const [openConfig, setOpenConfig] = useState(false);
@@ -112,6 +114,14 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
     const indenter = new Indenter(lines);
     const result = indenter.indent();
     setCode(result);
+  }
+
+  const [infoButtonSubject, setInfoButtonSubject] = useState(null);
+
+  const infoSourcesHook = () => {
+    return {
+      getTemplateInfo:getTemplateInfo
+    }
   }
 
   var CortexCompleter = {
@@ -202,6 +212,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
               <IconTipButton edge="start" tip="Indent code" color="inherit" reference={indentButtonRef} onClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
               </IconTipButton>
+              <InfoButton editorMode={editorMode} subject={infoButtonSubject} sourcesHook={infoSourcesHook} error_alert={(message) => showAlert({message, severity: "error"})}/>
             </Grid>
 
             <Grid item>
@@ -230,6 +241,25 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
                 editor.setValue(editor.getValue(), -1);
                 editor.completers = [editor.completers[0],editor.completers[1],CortexCompleter];
                 editor.getSession().setMode(editorMode);
+
+
+                editor.getSession().getSelection().on('changeSelection',(delta)=>{
+
+                  setTimeout(() => {
+                    const selectedText = editor.getSession().getTextRange();
+                    if(selectedText.length!=0){
+                      const start = editor.getSelectionRange().start.row;
+                      const end = editor.getSelectionRange().end.row;
+                      if(start==end){
+                        var wholelinetxt = editor.session.getLine(start);
+                        setInfoButtonSubject({text: wholelinetxt});
+                      }
+                    }
+                  }, 50);
+
+                });
+
+
               }}
               mode="javascript"
               theme="monokai"

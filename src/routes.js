@@ -68,6 +68,7 @@ export default function Routes({ context }) {
 											getBuild={context.getBuild} 
 											isUserSuper={context.isUserSuper} 
 											getActionCode={context.getActionCode}
+											getTemplateInfo={context.getTemplateInfo}
 											editorMode={editorMode} />
 										:''
 									)
@@ -80,6 +81,7 @@ export default function Routes({ context }) {
 										getTemplates={context.getTemplates} 
 										saveTemplates={context.saveTemplates} 
 										component={Templates}
+										getTemplateInfo={context.getTemplateInfo}
 										editorMode={editorMode}
 									/>
 								)} />

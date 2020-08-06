@@ -116,7 +116,7 @@ const ExpansionPanelDetails = withStyles((theme) => ({
   },
 }))(MuiExpansionPanelDetails);
 
-const TemplateItem = ({ index, template, namespace, moveUp, deleteTemplate, updateTemplate, showAlert, editorMode }) => {
+const TemplateItem = ({ index, template, namespace, moveUp, deleteTemplate, updateTemplate, showAlert, getTemplateInfo, editorMode }) => {
 
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -160,13 +160,14 @@ const TemplateItem = ({ index, template, namespace, moveUp, deleteTemplate, upda
         saveTemplate={updateTemplate} 
         showAlert={showAlert} 
         editorMode={editorMode}
+        getTemplateInfo={getTemplateInfo}
       />
     </div>
   )
 
 }
 
-const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, namespaceHook, editorMode }) => {
+const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, namespaceHook, getTemplateInfo, editorMode }) => {
 
 
   const classes = useStyles();
@@ -298,6 +299,7 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
                       updateTemplate={updateTemplate} 
                       showAlert={showAlert} 
                       editorMode={editorMode}
+                      getTemplateInfo={getTemplateInfo}
                     />
                   )
                 })
@@ -339,7 +341,7 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
   )
 }
 
-export default function TemplateSection({ namespaces, templatesHook, editorMode }) {
+export default function TemplateSection({ namespaces, templatesHook, getTemplateInfo, editorMode }) {
 
   const { setNamespaces, deleteNamespace } = templatesHook();
 
@@ -532,6 +534,7 @@ export default function TemplateSection({ namespaces, templatesHook, editorMode 
               handleChange={handleChange}
               namespaceHook={namespaceHook}
               editorMode={editorMode}
+              getTemplateInfo={getTemplateInfo}
             />
           )
         })
