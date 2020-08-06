@@ -176,7 +176,8 @@ class Macro extends React.Component {
 			'getForeingTask': this.getForeingTask,
 			'getForeingTasks': this.getForeingTasks,
 			'getActionCode': this.getActionCode,
-			'getTemplateInfo': this.props.getTemplateInfo
+			'getTemplateInfo': this.props.getTemplateInfo,
+			'getDoc': this.props.getDoc
 		}
 	}
 

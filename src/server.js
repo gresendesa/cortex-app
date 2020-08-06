@@ -181,6 +181,21 @@ class Server {
 		})
 	}
 
+	getDoc({ source, type, target, success, error }) {
+
+		const conn = this.getConnection();
+
+		conn.get(`doc/${source}/${type}/${target}`).then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			try {
+				error(e.response.data.detail);
+			} catch {
+				error(e.message);
+			}
+		})
+	}
+
 	getTriggerBuild({ id, name, project_id, task_name, section, success, error }) {
 
 		const conn = this.getConnection();

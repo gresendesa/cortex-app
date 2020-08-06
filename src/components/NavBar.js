@@ -24,6 +24,7 @@ import FilterFramesIcon from '@material-ui/icons/FilterFrames';
 import FolderIcon from '@material-ui/icons/Folder';
 import Link from '@material-ui/core/Link';
 import Tooltip from '@material-ui/core/Tooltip';
+import { Icon } from 'semantic-ui-react';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -86,7 +87,7 @@ export default function ButtonAppBar({ logged, setToken, username, version }) {
             : ''
           }
           <Typography variant="h6" className={classes.title}>
-            Rocket {' '}
+            <Icon name='rocket' style={{color:'#4caf50'}} size='small' /> Rocket {' '}
             <Tooltip title={version.short + ' • ' + version.release_date} aria-label="release date">
               <Link color="inherit" href="#">
               <small className={classes.tiny}>v{version.number}</small>

@@ -84,7 +84,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export function Editor({ project, saveMacro, getBuild, getTemplateInfo, alert, editorMode }) {
+export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getDoc, alert, editorMode }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
 
@@ -100,7 +100,8 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, alert, e
   const [infoButtonSubject, setInfoButtonSubject] = useState(null);
   const infoSourcesHook = () => {
     return {
-      getTemplateInfo:getTemplateInfo
+      getTemplateInfo:getTemplateInfo,
+      getDoc: getDoc
     }
   }
 
@@ -433,6 +434,7 @@ class PlainMacro extends React.Component {
 					saveMacro={this.props.saveMacro} 
 					getBuild={this.props.getBuild} 
           getTemplateInfo={this.props.getTemplateInfo} 
+          getDoc={this.props.getDoc}
 					alert={alertHook}
           editorMode={this.props.editorMode}
 				/>

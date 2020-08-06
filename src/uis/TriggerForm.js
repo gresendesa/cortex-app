@@ -89,7 +89,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TriggerForm({ task, trigger, open, toggleEditor, group, saveTrigger, alert, setFocus, deployMacro, active, getActionCode, getTemplateInfo, editorMode }) {
+export default function TriggerForm({ task, trigger, open, toggleEditor, group, saveTrigger, alert, setFocus, deployMacro, active, getActionCode, getTemplateInfo, getDoc, editorMode }) {
   const classes = useStyles();
 
   const [events, setEvents] = useState(Object.assign([], trigger.events));
@@ -107,7 +107,8 @@ export default function TriggerForm({ task, trigger, open, toggleEditor, group, 
   const [infoButtonSubject, setInfoButtonSubject] = useState(null);
   const infoSourcesHook = () => {
     return {
-      getTemplateInfo:getTemplateInfo
+      getTemplateInfo:getTemplateInfo,
+      getDoc: getDoc
     }
   }
 

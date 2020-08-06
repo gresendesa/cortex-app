@@ -48,7 +48,9 @@ export default function Routes({ context }) {
 											saveMacro={context.saveMacro} 
 											getBuild={context.getBuild}
 											getTemplateInfo={context.getTemplateInfo}
-											editorMode={editorMode} />
+											editorMode={editorMode} 
+											getDoc={context.getDoc}
+										/>
 										:''
 									)
 								}} />
@@ -69,6 +71,7 @@ export default function Routes({ context }) {
 											isUserSuper={context.isUserSuper} 
 											getActionCode={context.getActionCode}
 											getTemplateInfo={context.getTemplateInfo}
+											getDoc={context.getDoc}
 											editorMode={editorMode} />
 										:''
 									)
@@ -82,6 +85,7 @@ export default function Routes({ context }) {
 										saveTemplates={context.saveTemplates} 
 										component={Templates}
 										getTemplateInfo={context.getTemplateInfo}
+										getDoc={context.getDoc}
 										editorMode={editorMode}
 									/>
 								)} />

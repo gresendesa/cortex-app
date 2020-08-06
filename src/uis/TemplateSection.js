@@ -116,7 +116,7 @@ const ExpansionPanelDetails = withStyles((theme) => ({
   },
 }))(MuiExpansionPanelDetails);
 
-const TemplateItem = ({ index, template, namespace, moveUp, deleteTemplate, updateTemplate, showAlert, getTemplateInfo, editorMode }) => {
+const TemplateItem = ({ index, template, namespace, moveUp, deleteTemplate, updateTemplate, showAlert, getTemplateInfo, editorMode, getDoc }) => {
 
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -161,13 +161,14 @@ const TemplateItem = ({ index, template, namespace, moveUp, deleteTemplate, upda
         showAlert={showAlert} 
         editorMode={editorMode}
         getTemplateInfo={getTemplateInfo}
+        getDoc={getDoc}
       />
     </div>
   )
 
 }
 
-const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, namespaceHook, getTemplateInfo, editorMode }) => {
+const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, namespaceHook, getTemplateInfo, getDoc, editorMode }) => {
 
 
   const classes = useStyles();
@@ -300,6 +301,7 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
                       showAlert={showAlert} 
                       editorMode={editorMode}
                       getTemplateInfo={getTemplateInfo}
+                      getDoc={getDoc}
                     />
                   )
                 })
@@ -341,7 +343,7 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
   )
 }
 
-export default function TemplateSection({ namespaces, templatesHook, getTemplateInfo, editorMode }) {
+export default function TemplateSection({ namespaces, templatesHook, getTemplateInfo, editorMode, getDoc }) {
 
   const { setNamespaces, deleteNamespace } = templatesHook();
 
@@ -535,6 +537,7 @@ export default function TemplateSection({ namespaces, templatesHook, getTemplate
               namespaceHook={namespaceHook}
               editorMode={editorMode}
               getTemplateInfo={getTemplateInfo}
+              getDoc={getDoc}
             />
           )
         })

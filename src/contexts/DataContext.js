@@ -14,9 +14,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.9',
+		'number': '1.10',
 		'release_date': '6 August 2020',
-		'short': 'Template details access 😎'
+		'short': 'Integration with Gorlem docs'
 	}
 
 	setToken = (token) => {
@@ -200,6 +200,24 @@ class DataContextProvider extends Component {
 		}
 	}
 
+	getDoc = ({ source, type, target, success=()=>{}, error=()=>{} }) => {
+		if(this.state.token!==null){
+			this.setState({'processing': true});
+			const server = new Server({ token: this.state.token });
+			const onOk = (response) => {
+				success(response);
+				this.setState({'processing': false});
+			}
+			const onIssue = (response) => {
+				error(response);
+				this.setState({'processing': false});
+			}
+			server.getDoc({ source, type, target, success: onOk, error: onIssue })
+		} else {
+			error("sem token");
+		}
+	}
+
 	saveTemplates = ({ templates, success=()=>{}, error=()=>{} }) => {
 		if(this.state.token!==null){
 			const server = new Server({ token: this.state.token });
@@ -230,6 +248,7 @@ class DataContextProvider extends Component {
 											getTasks: this.getTasks,
 											processing: this.state.processing,
 											getTemplateInfo: this.getTemplateInfo,
+											getDoc: this.getDoc,
 											getBuild: this.getBuild,
 											getActionCode: this.getActionCode,
 											getTemplates: this.getTemplates,

@@ -18,7 +18,11 @@ export default function Footer({ version }) {
 
 				<Box mt={5}>
 					<Typography variant="body2" color="textSecondary" align="center">
-						{'Federal • Macrosoft ®'}
+						{'Federal • '}
+						<Link color="inherit" href="https://webmacrosoft.herokuapp.com/">
+							Macrosoft
+						</Link>{' '}
+						{' ®'}
 						{' '}
 						{new Date().getFullYear()}
 						{''}

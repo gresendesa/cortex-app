@@ -91,7 +91,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TemplateEditor({ open, setOpen, template, namespace, saveTemplate, getTemplateInfo, showAlert, editorMode }) {
+export default function TemplateEditor({ open, setOpen, template, namespace, saveTemplate, getTemplateInfo, getDoc, showAlert, editorMode }) {
   
   const classes = useStyles();
   const [openConfig, setOpenConfig] = useState(false);
@@ -122,7 +122,8 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
 
   const infoSourcesHook = () => {
     return {
-      getTemplateInfo:getTemplateInfo
+      getTemplateInfo:getTemplateInfo,
+      getDoc: getDoc
     }
   }
 

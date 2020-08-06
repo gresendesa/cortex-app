@@ -56,7 +56,7 @@ export const onLoadAce = ({ editorMode, setInfoButtonSubject, completer }) => {
 		editor.getSession().setMode(editorMode);
 
 		editor.getSession().getSelection().on('changeSelection',(delta)=>{
-
+			
 			setTimeout(() => {
 				const selectedText = editor.getSession().getTextRange();
 				if(selectedText.length!=0){
@@ -64,7 +64,7 @@ export const onLoadAce = ({ editorMode, setInfoButtonSubject, completer }) => {
 					const end = editor.getSelectionRange().end.row;
 					if(start==end){
 						var wholelinetxt = editor.session.getLine(start);
-						setInfoButtonSubject({text: wholelinetxt});
+						setInfoButtonSubject({line: wholelinetxt, word: selectedText});
 					}
 				}
 			}, 50);
