@@ -86,7 +86,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function BuildPanel({ open, setOpen, code, projectName }) {
+export default function BuildPanel({ open, setOpen, code, projectName, editorMode }) {
   const classes = useStyles();
 
   const handleClose = () => {
@@ -117,6 +117,10 @@ export default function BuildPanel({ open, setOpen, code, projectName }) {
 
           <Grid item xs={12} className={classes.editor}>
             <AceEditor 
+              onLoad={(editor) => {
+                editor.getSession().setMode(editorMode);
+              }}
+
               mode="javascript"
               theme="monokai"
               value={code}

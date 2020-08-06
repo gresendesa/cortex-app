@@ -47,6 +47,7 @@ export default function Routes({ context }) {
 											project={project} 
 											saveMacro={context.saveMacro} 
 											getBuild={context.getBuild}
+											getTemplateInfo={context.getTemplateInfo}
 											editorMode={editorMode} />
 										:''
 									)

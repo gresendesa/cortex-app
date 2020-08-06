@@ -27,12 +27,16 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 
+import InfoButton from './uis/InfoButton';
+
 import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 
 //import { cortexMacroModCommands } from './data/CortexMacroModCommands';
 import { plainCortexMacroModCommands } from './data/PlainCortexMacroModCommands';
 
 import BuildPanel from './uis/BuildPanel';
+
+import TemplateInfoDialog from './uis/TemplateInfoDialog';
 
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
@@ -81,7 +85,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export function Editor({ project, saveMacro, getBuild, alert, editorMode }) {
+export function Editor({ project, saveMacro, getBuild, getTemplateInfo, alert, editorMode }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
 
@@ -94,10 +98,54 @@ export function Editor({ project, saveMacro, getBuild, alert, editorMode }) {
   const [description, setDescription] = useState(project.macro.description); 
   const [processing, setProcessing] = useState(false);
 
+  const [infoTemplateOpen, setInfoTemplateOpen] = useState(false);
+  const [infoTemplateCodeOpen, setInfoTemplateCodeOpen] = useState(false);
+  const [infoTemplate, setInfoTemplate] = useState({});
+
+  const [infoButtonSubject, setInfoButtonSubject] = useState(null);
+
   const [build, setBuild] = useState({
   	open: false,
   	code: ''
   });
+
+  const onTemplateCode = (code) => {
+    setInfoTemplateCodeOpen(true);
+  }
+
+  const handleInfo = (target) => {
+
+    if(target.type=="template"){
+
+      const parts = target.argument.split('.');
+      var library_name = null;
+      var template_name = null;
+
+      const success = (message) => {
+        setInfoTemplate(message.detail);
+        setInfoTemplateOpen(true);
+        console.log(message.detail);
+      }
+
+      const error = (message) => {
+        alert().show({message, severity: "error"});
+      }
+
+      if(parts.length==3){
+        library_name = `${parts[0]}.${parts[1]}`;
+        template_name = parts[2];
+        getTemplateInfo({library: library_name, name: template_name, success, error });
+      } else if(parts.length==2) {
+        library_name = parts[0];
+        template_name = parts[1];
+        getTemplateInfo({library: library_name, name: template_name, success, error });
+      } else {
+        alert().show({message:'Invalid template name', severity: "error"});
+      }
+
+    }
+
+  }
 
   const setBuildOpen = (bool) => {
   	const copyBuild = Object.assign({},build);
@@ -262,6 +310,7 @@ export function Editor({ project, saveMacro, getBuild, alert, editorMode }) {
               <IconTipButton edge="start" tip="Indent code" color="inherit" onClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
               </IconTipButton>
+              <InfoButton subject={infoButtonSubject} callback={handleInfo} />
             </Grid>
 
             <Grid item>
@@ -290,6 +339,23 @@ export function Editor({ project, saveMacro, getBuild, alert, editorMode }) {
                 editor.setValue(editor.getValue(), -1);
                 editor.completers = [editor.completers[0],editor.completers[1],CortexCompleter];
                 editor.getSession().setMode(editorMode);
+
+                editor.getSession().getSelection().on('changeSelection',(delta)=>{
+
+                  setTimeout(() => {
+                    const selectedText = editor.getSession().getTextRange();
+                    if(selectedText.length!=0){
+                      const start = editor.getSelectionRange().start.row;
+                      const end = editor.getSelectionRange().end.row;
+                      if(start==end){
+                        var wholelinetxt = editor.session.getLine(start);
+                        setInfoButtonSubject({text: wholelinetxt});
+                      }
+                    }
+                  }, 50);
+
+                });
+
               }}
               mode="javascript"
               theme="monokai"
@@ -380,8 +446,11 @@ export function Editor({ project, saveMacro, getBuild, alert, editorMode }) {
 
       </Dialog>
 
-      <BuildPanel open={build.open} setOpen={setBuildOpen} code={build.code} projectName={name} />
+      <TemplateInfoDialog open={infoTemplateOpen} setOpen={setInfoTemplateOpen} template={infoTemplate} showCodeHandler={onTemplateCode} />
+      <BuildPanel editorMode={editorMode} open={infoTemplateCodeOpen} setOpen={setInfoTemplateCodeOpen} code={infoTemplate.code} projectName={infoTemplate.dev + ' • ' + infoTemplate.library + ' • ' + infoTemplate.name} />
+      <BuildPanel editorMode={editorMode} open={build.open} setOpen={setBuildOpen} code={build.code} projectName={name} />
 
+      
     </div>
   );
 }
@@ -425,6 +494,7 @@ class PlainMacro extends React.Component {
 					project={this.props.project} 
 					saveMacro={this.props.saveMacro} 
 					getBuild={this.props.getBuild} 
+          getTemplateInfo={this.props.getTemplateInfo} 
 					alert={alertHook}
           editorMode={this.props.editorMode}
 				/>

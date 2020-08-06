@@ -166,6 +166,21 @@ class Server {
 		})
 	}
 
+	getTemplateInfo({ library, name, success, error }) {
+
+		const conn = this.getConnection();
+
+		conn.get(`template/details/${library}/${name}`).then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			try {
+				error(e.response.data.detail);
+			} catch {
+				error(e.message);
+			}
+		})
+	}
+
 	getTriggerBuild({ id, name, project_id, task_name, section, success, error }) {
 
 		const conn = this.getConnection();

@@ -353,7 +353,7 @@ class Macro extends React.Component {
 					</MuiAlert>
 				</Snackbar>
 
-				<BuildPanel open={this.state.openBuild} setOpen={this.setOpenBuild} code={this.state.build} projectName={this.state.buildName} />
+				<BuildPanel open={this.state.openBuild} setOpen={this.setOpenBuild} code={this.state.build} projectName={this.state.buildName} editorMode={this.props.editorMode} />
 
 				<MacroSettings openConfig={this.state.openConfig} settings={settings} hookTask={this.hookTask} devName={this.state.devName} />
 

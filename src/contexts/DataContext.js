@@ -14,9 +14,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.8',
-		'release_date': '4 August 2020',
-		'short': 'MacroMod code highlight 💖'
+		'number': '1.9',
+		'release_date': '6 August 2020',
+		'short': 'Template details access 😎'
 	}
 
 	setToken = (token) => {
@@ -163,6 +163,25 @@ class DataContextProvider extends Component {
 		}
 	}
 
+	getTemplateInfo = ({ library, name, success=()=>{}, error=()=>{} }) => {
+
+		if(this.state.token!==null){
+			this.setState({'processing': true});
+			const server = new Server({ token: this.state.token });
+			const onOk = (response) => {
+				success(response);
+				this.setState({'processing': false});
+			}
+			const onIssue = (response) => {
+				error(response);
+				this.setState({'processing': false});
+			}
+			server.getTemplateInfo({ library, name, success: onOk, error: onIssue })
+		} else {
+			error("sem token");
+		}
+	}
+
 	getTemplates = ({ success=()=>{}, error=()=>{} }) => {
 		if(this.state.token!==null){
 			this.setState({'processing': true});
@@ -210,6 +229,7 @@ class DataContextProvider extends Component {
 											getTask: this.getTask,
 											getTasks: this.getTasks,
 											processing: this.state.processing,
+											getTemplateInfo: this.getTemplateInfo,
 											getBuild: this.getBuild,
 											getActionCode: this.getActionCode,
 											getTemplates: this.getTemplates,
