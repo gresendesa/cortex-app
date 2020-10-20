@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));*/
 
-export default function TasksPanel({ task, hookTask, indice, editorMode }) {
+export default function TasksPanel({ project, task, hookTask, indice, editorMode }) {
 
 	const { deleteTask, editTask, hasTask, alert, focus, setFocus, getFocus, moveTaskUp, hasMacroUnsafe } = hookTask();
 
@@ -90,7 +90,7 @@ export default function TasksPanel({ task, hookTask, indice, editorMode }) {
 						alignItems="stretch"
 					>
 						<Grid item>
-							<TriggersSection task={task} hookTask={hookTask} editorMode={editorMode} />
+							<TriggersSection project={project} task={task} hookTask={hookTask} editorMode={editorMode} />
 						</Grid>
 						<Grid item>
 							<BottomNavigation >

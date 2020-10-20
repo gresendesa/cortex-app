@@ -165,7 +165,8 @@ class Trigger extends React.Component {
 								
 					
 	            </ListItem>
-	            <TriggerForm task={this.props.task} 
+	            <TriggerForm project={this.props.project}
+	            			 task={this.props.task} 
 	            			 saveTrigger={this.saveTrigger} 
 	            			 trigger={this.state.trigger} 
 	            			 open={this.state.openEditor} 

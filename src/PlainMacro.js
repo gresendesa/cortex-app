@@ -273,7 +273,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getDoc, 
               <IconTipButton edge="start" tip="Indent code" color="inherit" onClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
               </IconTipButton>
-              <InfoButton editorMode={editorMode} subject={infoButtonSubject} sourcesHook={infoSourcesHook} error_alert={(message) =>  alert().show({message, severity: "error"})}/>
+              <InfoButton editorMode={editorMode} subject={infoButtonSubject} sourcesHook={infoSourcesHook} project={project} error_alert={(message) =>  alert().show({message, severity: "error"})}/>
             </Grid>
 
             <Grid item>

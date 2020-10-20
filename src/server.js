@@ -170,7 +170,7 @@ class Server {
 
 		const conn = this.getConnection();
 
-		const url = `template/details/${library}/${name}`;
+		var url = `template/details/${library}/${name}`;
 		if(project_id!==null){
 			url = `template/details/${library}/${name}/${project_id}`;
 		}
