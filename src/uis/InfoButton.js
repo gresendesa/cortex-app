@@ -127,9 +127,10 @@ export default function InfoButton({ subject, sourcesHook, editorMode, project=n
 	      } else if(parts.length==2) {
 	        library_name = parts[0];
 	        template_name = parts[1];
-	       	getTemplateInfo({library: library_name, name: template_name, success, error });
 	        if((project)&&(project.id)){
 	        	getTemplateInfo({library: library_name, name: template_name, project_id:project.id, success, error });
+	        } else {
+	        	getTemplateInfo({library: library_name, name: template_name, success, error });
 	        }
 	      } else {
 	        error_alert('Invalid template name');

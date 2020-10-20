@@ -91,7 +91,6 @@ export default function Routes({ context }) {
 								)} />
 								<Route render={(props) => (
 									<Projects {...props} 
-										fetchMacros={context.fetchMacros} 
 										addMacro={context.addMacro} 
 										delMacro={context.delMacro}
 										macros={context.macros} 

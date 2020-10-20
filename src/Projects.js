@@ -92,7 +92,7 @@ class Projects extends React.Component {
 		const error = (response) => {
 			
 		}
-		this.props.fetchMacros({ success, error });
+		//this.props.fetchMacros({ success, error });
 
 	}
 
