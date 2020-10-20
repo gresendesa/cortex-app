@@ -11,7 +11,7 @@ import GorlemCommandInfo from './GorlemCommandInfo';
 
 import axios from 'axios';
 
-export default function InfoButton({ subject, sourcesHook, editorMode, error_alert=(window.alert) }) {
+export default function InfoButton({ subject, sourcesHook, editorMode, project=null, error_alert=(window.alert) }) {
 
 	const [infoTemplateOpen, setInfoTemplateOpen] = useState(false);
 	const [infoTemplateCodeOpen, setInfoTemplateCodeOpen] = useState(false);

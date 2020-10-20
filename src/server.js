@@ -166,11 +166,16 @@ class Server {
 		})
 	}
 
-	getTemplateInfo({ library, name, success, error }) {
+	getTemplateInfo({ library, name, project_id, success, error }) {
 
 		const conn = this.getConnection();
 
-		conn.get(`template/details/${library}/${name}`).then(r => {
+		const url = `template/details/${library}/${name}`;
+		if(project_id!==null){
+			url = `template/details/${library}/${name}/${project_id}`;
+		}
+
+		conn.get(url).then(r => {
 			success(r.data)
 		}).catch(function(e) {
 			try {

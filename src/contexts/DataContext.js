@@ -163,7 +163,7 @@ class DataContextProvider extends Component {
 		}
 	}
 
-	getTemplateInfo = ({ library, name, success=()=>{}, error=()=>{} }) => {
+	getTemplateInfo = ({ library, name, project_id=null, success=()=>{}, error=()=>{} }) => {
 
 		if(this.state.token!==null){
 			this.setState({'processing': true});
@@ -176,7 +176,7 @@ class DataContextProvider extends Component {
 				error(response);
 				this.setState({'processing': false});
 			}
-			server.getTemplateInfo({ library, name, success: onOk, error: onIssue })
+			server.getTemplateInfo({ library, name, project_id, success: onOk, error: onIssue })
 		} else {
 			error("sem token");
 		}
