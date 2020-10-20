@@ -87,7 +87,7 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper 
 	useEffect(() => {
 		if(searchString!=''){
 			setsearchResultProjects(projects.filter((p) => {
-				return (p.macro.name.toLowerCase().includes(searchString.toLowerCase()) || p.dev.toLowerCase().includes(searchString.toLowerCase()));
+				return (p.macro.name.toLowerCase().includes(searchString.toLowerCase()) || p.dev.toLowerCase().includes(searchString.toLowerCase()) || p.macro.description.toLowerCase().includes(searchString.toLowerCase()));
 			}));
 		} else {
 			setsearchResultProjects(projects);
