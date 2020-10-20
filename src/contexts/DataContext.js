@@ -14,9 +14,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.10',
-		'release_date': '6 August 2020',
-		'short': 'Integration with Gorlem docs'
+		'number': '1.11',
+		'release_date': '20 October 2020',
+		'short': 'Search bar included on project area'
 	}
 
 	setToken = (token) => {

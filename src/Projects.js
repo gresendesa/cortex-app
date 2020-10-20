@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
@@ -20,11 +20,119 @@ import ProjectCreateDialog from './uis/ProjectCreateDialog';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { useHistory } from 'react-router-dom';
 import DeleteButton from './uis/DeleteButton';
-import { makeStyles } from '@material-ui/core/styles';
+import { fade, makeStyles } from '@material-ui/core/styles';
 import { deepOrange, green, indigo } from '@material-ui/core/colors';
 import Tooltip from '@material-ui/core/Tooltip';
+import SearchIcon from '@material-ui/icons/Search';
+import InputBase from '@material-ui/core/InputBase';
 
 import { timeDifference } from './uis/utils';
+
+function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper }) {
+	const useStyles = makeStyles((theme) => ({
+	  search: {
+	    position: 'relative',
+	    borderRadius: theme.shape.borderRadius,
+	    backgroundColor: fade(theme.palette.common.white, 0.15),
+	    '&:hover': {
+	      backgroundColor: fade(theme.palette.common.white, 0.25),
+	    },
+	    marginRight: theme.spacing(0),
+	    marginLeft: 0,
+	    width: '100%',
+	    [theme.breakpoints.up('sm')]: {
+	      marginLeft: theme.spacing(0),
+	      width: 'auto',
+	    },
+	  },
+	  searchIcon: {
+	    padding: theme.spacing(0, 2),
+	    height: '100%',
+	    position: 'absolute',
+	    pointerEvents: 'none',
+	    display: 'flex',
+	    alignItems: 'center',
+	    justifyContent: 'center',
+	  },
+	  inputRoot: {
+	    color: 'inherit',
+	  },
+	  inputInput: {
+	    padding: theme.spacing(1, 1, 1, 0),
+	    // vertical padding + font size from searchIcon
+	    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+	    transition: theme.transitions.create('width'),
+	    width: '100%',
+	    [theme.breakpoints.up('md')]: {
+	      width: '20ch',
+	    },
+	  },
+	}));
+
+
+
+	const classes = useStyles();
+
+	const [searchResultProjects, setsearchResultProjects] = useState(projects);
+	const [searchString, setSearchString] = useState('')
+
+	const handleSearch = (e) => {
+		setSearchString(e.target.value)
+	}
+
+	useEffect(() => {
+		setsearchResultProjects(projects);
+	},[projects]);
+
+	useEffect(() => {
+		if(searchString!=''){
+			setsearchResultProjects(projects.filter((p) => {
+				return (p.macro.name.toLowerCase().includes(searchString.toLowerCase()) || p.dev.toLowerCase().includes(searchString.toLowerCase()));
+			}));
+		} else {
+			setsearchResultProjects(projects);
+		}
+	},[searchString])
+
+	return (
+		<div>
+			<div className={classes.search}>
+				<div className={classes.searchIcon}>
+					<SearchIcon />
+				</div>
+				<InputBase
+					placeholder="Search…"
+					value={searchString}
+					onChange={handleSearch}
+					classes={{
+						root: classes.inputRoot,
+						input: classes.inputInput,
+					}}
+					inputProps={{ 'aria-label': 'search' }}
+				/>
+			</div>
+			<div>
+				<List>
+								
+					{
+						searchResultProjects.length > 0 ? 
+						searchResultProjects.map(p => {
+							return (
+								<ProjectItem key={p.id} p={p} redirectToProject={redirectToProject} removeProject={removeProject} isUserSuper={isUserSuper} />
+							)
+						}) : 
+						<Alert severity="info">
+							<AlertTitle>No projects</AlertTitle>
+						</Alert>
+					}
+
+
+				</List>
+			</div>
+		</div>
+	)
+}
+
 
 function ProjectItem({ p, redirectToProject, removeProject, isUserSuper }) {
 
@@ -156,26 +264,20 @@ class Projects extends React.Component {
 
 					</Grid>
 
+
 				</Grid>
 
-				<List>
-					
-					{
-
-						this.props.macros.length > 0 ?
-						this.props.macros.map(p => {
-							return (
-								<ProjectItem key={p.id} p={p} redirectToProject={this.redirectToProject} removeProject={this.removeProject} isUserSuper={this.props.isUserSuper} />
-							)
-						})
-						:
-						<Alert severity="info">
-							<AlertTitle>No projects loaded</AlertTitle>
-						</Alert>
-					}
-
-
-				</List>
+				<Grid 
+					container
+					direction="column"
+					justify="space-evenly"
+					alignItems="stretch"
+				>
+				
+					<Grid item>
+						<SearchWidget projects={this.props.macros} redirectToProject={this.redirectToProject} removeProject={this.removeProject} isUserSuper={this.props.isUserSuper} />
+					</Grid>
+				</Grid>
 
 				<ProjectCreateDialog open={this.state.openCreateDialog} setOpen={(bool) => {this.setState({openCreateDialog: bool})}} createProject={this.createProject} />
 
