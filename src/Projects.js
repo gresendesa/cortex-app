@@ -21,14 +21,15 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 import { useHistory } from 'react-router-dom';
 import DeleteButton from './uis/DeleteButton';
 import { fade, makeStyles } from '@material-ui/core/styles';
-import { deepOrange, green, indigo } from '@material-ui/core/colors';
+import { deepOrange, green, indigo, blue } from '@material-ui/core/colors';
 import Tooltip from '@material-ui/core/Tooltip';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
+import GroupIcon from '@material-ui/icons/Group';
 
 import { timeDifference } from './uis/utils';
 
-function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper }) {
+function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper, username }) {
 	const useStyles = makeStyles((theme) => ({
 	  search: {
 	    position: 'relative',
@@ -118,7 +119,7 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper 
 						searchResultProjects.length > 0 ? 
 						searchResultProjects.map(p => {
 							return (
-								<ProjectItem key={p.id} p={p} redirectToProject={redirectToProject} removeProject={removeProject} isUserSuper={isUserSuper} />
+								<ProjectItem key={p.id} p={p} redirectToProject={redirectToProject} removeProject={removeProject} isUserSuper={isUserSuper} username={username} />
 							)
 						}) : 
 						<Alert severity="info">
@@ -134,20 +135,26 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper 
 }
 
 
-function ProjectItem({ p, redirectToProject, removeProject, isUserSuper }) {
+function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, username }) {
 
 	const useStyles = makeStyles((theme) => ({
 	  avatarProject: {
 	    width: theme.spacing(5),
 	    height: theme.spacing(5),
 	    color: theme.palette.getContrastText(green[500]),
-	    backgroundColor: green[500],
+	    backgroundColor: green[500]
 	  },
 	  avatarNoneProject: {
 	    width: theme.spacing(5),
 	    height: theme.spacing(5),
 	    color: theme.palette.getContrastText(indigo[500]),
-	    backgroundColor: indigo[500],
+	    backgroundColor: indigo[500]
+	  },
+	  sharedProject: {
+	  	width: theme.spacing(5),
+	    height: theme.spacing(5),
+	    color: theme.palette.getContrastText(blue[500]),
+	    backgroundColor: blue[500]
 	  }
 	}));
 
@@ -155,24 +162,32 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper }) {
 
 	const [lastSave, setLastSave] = useState(timeDifference(p.date));
 
-	/*setInterval(() => {
-		setLastSave(timeDifference(p.date));
-	}, 1000);*/
-
-	return (
-		<ListItem button onClick={() => {redirectToProject(p)}}>
-			<ListItemAvatar>
+	const DefaultIcon = ({ p, classes }) => {
+		return (
+			<div>
 				{p.macro.protocol == 'CTRL' && <Avatar className={classes.avatarProject}>
 					<PlayArrowRoundedIcon />
 				</Avatar>}
 				{p.macro.protocol == 'NONE' && <Avatar className={classes.avatarNoneProject}>
 					<CodeIcon /> 
 				</Avatar>}
+			</div>
+		)
+	}
+
+	return (
+		<ListItem button onClick={() => {redirectToProject(p)}}>
+			<ListItemAvatar>
+				{username != p.dev ? <Avatar className={classes.sharedProject}>
+					<GroupIcon fontSize='small' />
+				</Avatar>
+				:
+				<DefaultIcon p={p} classes={classes} />}
 			</ListItemAvatar>
 			<Tooltip title={"Saved " + lastSave + " before"}>
 				<ListItemText
 					primary={p.macro.name}
-					secondary={isUserSuper ? (p.dev + (p.macro.description ? ' • ' + p.macro.description : '')) : (p.macro.description)}
+					secondary={username != p.dev ? (p.dev + (p.macro.description ? ' • ' + p.macro.description : '')) : (p.macro.description)}
 					/>
 			</Tooltip>
 				
@@ -275,7 +290,7 @@ class Projects extends React.Component {
 				>
 				
 					<Grid item>
-						<SearchWidget projects={this.props.macros} redirectToProject={this.redirectToProject} removeProject={this.removeProject} isUserSuper={this.props.isUserSuper} />
+						<SearchWidget projects={this.props.macros} redirectToProject={this.redirectToProject} removeProject={this.removeProject} isUserSuper={this.props.isUserSuper} username={this.props.username} />
 					</Grid>
 				</Grid>
 

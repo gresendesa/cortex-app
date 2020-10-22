@@ -96,6 +96,7 @@ export default function Routes({ context }) {
 										macros={context.macros} 
 										isUserSuper={context.isUserSuper} 
 										setIsUserSuper={context.setIsUserSuper}
+										username={context.username}
 									/> 
 								)} />
 							</Switch>
