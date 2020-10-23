@@ -19,6 +19,7 @@ import CodeIcon from '@material-ui/icons/Code';
 import BuildPanel from './uis/BuildPanel';
 import translateTriggerGroup from './uis/utils';
 
+
 class Macro extends React.Component {
 
 	state = {
@@ -243,6 +244,12 @@ class Macro extends React.Component {
 		this.props.getBuild({ id, success, error });
 	}
 
+	updateCollaborators = (collaborators, callback) => {
+      let copyProject = Object.assign([], this.state.project);
+      copyProject.collaborators = collaborators
+      this.setState({'project': copyProject}, callback)
+    }
+
 	getActionCode = ({ id, name, task_name, section, callback=()=>{} }) => {
 
 		const success = (response) => {
@@ -357,7 +364,7 @@ class Macro extends React.Component {
 
 				<BuildPanel open={this.state.openBuild} setOpen={this.setOpenBuild} code={this.state.build} projectName={this.state.buildName} editorMode={this.props.editorMode} />
 
-				<MacroSettings openConfig={this.state.openConfig} settings={settings} hookTask={this.hookTask} devName={this.state.devName} />
+				<MacroSettings openConfig={this.state.openConfig} settings={settings} hookTask={this.hookTask} devName={this.state.devName} project={this.state.project} addCollaborator={this.props.addCollaborator} removeCollaborator={this.props.removeCollaborator} updateCollaborators={this.updateCollaborators} />
 
 			</React.Fragment>
 

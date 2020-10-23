@@ -50,6 +50,8 @@ export default function Routes({ context }) {
 											getTemplateInfo={context.getTemplateInfo}
 											editorMode={editorMode} 
 											getDoc={context.getDoc}
+											addCollaborator={context.addCollaborator}
+											removeCollaborator={context.removeCollaborator}
 										/>
 										:''
 									)
@@ -72,7 +74,10 @@ export default function Routes({ context }) {
 											getActionCode={context.getActionCode}
 											getTemplateInfo={context.getTemplateInfo}
 											getDoc={context.getDoc}
-											editorMode={editorMode} />
+											editorMode={editorMode}
+											addCollaborator={context.addCollaborator}
+											removeCollaborator={context.removeCollaborator}
+										 />
 										:''
 									)
 

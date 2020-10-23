@@ -216,6 +216,62 @@ class Server {
 		})
 	}
 
+	addCollaborator({ project_id, username, success, error }) {
+		const conn = this.getConnection();
+
+		conn.post(`/project/${project_id}/collaborator/${username}`).then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			try {
+				error(e.response.data.detail);
+			} catch {
+				error(e.message);
+			}
+		})
+	}
+
+	removeCollaborator({ project_id, username, success, error }) {
+		const conn = this.getConnection();
+
+		conn.delete(`/project/${project_id}/collaborator/${username}`).then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			try {
+				error(e.response.data.detail);
+			} catch {
+				error(e.message);
+			}
+		})
+	}
+
+	removeCollaborator({ project_id, username, success, error }) {
+		const conn = this.getConnection();
+
+		conn.delete(`/project/${project_id}/collaborator/${username}`).then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			try {
+				error(e.response.data.detail);
+			} catch {
+				error(e.message);
+			}
+		})
+	}
+
+	getCollaborators({ project_id, success, error }) {
+		const conn = this.getConnection();
+
+		conn.delete(`/project/${project_id}/collaborators`).then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			try {
+				error(e.response.data.detail);
+			} catch {
+				error(e.message);
+			}
+		})
+	}
+
 }
 
 export default Server;

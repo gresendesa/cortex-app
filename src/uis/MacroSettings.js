@@ -16,13 +16,15 @@ import Grid from '@material-ui/core/Grid';
 
 import TextField from '@material-ui/core/TextField';
 
+import SharingArea from './SharingArea';
+
 const useStyles = makeStyles(theme => ({
   textarea: {
     resize: "both",
   }
 }));
 
-export default function MacroSettings({ openConfig, devName, settings, hookTask }) {
+export default function MacroSettings({ openConfig, devName, settings, hookTask, project, addCollaborator, removeCollaborator, updateCollaborators }) {
 
 	const classes = useStyles();
 
@@ -82,6 +84,14 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 	}
 
 	const prefixDevName = devName.toLowerCase() + ".";
+
+	const sharingAlertInterface = () => {
+		return {
+			show: ({message, severity}) => {
+				alert(message, severity)
+			}
+		}
+	}
 
 	return(
 
@@ -168,6 +178,11 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask 
 							   variant="outlined"
 					/>
 				</ListItem>
+				<Divider />
+				<ListItem>
+                  <SharingArea project={project} addCollaborator={addCollaborator} removeCollaborator={removeCollaborator} updateCollaborators={updateCollaborators} alert={sharingAlertInterface} width={430} />
+                </ListItem>
+                <Divider />
 			</List>
 			<List aria-label="main mailbox folders">
 				<ListItem>

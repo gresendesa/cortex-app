@@ -27,6 +27,8 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 
+import SharingArea from './uis/SharingArea';
+
 import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 
 //import { cortexMacroModCommands } from './data/CortexMacroModCommands';
@@ -84,7 +86,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getDoc, alert, editorMode }) {
+export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getDoc, alert, editorMode, addCollaborator, removeCollaborator, updateCollaborators }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
 
@@ -376,6 +378,10 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getDoc, 
                     label="onChat"
                   />
                 </ListItem>
+
+                <ListItem>
+                  <SharingArea project={project} addCollaborator={addCollaborator} removeCollaborator={removeCollaborator} updateCollaborators={updateCollaborators} alert={alert} />
+                </ListItem>
               </List>
 
             </Drawer>
@@ -396,15 +402,22 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getDoc, 
 
 class PlainMacro extends React.Component {
 
-	state = {
-		alert: {
-			popUp: false,
-			severity: null,
-			message: null
-		}
-	}
+  state = {
+    alert: {
+      popUp: false,
+      severity: null,
+      message: null
+    },
+    project: this.props.project
+  }
 
-	render(){
+  render(){
+
+    const updateCollaborators = (collaborators, callback) => {
+      let copyProject = Object.assign([], this.state.project);
+      copyProject.collaborators = collaborators
+      this.setState({'project': copyProject}, callback)
+    }
 
 		const alertHook = () => {
 			return ({ 
@@ -430,13 +443,17 @@ class PlainMacro extends React.Component {
 		return (
 			<div>
 				<Editor 
-					project={this.props.project} 
+					project={this.state.project} 
 					saveMacro={this.props.saveMacro} 
 					getBuild={this.props.getBuild} 
           getTemplateInfo={this.props.getTemplateInfo} 
           getDoc={this.props.getDoc}
 					alert={alertHook}
           editorMode={this.props.editorMode}
+          addCollaborator={this.props.addCollaborator}
+          removeCollaborator={this.props.removeCollaborator}
+          getCollaborators={this.props.getCollaborators}
+          updateCollaborators={updateCollaborators}
 				/>
 				<Snackbar open={this.state.alert.popUp} autoHideDuration={4000} onClose={alertHook().close} >
 					<MuiAlert elevation={6} variant="filled" severity={this.state.alert.severity}>

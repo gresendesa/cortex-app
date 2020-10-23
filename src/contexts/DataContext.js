@@ -14,9 +14,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.11',
-		'release_date': '20 October 2020',
-		'short': 'Search bar included on project area'
+		'number': '1.12',
+		'release_date': '23 October 2020',
+		'short': 'Collaboration support added'
 	}
 
 	setToken = (token) => {
@@ -227,6 +227,33 @@ class DataContextProvider extends Component {
 		}
 	}
 
+	addCollaborator = ({ project_id, username, success=()=>{}, error=()=>{} }) => {
+		if(this.state.token!==null){
+			const server = new Server({ token: this.state.token });
+			server.addCollaborator({ project_id, username, success, error })
+		} else {
+			error("sem token");
+		}
+	}
+
+	removeCollaborator = ({ project_id, username, success=()=>{}, error=()=>{} }) => {
+		if(this.state.token!==null){
+			const server = new Server({ token: this.state.token });
+			server.removeCollaborator({ project_id, username, success, error })
+		} else {
+			error("sem token");
+		}
+	}
+
+	getCollaborators = ({ project_id, success=()=>{}, error=()=>{} }) => {
+		if(this.state.token!==null){
+			const server = new Server({ token: this.state.token });
+			server.getCollaborators({ project_id, success, error })
+		} else {
+			error("sem token");
+		}
+	}
+
 	componentWillMount(){
 		this.setToken(localStorage.getItem('cortex-token'));
 		this.setUsername(localStorage.getItem('cortex-username'));	
@@ -254,7 +281,10 @@ class DataContextProvider extends Component {
 											getTemplates: this.getTemplates,
 											saveTemplates: this.saveTemplates,
 											setIsUserSuper: this.setIsUserSuper,
-											version: this.version
+											version: this.version,
+											addCollaborator: this.addCollaborator,
+											removeCollaborator: this.removeCollaborator,
+											getCollaborators: this.getCollaborators
 
 										}}>
 				{this.props.children}
