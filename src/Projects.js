@@ -26,6 +26,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import GroupIcon from '@material-ui/icons/Group';
+import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 
 import { timeDifference } from './uis/utils';
 
@@ -178,11 +179,19 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 	return (
 		<ListItem button onClick={() => {redirectToProject(p)}}>
 			<ListItemAvatar>
-				{username != p.dev ? <Avatar className={classes.sharedProject}>
-					<GroupIcon fontSize='small' />
-				</Avatar>
+				{username != p.dev ? 
+					<Avatar className={classes.sharedProject}>
+						{
+							p.macro.protocol == 'CTRL' &&
+								<GroupIcon fontSize='small' />
+						}
+						{
+							p.macro.protocol == 'NONE' &&
+								<PeopleOutlineIcon fontSize='small' />
+						}
+					</Avatar>
 				:
-				<DefaultIcon p={p} classes={classes} />}
+					<DefaultIcon p={p} classes={classes} />}
 			</ListItemAvatar>
 			<Tooltip title={"Saved " + lastSave + " before"}>
 				<ListItemText
