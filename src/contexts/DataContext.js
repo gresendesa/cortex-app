@@ -14,9 +14,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.12',
-		'release_date': '23 October 2020',
-		'short': 'Collaboration support added'
+		'number': '1.13',
+		'release_date': '27 January 2021',
+		'short': 'Indentation improvement. ♥ Thanks lomexicano & Ice. Autocomplete snippets'
 	}
 
 	setToken = (token) => {

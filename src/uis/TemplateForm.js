@@ -52,16 +52,23 @@ export default function TemplateForm() {
   
 
   const [action, setAction] = useState('');
+  const [indentSwitch, setIndentSwitch] = useState(false);
 
   const handleActionChange = (newValue) =>  {
     setAction(newValue);
   }
 
-  const handleIndent = () => {
+  const handleIndent = (e) => {
     const lines = action.split('\n');
     const indenter = new Indenter(lines);
-    const result = indenter.indent();
+    var result = null;
+    if(indentSwitch){
+      result = indenter.indent('    ');
+    } else {
+      result = indenter.indent();
+    }
     setAction(result);
+    setIndentSwitch(!indentSwitch);
   }
 
   /*const dataa = https://beta.mkb.gorlem.ml/api/docs/
@@ -97,7 +104,7 @@ export default function TemplateForm() {
   return (
     <div>
 
-      <IconButton edge="start" color="inherit" onClick={handleIndent} aria-label="close">
+      <IconButton edge="start" color="inherit" onClick={handleIndent} onDoubleClick={handleIndent} aria-label="close">
         <FormatAlignRightIcon />
       </IconButton>
 

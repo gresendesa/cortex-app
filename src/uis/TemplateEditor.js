@@ -100,6 +100,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
   const [code, setCode] = useState(template.code);
   const [description, setDescription] = useState(template.description); 
   const [processing, setProcessing] = useState(false);
+  const [indentSwitch, setIndentSwitch] = useState(false);
 
   useEffect(() => {
     setName(template.name);
@@ -111,11 +112,17 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
   const indentButtonRef = useRef(null);
   const editButtonRef = useRef(null);
 
-  const handleIndent = () => {
+  const handleIndent = (e) => {
     const lines = code.split('\n');
     const indenter = new Indenter(lines);
-    const result = indenter.indent();
+    var result = null;
+    if(indentSwitch){
+      result = indenter.indent('    ');
+    } else {
+      result = indenter.indent();
+    }
     setCode(result);
+    setIndentSwitch(!indentSwitch);
   }
 
   const [infoButtonSubject, setInfoButtonSubject] = useState(null);
@@ -212,7 +219,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
             sm={12}> 
             
             <Grid item>
-              <IconTipButton edge="start" tip="Indent code" color="inherit" reference={indentButtonRef} onClick={handleIndent} className={classes.actionButton} aria-label="close">
+              <IconTipButton edge="start" tip="Indent code" color="inherit" reference={indentButtonRef} onClick={handleIndent} onDoubleClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
               </IconTipButton>
               <InfoButton editorMode={editorMode} subject={infoButtonSubject} sourcesHook={infoSourcesHook} error_alert={(message) => showAlert({message, severity: "error"})}/>

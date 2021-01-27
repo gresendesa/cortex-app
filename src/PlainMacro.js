@@ -98,6 +98,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getDoc, 
   const [isOnChat, setIsOnChat] = useState(project.macro.type == 'onChat');
   const [description, setDescription] = useState(project.macro.description); 
   const [processing, setProcessing] = useState(false);
+  const [indentSwitch, setIndentSwitch] = useState(false);
 
   const [infoButtonSubject, setInfoButtonSubject] = useState(null);
   const infoSourcesHook = () => {
@@ -128,11 +129,17 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getDoc, 
     setOpen(true);
   };
 
-  const handleIndent = () => {
+  const handleIndent = (e) => {
     const lines = code.split('\n');
     const indenter = new Indenter(lines);
-    const result = indenter.indent();
+    var result = null;
+    if(indentSwitch){
+      result = indenter.indent('    ');
+    } else {
+      result = indenter.indent();
+    }
     setCode(result);
+    setIndentSwitch(!indentSwitch);
   }
 
   const handleClose = () => {
@@ -272,7 +279,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getDoc, 
             sm={12}> 
             
             <Grid item>
-              <IconTipButton edge="start" tip="Indent code" color="inherit" onClick={handleIndent} className={classes.actionButton} aria-label="close">
+              <IconTipButton edge="start" tip="Indent code" color="inherit" onClick={handleIndent} onDoubleClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
               </IconTipButton>
               <InfoButton editorMode={editorMode} subject={infoButtonSubject} sourcesHook={infoSourcesHook} project={project} error_alert={(message) =>  alert().show({message, severity: "error"})}/>

@@ -1,6 +1,25 @@
 export const cortexMacroModCommands = [
 
   {
+    "value": "HTTPREQUEST(\"GET\",\"http://site.com?param1=a\",\"\",\"\",5000,&response,#statuscode); //It requires MacrosoftNET module",
+    "score": 2,
+    "meta": "Performs HTTP GET request example"
+  },
+
+  {
+    "value": "HTTPREQUEST(\"POST\",\"http://site.com?param1=a\",\"somemessage\",\"Content-Type: text/html,Authorization: token 000000\",5000,&response,#statuscode); //It requires MacrosoftNET module",
+    "score": 2,
+    "meta": "Performs HTTP POST request example"
+  },
+
+  {
+    "value": "%LANG%",
+    "score": 1,
+    "meta": "Macrosoft Language Variable"
+  },
+
+
+  {
     "value": '{{ build }}',
     "score": 2,
     "meta": "Shows the build number"

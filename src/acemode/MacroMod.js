@@ -111,7 +111,9 @@ export class CustomHighlightRules extends window.ace.acequire("ace/mode/text_hig
 	            "KEY_RCONTROL|KEY_RETURN|KEY_RIGHT|KEY_RMENU|KEY_RMETA|KEY_RSHIFT|KEY_S|"                   +
 	            "KEY_SCROLL|KEY_SECTION|KEY_SEMICOLON|KEY_SLASH|KEY_SLEEP|KEY_SPACE|KEY_STOP|"              +
 	            "KEY_SUBTRACT|KEY_SYSRQ|KEY_T|KEY_TAB|KEY_U|KEY_UNDERLINE|KEY_UNLABELED|KEY_UP|"            +
-	            "KEY_V|KEY_W|KEY_X|KEY_Y|KEY_YEN|KEY_Z",
+	            "KEY_V|KEY_W|KEY_X|KEY_Y|KEY_YEN|KEY_Z"														+
+
+	            "LANG",																						
 
 	        "keyword":
 	            "arraysize|bind|bindgui|break|calcyawto|camera|chatfilter|chatheight|"          +
@@ -145,7 +147,9 @@ export class CustomHighlightRules extends window.ace.acequire("ace/mode/text_hig
 	            "UNTIL|VOLUME|WAIT|WHILE|"                                                      +
 	            "ENDIF|NEXT|LOOP|ENDUNSAFE|"                                                    +
 
-	            "jump|call|return|"                                                             + //Federal commands
+	            "jump|call|return|"																+
+
+	            "HTTPREQUEST|httprequest|"                                                      + //Federal commands
 
 	            "import|extends|macro|include", //Cortex templates call
 	        "storage.type":

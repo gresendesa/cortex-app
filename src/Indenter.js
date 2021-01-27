@@ -93,7 +93,7 @@ class Indenter {
 		Adicione a linha ao buffer
 	
 	*/
-	indent(){
+	indent(space='\t'){
 		var indented_lines = []
 
 		for (var index = 0; index < this.lines.length; index++) {
@@ -105,7 +105,7 @@ class Indenter {
 				this.indentation -= 1;
 			}
 
-			var indented_line = `${'\t'.repeat(this.indentation)}${line.jstrip()}`;
+			var indented_line = `${space.repeat(this.indentation)}${line.jstrip()}`;
 
 			checking = this.check_opening(line);
 			if(checking !== null){

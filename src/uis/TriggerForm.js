@@ -103,6 +103,7 @@ export default function TriggerForm({ project, task, trigger, open, toggleEditor
   const [blocking, setBlocking] = useState(trigger.blocking);
 
   const [deploying, setDeploying] = useState(false);
+  const [indentSwitch, setIndentSwitch] = useState(false);
 
   const [infoButtonSubject, setInfoButtonSubject] = useState(null);
   const infoSourcesHook = () => {
@@ -206,11 +207,17 @@ export default function TriggerForm({ project, task, trigger, open, toggleEditor
     setEvents(copyEvents);
   }
 
-  const handleIndent = () => {
+  const handleIndent = (e) => {
     const lines = action.split('\n');
     const indenter = new Indenter(lines);
-    const result = indenter.indent();
+    var result = null;
+    if(indentSwitch){
+      result = indenter.indent('    ');
+    } else {
+      result = indenter.indent();
+    }
     setAction(result);
+    setIndentSwitch(!indentSwitch);
   }
 
   var CortexCompleter ={
@@ -263,7 +270,7 @@ export default function TriggerForm({ project, task, trigger, open, toggleEditor
               <IconTipButton edge="start" tip="Manage events CTRL+E" color="inherit" reference={eventsButtonRef} onClick={handleOpenEvents} className={classes.actionButton} aria-label="close">
                 <EventIcon />
               </IconTipButton>
-              <IconTipButton edge="start" tip="Indent code" color="inherit" reference={indentButtonRef} onClick={handleIndent} className={classes.actionButton} aria-label="close">
+              <IconTipButton edge="start" tip="Indent code" color="inherit" reference={indentButtonRef} onClick={handleIndent} onDoubleClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
               </IconTipButton>
               <InfoButton editorMode={editorMode} subject={infoButtonSubject} sourcesHook={infoSourcesHook} project={project} error_alert={(message) => alert(message, 'error')}/>
