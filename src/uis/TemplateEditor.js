@@ -87,7 +87,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'inherit',
   },
   toolBar: {
-    backgroundColor: 'gray',
+    display: 'flex',
+    justifyContent: 'space-between'
   },
   breadCrumb: {
     marginRight: theme.spacing(1),
@@ -203,7 +204,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
     <div>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} >
         <AppBar className={classes.appBar} color="primary">
-          <Toolbar>
+          <Toolbar className={classes.toolBar}>
             <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
               <CloseIcon />
             </IconButton>

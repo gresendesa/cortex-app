@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     textAlign:'center',
-    maxWidth: '45vw'
+    maxWidth: '35vw'
   },
   panel: {
   	marginTop: theme.spacing(1),
@@ -85,7 +85,7 @@ export default function TasksPanel({ project, task, hookTask, indice, editorMode
 	return (
 
 		<Box>
-			<ExpansionPanel expanded={expand} >
+			<ExpansionPanel expanded={expand} square={true}>
 
 				<ExpansionPanelSummary 
 					onClick={handleExpandClick}
@@ -93,7 +93,7 @@ export default function TasksPanel({ project, task, hookTask, indice, editorMode
 					aria-controls="panel1a-content"
 					id="panel1a-header"
 					className={classes.panel}>
-					<Typography variant="h6" className={classes.title}>
+					<Typography variant="subtitle1" className={classes.title}>
 						<strong>{task.name}</strong>
 					</Typography>
 				</ExpansionPanelSummary>

@@ -88,10 +88,14 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'inherit',
   },
   toolBar: {
-    backgroundColor: 'gray',
+    display: 'flex',
+    justifyContent: 'space-between'
   },
   breadCrumb: {
     marginRight: theme.spacing(1),
+  },
+  buttons:{
+    float: 'right'
   }
 }));
 
@@ -242,7 +246,7 @@ export default function TriggerForm({ project, task, trigger, open, toggleEditor
     <div>
       <Dialog fullScreen open={open} onClose={handleClose} className={classes.dialog} TransitionComponent={Transition} >
         <AppBar className={classes.appBar} style={{ background: '#357a38' }}>
-          <Toolbar>
+          <Toolbar className={classes.toolBar}>
             <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
               <CloseIcon />
             </IconButton>
