@@ -16,6 +16,7 @@ import DeleteButton from './uis/DeleteButton';
 import { deepOrange, green, blueGrey, gray, yellow } from '@material-ui/core/colors';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
+import Chip from '@material-ui/core/Chip';
 
 function TriggerAvatar({ active, blocking }) {
 	const useStyles = makeStyles((theme) => ({
@@ -74,6 +75,42 @@ function TypographyCustom({ color, children }) {
 	)
 }
 
+function TriggerEvents({ trigger }) {
+	const useStyles = makeStyles((theme) => ({
+	  event:{
+	  	margin: '0.3em',
+	  	fontFamily:'mono',
+	  	fontSize: '90%'
+	  }
+	}));
+
+	const classes = useStyles();
+
+	return (
+		<React.Fragment>
+			{
+				trigger.events.length ?
+				<React.Fragment>
+					{
+						trigger.events.map((event, indice) => {
+		      				return (
+		      					
+		      					event.match ?
+		      					<Chip label={event.argument+' matches '+event.rule} color="secondary" className={classes.event}/>
+								:
+								<Chip label={event.argument+' '+event.rule} color="primary" className={classes.event}/>
+		      					
+		      				)
+		      			})
+					}
+				</React.Fragment>
+				:
+				<Chip label="No events required" size="small"/>
+			}
+			{trigger.blocking && <Chip label="Subsequent actions will be bypassed" size="small"/>}
+		</React.Fragment>
+	)
+}
 
 class Trigger extends React.Component {
 
@@ -150,11 +187,7 @@ class Trigger extends React.Component {
 
 		const HtmlTooltip = withStyles((theme) => ({
 		  tooltip: {
-		    backgroundColor: '#f5f5f9',
-		    color: 'rgba(0, 0, 0, 0.87)',
-		    maxWidth: 220,
-		    fontSize: theme.typography.pxToRem(12),
-		    border: '1px solid #dadde9',
+		    backgroundColor: 'rgba(255, 255, 255, 0.3)',
 		  },
 		}))(Tooltip);
 
@@ -172,26 +205,7 @@ class Trigger extends React.Component {
 			<React.Fragment>
 				<HtmlTooltip title={
 					
-					this.props.trigger.events.length ?
-					<React.Fragment>
-						<ul>
-						{
-							this.props.trigger.events.map((trigger, indice) => {
-	              				return (
-	              					
-									<li>
-										
-									</li>
-									
-	              				)
-	              			})
-						}
-						</ul>
-					</React.Fragment>
-					:
-					<b>
-					fds
-					</b>
+					<TriggerEvents trigger={this.props.trigger} />
 					
 				} aria-label="events" placement="top">
 					<ListItem button onClick={this.handleClick} dense>

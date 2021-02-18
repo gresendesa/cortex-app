@@ -82,7 +82,7 @@ export default function SignIn({ setToken, setUsername, setIsUserSuper }) {
 					<Box mb={2}>
 						<Icon name='rocket' style={{color:'#357a38'}} size='huge' />
 					</Box>
-					<Typography component="h1" variant="h5">
+					<Typography component="h1" variant="h5" color="secondary">
 						Log in
 					</Typography>
 					<form className={classes.form} noValidate>

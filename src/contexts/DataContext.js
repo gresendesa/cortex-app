@@ -14,9 +14,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.13',
-		'release_date': '27 January 2021',
-		'short': 'Indentation improvement. ♥ Thanks lomexicano & Ice. Autocomplete snippets'
+		'number': '1.14',
+		'release_date': '18 February 2021',
+		'short': 'Dark theme. ♥ Thanks Jeff for the suggestion'
 	}
 
 	setToken = (token) => {
