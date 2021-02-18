@@ -156,7 +156,10 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 	    height: theme.spacing(5),
 	    color: theme.palette.getContrastText(blue[500]),
 	    backgroundColor: blue[500]
-	  }
+	  },
+	  projectItem: {
+	    color: theme.palette.getContrastText(blue[500]),
+	  },
 	}));
 
 	const classes = useStyles();
@@ -195,6 +198,7 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 			</ListItemAvatar>
 			<Tooltip title={"Saved " + lastSave + " before"}>
 				<ListItemText
+					className={classes.projectItem}
 					primary={p.macro.name}
 					secondary={username != p.dev ? (p.dev + (p.macro.description ? ' • ' + p.macro.description : '')) : (p.macro.description)}
 					/>
@@ -271,7 +275,7 @@ class Projects extends React.Component {
 					
 					<Grid item>
 						<Box component="span" m={1}>
-							<Typography variant="h5" color="primary">
+							<Typography variant="h5" color="secondary">
 								{this.props.isUserSuper ? 'Rocket Projects' : 'My Projects'}
 							</Typography>
 						</Box>

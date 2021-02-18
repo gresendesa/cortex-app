@@ -63,6 +63,16 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(2),
     flex: 1,
     overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    maxWidth: '60vw'
+  },
+  location: {
+    flex: 1,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    maxWidth: '20vw'
   },
   actionButton: {
     marginLeft: theme.spacing(0.05),
@@ -240,7 +250,9 @@ export default function TriggerForm({ project, task, trigger, open, toggleEditor
               {name}
             </Typography>
             <Box className={classes.breadCrumb}>
-              {task.name} • {translateTriggerGroup(group)}
+              <Typography className={classes.location} >
+                {task.name} • {translateTriggerGroup(group)}
+              </Typography>
             </Box>
 
             <ButtonGroup color="primary" aria-label="outlined primary button group">

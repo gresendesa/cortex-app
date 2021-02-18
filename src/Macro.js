@@ -307,7 +307,7 @@ class Macro extends React.Component {
 					alignItems="stretch"
 				>
 					<Grid item>
-						<Box mt={2} fontWeight="fontWeightMedium" fontFamily="Monospace" fontSize={16}>
+						<Box mt={2} fontWeight="fontWeightMedium" fontFamily="Monospace" fontSize={18} color={'#f50052'}>
 							{this.props.project.dev + ' • ' + this.state.name}
 						</Box>
 					</Grid>

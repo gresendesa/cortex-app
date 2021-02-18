@@ -14,7 +14,8 @@ import BlockIcon from '@material-ui/icons/Block';
 import CheckIcon from '@material-ui/icons/Check';
 import DeleteButton from './uis/DeleteButton';
 import { deepOrange, green, blueGrey, gray, yellow } from '@material-ui/core/colors';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 
 function TriggerAvatar({ active, blocking }) {
 	const useStyles = makeStyles((theme) => ({
@@ -52,6 +53,27 @@ function TriggerAvatar({ active, blocking }) {
 		</ListItemAvatar>
 	)
 }
+
+function TypographyCustom({ color, children }) {
+	const useStyles = makeStyles((theme) => ({
+	  title: {
+	    flex: 1,
+	    overflow: 'hidden',
+	    textOverflow: 'ellipsis',
+	    whiteSpace: 'nowrap',
+	    maxWidth: '30vw'
+	  },
+	}));
+
+	const classes = useStyles();
+
+	return (
+		<Typography color={color} className={classes.title}>
+			{ children }
+		</Typography>
+	)
+}
+
 
 class Trigger extends React.Component {
 
@@ -124,47 +146,96 @@ class Trigger extends React.Component {
 
 		const { deleteTrigger } = this.props;
 
+		const opa = 'fdd';
+
+		const HtmlTooltip = withStyles((theme) => ({
+		  tooltip: {
+		    backgroundColor: '#f5f5f9',
+		    color: 'rgba(0, 0, 0, 0.87)',
+		    maxWidth: 220,
+		    fontSize: theme.typography.pxToRem(12),
+		    border: '1px solid #dadde9',
+		  },
+		}))(Tooltip);
+
+		/*argument: "EVENT"
+​​
+		id: 0.6855183031923985
+		​​
+		match: false
+		​​
+		rule: "fdsafdsa"*/
+
+		console.log(this.props.trigger.events)
+
 		return (
 			<React.Fragment>
-				<ListItem button onClick={this.handleClick} >
-					<TriggerAvatar active={this.props.trigger.active} blocking={this.props.trigger.blocking} />
-					<ListItemText primary={
-						this.props.trigger.active ?
-						this.state.trigger.name
-						:
-						<Typography color="textSecondary">
-							<strike>{this.state.trigger.name}</strike>
-						</Typography>
-					} />
-
+				<HtmlTooltip title={
 					
-						<ListItemSecondaryAction>
-
-							{
-								this.props.indice>0 ?
-								<IconButton edge="end" aria-label="move-up" onClick={this.handleMoveUp}>
-									<ArrowUpwardIcon size="small" />
-								</IconButton>
-								:
-								""
-							}
-							{
-								this.props.trigger.active ?
-								<IconButton edge="end" aria-label="toggle-active" onClick={this.toggleActive}>
-									<BlockIcon size="small" />
-								</IconButton>
-								:
-								<IconButton edge="end" aria-label="toggle-active" onClick={this.toggleActive}>
-									<CheckIcon size="small" />
-								</IconButton>
-							}
-
-							<DeleteButton type='trigger' callback={() => deleteTrigger(this.state.trigger)} />
-
-						</ListItemSecondaryAction>
-								
+					this.props.trigger.events.length ?
+					<React.Fragment>
+						<ul>
+						{
+							this.props.trigger.events.map((trigger, indice) => {
+	              				return (
+	              					
+									<li>
+										
+									</li>
+									
+	              				)
+	              			})
+						}
+						</ul>
+					</React.Fragment>
+					:
+					<b>
+					fds
+					</b>
 					
-	            </ListItem>
+				} aria-label="events" placement="top">
+					<ListItem button onClick={this.handleClick} dense>
+						<TriggerAvatar active={this.props.trigger.active} blocking={this.props.trigger.blocking} />
+						<ListItemText primary={
+							this.props.trigger.active ?
+							<TypographyCustom>
+								{this.state.trigger.name}
+							</TypographyCustom>
+							:
+							<TypographyCustom color="textSecondary">
+								<strike>{this.state.trigger.name}</strike>
+							</TypographyCustom>
+						} />
+
+						
+							<ListItemSecondaryAction>
+
+								{
+									this.props.indice>0 ?
+									<IconButton edge="end" aria-label="move-up" onClick={this.handleMoveUp}>
+										<ArrowUpwardIcon size="small" />
+									</IconButton>
+									:
+									""
+								}
+								{
+									this.props.trigger.active ?
+									<IconButton edge="end" aria-label="toggle-active" onClick={this.toggleActive}>
+										<BlockIcon size="small" />
+									</IconButton>
+									:
+									<IconButton edge="end" aria-label="toggle-active" onClick={this.toggleActive}>
+										<CheckIcon size="small" />
+									</IconButton>
+								}
+
+								<DeleteButton type='trigger' callback={() => deleteTrigger(this.state.trigger)} />
+
+							</ListItemSecondaryAction>
+									
+						
+		            </ListItem>
+	            </HtmlTooltip>
 	            <TriggerForm project={this.props.project}
 	            			 task={this.props.task} 
 	            			 saveTrigger={this.saveTrigger} 

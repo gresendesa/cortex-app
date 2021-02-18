@@ -72,9 +72,9 @@ export default function TriggersSection({ project, task, hookTask, editorMode })
           scrollButtons="auto"
           centered
         >
-          <Tab label="Before" {...a11yProps(0)} />
-          <Tab label="Loop" {...a11yProps(1)} />
-          <Tab label="After" {...a11yProps(2)} />
+          <Tab label="Before" {...a11yProps(0)} dense />
+          <Tab label="Loop" {...a11yProps(1)} dense />
+          <Tab label="After" {...a11yProps(2)} dense />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>

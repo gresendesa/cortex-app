@@ -37,7 +37,11 @@ function Dependencie({ dependencie, deleteDependencie, getForeingTask, popUp, al
 			<ListItemIcon>
 				<ExtensionTwoToneIcon />
 			</ListItemIcon>
-			<ListItemText primary={dependencie.taskName} secondary={dependencie.dev + "." + dependencie.project} />
+			<ListItemText primary={
+				<Typography color="secondary">
+					{dependencie.taskName}
+				</Typography>
+			} secondary={dependencie.dev + "." + dependencie.project} />
 			<ListItemSecondaryAction>
 				<DeleteButton type='dependencie' callback={() => {deleteDependencie(dependencie.id)}} />
 			</ListItemSecondaryAction>

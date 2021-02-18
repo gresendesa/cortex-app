@@ -36,7 +36,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));*/
 
+const useStyles = makeStyles((theme) => ({
+  title: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    textAlign:'center',
+    maxWidth: '45vw'
+  },
+  panel: {
+  	marginTop: theme.spacing(1),
+  }
+}));
+
 export default function TasksPanel({ project, task, hookTask, indice, editorMode }) {
+
+	const classes = useStyles();
 
 	const { deleteTask, editTask, hasTask, alert, focus, setFocus, getFocus, moveTaskUp, hasMacroUnsafe } = hookTask();
 
@@ -76,8 +91,9 @@ export default function TasksPanel({ project, task, hookTask, indice, editorMode
 					onClick={handleExpandClick}
 					expandIcon={<ExpandMoreIcon />}
 					aria-controls="panel1a-content"
-					id="panel1a-header">
-					<Typography>
+					id="panel1a-header"
+					className={classes.panel}>
+					<Typography variant="h6" className={classes.title}>
 						<strong>{task.name}</strong>
 					</Typography>
 				</ExpansionPanelSummary>

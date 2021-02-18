@@ -62,6 +62,16 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(2),
     flex: 1,
     overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    maxWidth: '60vw'
+  },
+  location: {
+    flex: 1,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    maxWidth: '20vw'
   },
   actionButton: {
     marginLeft: theme.spacing(0.05),
@@ -201,7 +211,9 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
               {name}
             </Typography>
             <Box className={classes.breadCrumb}>
-              {namespace.name}
+              <Typography className={classes.location}>
+                {namespace.name}
+              </Typography>
             </Box>
             <IconTipButton edge="end" tip="Save CTRL+S" disabled={processing} reference={saveButtonRef} color="inherit" onClick={() => handleSave(code)} aria-label="close">
               <SaveIcon />

@@ -9,6 +9,9 @@ const theme = createMuiTheme({
 	typography: {
 		fontSize: 21,
 	},
+	palette: {
+		type: 'dark',
+	},
 });
 
 ReactDOM.render(
