@@ -164,7 +164,11 @@ export default function SimpleDialog(props) {
           )
         })
       }
-      
+      <DialogTitle>
+        <Typography variant={'subtitle2'}>
+          Click over a template to import it automatically
+        </Typography>
+      </DialogTitle>
     </Dialog>
   );
 }

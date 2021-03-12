@@ -45,7 +45,7 @@ export default function AddTemplateButton({ subject, sourcesHook, editorMode, ad
 	}
 
 	return (
-		<IconTipButton tip={'Import library'}>
+		<IconTipButton tip={'Import public template'}>
 
 			{popUp && <LibraryAdd onClick={handleClick}/>}
 
