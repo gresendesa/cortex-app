@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Box, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+
 import { useHistory } from 'react-router-dom';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import IconTipButton from './uis/IconTipButton';
@@ -36,6 +37,8 @@ import { plainCortexMacroModCommands } from './data/PlainCortexMacroModCommands'
 
 import InfoButton from './uis/InfoButton';
 import BuildPanel from './uis/BuildPanel';
+import AddTemplateButton from './uis/AddTemplateButton';
+
 
 import { onLoadAce } from './uis/utils';
 
@@ -88,7 +91,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getDoc, alert, editorMode, addCollaborator, removeCollaborator, updateCollaborators }) {
+export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPublicTemplates, getDoc, alert, editorMode, addCollaborator, removeCollaborator, updateCollaborators }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
 
@@ -106,7 +109,8 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getDoc, 
   const infoSourcesHook = () => {
     return {
       getTemplateInfo:getTemplateInfo,
-      getDoc: getDoc
+      getDoc: getDoc,
+      getPublicTemplates: getPublicTemplates
     }
   }
 
@@ -188,6 +192,10 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getDoc, 
 
   }
 
+  const handleAddTemplate = () => {
+    console.log("opa")
+  }
+
   const handleSave = (launch=false) => {
     const copyMacro = Object.assign({}, project.macro);
     copyMacro.name = name;
@@ -234,6 +242,19 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getDoc, 
           callback(null, completions);
       }
   }
+
+  const aceEditor = useRef()
+
+  const addLineAtCurrentPosition = line => {
+    if(aceEditor.current !== undefined){
+      let editor = aceEditor.current.editor
+      editor.session.insert(editor.getCursorPosition(), line)
+    }
+  }
+
+  useEffect(() => {
+    console.log(aceEditor)
+  }, [aceEditor])
 
   const saveButtonRef = useRef(null);
   const kodeButtonRef = useRef(null);
@@ -284,6 +305,11 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getDoc, 
               <IconTipButton edge="start" tip="Indent code" color="inherit" onClick={handleIndent} onDoubleClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
               </IconTipButton>
+              
+
+              <AddTemplateButton editorMode={editorMode} subject={infoButtonSubject} sourcesHook={infoSourcesHook} addLine={addLineAtCurrentPosition} project={project} error_alert={(message) =>  alert().show({message, severity: "error"})}/>
+
+
               <InfoButton editorMode={editorMode} subject={infoButtonSubject} sourcesHook={infoSourcesHook} project={project} error_alert={(message) =>  alert().show({message, severity: "error"})}/>
             </Grid>
 
@@ -312,6 +338,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getDoc, 
               mode="javascript"
               theme="monokai"
               value={code}
+              ref={aceEditor}
               onChange={handleTemplateCodeChange}
               name="UNIQUE_ID_OF_DIV"
               editorProps={{ $blockScrolling: true }}
@@ -456,6 +483,7 @@ class PlainMacro extends React.Component {
 					saveMacro={this.props.saveMacro} 
 					getBuild={this.props.getBuild} 
           getTemplateInfo={this.props.getTemplateInfo} 
+          getPublicTemplates={this.props.getPublicTemplates}
           getDoc={this.props.getDoc}
 					alert={alertHook}
           editorMode={this.props.editorMode}

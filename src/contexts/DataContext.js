@@ -200,6 +200,24 @@ class DataContextProvider extends Component {
 		}
 	}
 
+	getPublicTemplates = ({ success=()=>{}, error=()=>{} }) => {
+		if(this.state.token!==null){
+			this.setState({'processing': true});
+			const server = new Server({ token: this.state.token });
+			const onOk = (response) => {
+				success(response);
+				this.setState({'processing': false});
+			}
+			const onIssue = (response) => {
+				error(response);
+				this.setState({'processing': false});
+			}
+			server.getPublicTemplates({ success: onOk, error: onIssue })
+		} else {
+			error("sem token");
+		}
+	}
+
 	getDoc = ({ source, type, target, success=()=>{}, error=()=>{} }) => {
 		if(this.state.token!==null){
 			this.setState({'processing': true});
@@ -275,6 +293,7 @@ class DataContextProvider extends Component {
 											getTasks: this.getTasks,
 											processing: this.state.processing,
 											getTemplateInfo: this.getTemplateInfo,
+											getPublicTemplates: this.getPublicTemplates,
 											getDoc: this.getDoc,
 											getBuild: this.getBuild,
 											getActionCode: this.getActionCode,

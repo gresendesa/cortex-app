@@ -48,6 +48,7 @@ export default function Routes({ context }) {
 											saveMacro={context.saveMacro} 
 											getBuild={context.getBuild}
 											getTemplateInfo={context.getTemplateInfo}
+											getPublicTemplates={context.getPublicTemplates}
 											editorMode={editorMode} 
 											getDoc={context.getDoc}
 											addCollaborator={context.addCollaborator}

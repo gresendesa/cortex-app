@@ -66,6 +66,23 @@ class Server {
 
 	}
 
+
+	getPublicTemplates({ success, error }) {
+
+		const conn = this.getConnection();
+
+		conn.get('/templates/public').then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			try {
+				error(e.response.data.detail);
+			} catch {
+				error(e.message);
+			}
+		})
+
+	}
+
 	saveTemplates({ templates, success, error }) {
 
 		const conn = this.getConnection();
