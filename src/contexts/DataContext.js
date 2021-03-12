@@ -14,9 +14,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.14',
-		'release_date': '18 February 2021',
-		'short': 'Dark theme. ♥ Thanks Jeff for the suggestion'
+		'number': '1.15',
+		'release_date': '12 March 2021',
+		'short': 'Public templates importing button added ♥'
 	}
 
 	setToken = (token) => {

@@ -78,6 +78,7 @@ export default function Routes({ context }) {
 											editorMode={editorMode}
 											addCollaborator={context.addCollaborator}
 											removeCollaborator={context.removeCollaborator}
+											getPublicTemplates={context.getPublicTemplates}
 										 />
 										:''
 									)
@@ -91,6 +92,7 @@ export default function Routes({ context }) {
 										saveTemplates={context.saveTemplates} 
 										component={Templates}
 										getTemplateInfo={context.getTemplateInfo}
+										getPublicTemplates={context.getPublicTemplates}
 										getDoc={context.getDoc}
 										editorMode={editorMode}
 									/>

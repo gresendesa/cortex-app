@@ -10,7 +10,7 @@ import { Snackbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 
-export default function AddTemplateButton({ subject, sourcesHook, editorMode, addLine, project=null, error_alert=(window.alert) }) {
+export default function AddTemplateButton({ getPublicTemplates, addLine, successAlert }) {
 
 
 	const [popUp, setPopUp] = useState(true);
@@ -28,7 +28,7 @@ export default function AddTemplateButton({ subject, sourcesHook, editorMode, ad
 
 		console.log('ata')
 
-		const { getPublicTemplates } = sourcesHook();
+		//const { getPublicTemplates } = sourcesHook();
 
 		const success = res => {
 			setPopUp(true);
@@ -51,7 +51,7 @@ export default function AddTemplateButton({ subject, sourcesHook, editorMode, ad
 
 			{!popUp && <CircularProgress size={30} />}
 
-			<PublicTemplateList onClose={handleDialogClose} libraries={libraries} addLine={addLine} setLibraries={setLibraries} />
+			<PublicTemplateList onClose={handleDialogClose} libraries={libraries} addLine={addLine} setLibraries={setLibraries} successAlert={successAlert}/>
 
 		</IconTipButton>
 	);

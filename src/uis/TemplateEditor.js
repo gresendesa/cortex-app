@@ -54,6 +54,8 @@ import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 
 import { cortexMacroModCommands } from '../data/CortexMacroModCommands';
 
+import AddTemplateButton from './AddTemplateButton';
+
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: 'relative',
@@ -102,7 +104,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TemplateEditor({ open, setOpen, template, namespace, saveTemplate, getTemplateInfo, getDoc, showAlert, editorMode }) {
+export default function TemplateEditor({ open, setOpen, template, namespace, saveTemplate, getTemplateInfo, getDoc, showAlert, editorMode, getPublicTemplates }) {
   
   const classes = useStyles();
   const [openConfig, setOpenConfig] = useState(false);
@@ -200,6 +202,19 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
       
   }
 
+  const aceEditor = useRef()
+
+  const addLineAtCurrentPosition = line => {
+    if(aceEditor.current !== undefined){
+      let editor = aceEditor.current.editor
+      editor.session.insert(editor.getCursorPosition(), line)
+    }
+  }
+
+  useEffect(() => {
+    console.log(aceEditor)
+  }, [aceEditor])
+
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} >
@@ -235,6 +250,10 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
               <IconTipButton edge="start" tip="Indent code" color="inherit" reference={indentButtonRef} onClick={handleIndent} onDoubleClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
               </IconTipButton>
+              
+              <AddTemplateButton getPublicTemplates={getPublicTemplates} addLine={addLineAtCurrentPosition} successAlert={(message) =>  showAlert({message, severity: "success"})}/>
+
+
               <InfoButton editorMode={editorMode} subject={infoButtonSubject} sourcesHook={infoSourcesHook} error_alert={(message) => showAlert({message, severity: "error"})}/>
             </Grid>
 
@@ -263,6 +282,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
               mode="javascript"
               theme="monokai"
               value={code}
+              ref={aceEditor}
               onChange={handleTemplateCodeChange}
               name="UNIQUE_ID_OF_DIV"
               editorProps={{ $blockScrolling: true }}

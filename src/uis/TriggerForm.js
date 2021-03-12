@@ -55,6 +55,8 @@ import { cortexMacroModCommands } from '../data/CortexMacroModCommands';
 import IconTipButton from './IconTipButton';
 import InfoButton from './InfoButton';
 
+import AddTemplateButton from './AddTemplateButton';
+
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: 'relative',
@@ -103,7 +105,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function TriggerForm({ project, task, trigger, open, toggleEditor, group, saveTrigger, alert, setFocus, deployMacro, active, getActionCode, getTemplateInfo, getDoc, editorMode }) {
+export default function TriggerForm({ project, task, trigger, open, toggleEditor, group, saveTrigger, alert, setFocus, deployMacro, active, getActionCode, getTemplateInfo, getDoc, editorMode, getPublicTemplates }) {
   const classes = useStyles();
 
   const [events, setEvents] = useState(Object.assign([], trigger.events));
@@ -241,6 +243,19 @@ export default function TriggerForm({ project, task, trigger, open, toggleEditor
       }
   }
 
+  const aceEditor = useRef()
+
+  const addLineAtCurrentPosition = line => {
+    if(aceEditor.current !== undefined){
+      let editor = aceEditor.current.editor
+      editor.session.insert(editor.getCursorPosition(), line)
+    }
+  }
+
+  useEffect(() => {
+    console.log(aceEditor)
+  }, [aceEditor])
+
   //<Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
   return (
     <div>
@@ -289,6 +304,9 @@ export default function TriggerForm({ project, task, trigger, open, toggleEditor
               <IconTipButton edge="start" tip="Indent code" color="inherit" reference={indentButtonRef} onClick={handleIndent} onDoubleClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
               </IconTipButton>
+
+              <AddTemplateButton getPublicTemplates={getPublicTemplates} addLine={addLineAtCurrentPosition} successAlert={(message) =>  alert(message, 'success')}/>
+
               <InfoButton editorMode={editorMode} subject={infoButtonSubject} sourcesHook={infoSourcesHook} project={project} error_alert={(message) => alert(message, 'error')}/>
 
             </Grid>
@@ -318,6 +336,7 @@ export default function TriggerForm({ project, task, trigger, open, toggleEditor
               mode="javascript"
               theme="monokai"
               value={action}
+              ref={aceEditor}
               onChange={handleActionChange}
               name="UNIQUE_ID_OF_DIV"
               editorProps={{ $blockScrolling: Infinity }}

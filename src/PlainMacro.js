@@ -109,8 +109,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
   const infoSourcesHook = () => {
     return {
       getTemplateInfo:getTemplateInfo,
-      getDoc: getDoc,
-      getPublicTemplates: getPublicTemplates
+      getDoc: getDoc
     }
   }
 
@@ -307,7 +306,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
               </IconTipButton>
               
 
-              <AddTemplateButton editorMode={editorMode} subject={infoButtonSubject} sourcesHook={infoSourcesHook} addLine={addLineAtCurrentPosition} project={project} error_alert={(message) =>  alert().show({message, severity: "error"})}/>
+              <AddTemplateButton getPublicTemplates={getPublicTemplates} addLine={addLineAtCurrentPosition} successAlert={(message) =>  alert().show({message, severity: "success"})}/>
 
 
               <InfoButton editorMode={editorMode} subject={infoButtonSubject} sourcesHook={infoSourcesHook} project={project} error_alert={(message) =>  alert().show({message, severity: "error"})}/>

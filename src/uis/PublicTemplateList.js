@@ -4,7 +4,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Box from '@material-ui/core/Box';
 import Dialog from '@material-ui/core/Dialog';
 import { blue } from '@material-ui/core/colors';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -27,10 +27,14 @@ import FolderIcon from '@material-ui/icons/Folder';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import Grid from '@material-ui/core/Grid';
 
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
 function Library(props) {
 
   const [open, setOpen] = useState(false);
-  const { key, lib, devname, addLine } = props; 
+  const { key, lib, devname, addLine, successAlert } = props; 
 
   const handleClick = () => {
     setOpen(!open);
@@ -45,7 +49,7 @@ function Library(props) {
   }));
 
   const handlePick = e => {
-    
+    successAlert(`'${devname}.${lib.name}.${e}' imported sucessfully`)
     addLine(`\n{* import '${devname}.${lib.name}.${e}' as ${e.toUpperCase()} *}`)
   }
 
@@ -58,11 +62,11 @@ function Library(props) {
         <ListItemIcon>
           <FolderIcon fontSize="small" />
         </ListItemIcon>
-        <ListItemText primary={lib.name} />
+        <ListItemText primary={<i>{lib.name}</i>} />
         {open ? <ExpandLess fontSize="small" /> : <ExpandMore fontSize="small" />}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
+        <List component="div" disablePadding dense>
           {
             lib.templates.map((templateName, index) => {
               return (
@@ -70,7 +74,7 @@ function Library(props) {
                   <ListItemIcon>
                     <AssignmentIcon fontSize="small" />
                   </ListItemIcon>
-                  <ListItemText primary={templateName} onClick={() => {
+                  <ListItemText primary={<i>{templateName}</i>} onClick={() => {
                     handlePick(templateName)
                   }} />
                 </ListItem>
@@ -82,6 +86,34 @@ function Library(props) {
     </React.Fragment>
   )
 }
+
+
+const styles = (theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  }
+});
+
+const DialogTitleClose = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      {children}
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
 
 
 
@@ -108,7 +140,7 @@ export default function SimpleDialog(props) {
   }));
 
   const classes = useStyles();
-  const { onClose, libraries, setLibraries, addLine } = props;
+  const { onClose, libraries, setLibraries, addLine, successAlert } = props;
 
   const [open, setOpen] = useState(false);
 
@@ -126,6 +158,11 @@ export default function SimpleDialog(props) {
 
   return (
     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth={'sm'} fullWidth>
+      <DialogTitleClose onClose={handleClose}>
+        <Typography variant={'h6'}>
+          Public templates
+        </Typography>
+      </DialogTitleClose>
       {
         libraries.map((libs, index) => {
           return(
@@ -135,7 +172,7 @@ export default function SimpleDialog(props) {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-              <Typography className={classes.heading}>{libs.devname}</Typography>
+              <Typography className={classes.heading}><i>{libs.devname}</i></Typography>
               </AccordionSummary>
               
               {
@@ -148,9 +185,10 @@ export default function SimpleDialog(props) {
                           component="nav"
                           aria-labelledby="nested-list-subheader"
                           className={classes.root}
+                          dense
                         >
 
-                          <Library lib={lib} devname={libs.devname} addLine={addLine} />
+                          <Library lib={lib} devname={libs.devname} addLine={addLine} successAlert={successAlert} />
 
                         </List>
                       </Grid>

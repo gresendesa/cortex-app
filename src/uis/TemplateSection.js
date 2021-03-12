@@ -116,7 +116,7 @@ const ExpansionPanelDetails = withStyles((theme) => ({
   },
 }))(MuiExpansionPanelDetails);
 
-const TemplateItem = ({ index, template, namespace, moveUp, deleteTemplate, updateTemplate, showAlert, getTemplateInfo, editorMode, getDoc }) => {
+const TemplateItem = ({ index, template, namespace, moveUp, deleteTemplate, updateTemplate, showAlert, getTemplateInfo, editorMode, getDoc, getPublicTemplates }) => {
 
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -162,13 +162,14 @@ const TemplateItem = ({ index, template, namespace, moveUp, deleteTemplate, upda
         editorMode={editorMode}
         getTemplateInfo={getTemplateInfo}
         getDoc={getDoc}
+        getPublicTemplates={getPublicTemplates}
       />
     </div>
   )
 
 }
 
-const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, namespaceHook, getTemplateInfo, getDoc, editorMode }) => {
+const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, namespaceHook, getTemplateInfo, getDoc, editorMode, getPublicTemplates }) => {
 
 
   const classes = useStyles();
@@ -302,6 +303,7 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
                       editorMode={editorMode}
                       getTemplateInfo={getTemplateInfo}
                       getDoc={getDoc}
+                      getPublicTemplates={getPublicTemplates}
                     />
                   )
                 })
@@ -343,7 +345,7 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
   )
 }
 
-export default function TemplateSection({ namespaces, templatesHook, getTemplateInfo, editorMode, getDoc }) {
+export default function TemplateSection({ namespaces, templatesHook, getTemplateInfo, editorMode, getDoc, getPublicTemplates }) {
 
   const { setNamespaces, deleteNamespace } = templatesHook();
 
@@ -538,6 +540,7 @@ export default function TemplateSection({ namespaces, templatesHook, getTemplate
               editorMode={editorMode}
               getTemplateInfo={getTemplateInfo}
               getDoc={getDoc}
+              getPublicTemplates={getPublicTemplates}
             />
           )
         })
