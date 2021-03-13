@@ -50,11 +50,11 @@ class Server {
 
 	}
 
-	getMacros({ success, error }) {
+	getMacros({ success, error, limit }) {
 
 		const conn = this.getConnection();
 
-		conn.get('/projects').then(r => {
+		conn.get(`/projects/${limit}`).then(r => {
 			success(r.data)
 		}).catch(function(e) {
 			error(e.response);

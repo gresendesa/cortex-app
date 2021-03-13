@@ -27,10 +27,11 @@ import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import GroupIcon from '@material-ui/icons/Group';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { timeDifference } from './uis/utils';
 
-function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper, username }) {
+function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper, username, totalRecords, fetchMacros }) {
 	const useStyles = makeStyles((theme) => ({
 	  search: {
 	    position: 'relative',
@@ -72,11 +73,13 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper,
 	}));
 
 
-
+	console.log('totalRecords', totalRecords)
 	const classes = useStyles();
 
 	const [searchResultProjects, setsearchResultProjects] = useState(projects);
 	const [searchString, setSearchString] = useState('')
+	const [loadingProjects, setLoadingProjects] = useState(false)
+
 
 	const handleSearch = (e) => {
 		setSearchString(e.target.value)
@@ -95,6 +98,17 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper,
 			setsearchResultProjects(projects);
 		}
 	},[searchString])
+
+	const onLoadOlderProjects = () => {
+		let limit = 0
+
+		const succs = () => {
+			setLoadingProjects(false)
+		}
+		const err = succs
+		setLoadingProjects(true)
+		fetchMacros({ limit, success: succs, error:err })
+	}
 
 	return (
 		<div>
@@ -126,6 +140,26 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper,
 						<Alert severity="info">
 							<AlertTitle>No projects</AlertTitle>
 						</Alert>
+					}
+
+					{
+						!loadingProjects &&	totalRecords > projects.length && 
+						<ListItem button onClick={onLoadOlderProjects} style={{display:'flex', justifyContent:'center'}}>
+							<Typography variant="overline" color="primary" align="center">
+
+								Load older projects
+
+							</Typography>
+						</ListItem>
+						
+					}
+
+					{
+						loadingProjects && totalRecords > projects.length && 
+						<ListItem button onClick={onLoadOlderProjects} style={{display:'flex', justifyContent:'center'}}>
+							<CircularProgress color="secondary" />
+						</ListItem>
+						
 					}
 
 
@@ -303,7 +337,7 @@ class Projects extends React.Component {
 				>
 				
 					<Grid item>
-						<SearchWidget projects={this.props.macros} redirectToProject={this.redirectToProject} removeProject={this.removeProject} isUserSuper={this.props.isUserSuper} username={this.props.username} />
+						<SearchWidget projects={this.props.macros} redirectToProject={this.redirectToProject} removeProject={this.removeProject} isUserSuper={this.props.isUserSuper} username={this.props.username} totalRecords={this.props.totalRecords} fetchMacros={this.props.fetchMacros} />
 					</Grid>
 				</Grid>
 

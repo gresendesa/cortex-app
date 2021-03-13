@@ -10,7 +10,8 @@ class DataContextProvider extends Component {
 		'token': null,
 		'username': null,
 		'processing': false,
-		'isUserSuper': false
+		'isUserSuper': false,
+		'totalRecords': 0
 	}
 
 	version = {
@@ -50,12 +51,12 @@ class DataContextProvider extends Component {
 		}
 	}
 
-	fetchMacros = ({ success=()=>{}, error=()=>{} }) => {
+	fetchMacros = ({ limit=10, success=()=>{}, error=()=>{} }) => {
 		if(this.state.token!==null){
 			const server = new Server({ token: this.state.token });
 			this.setState({'processing': true});
 			const onOk = (response) => {
-				this.setState({'macros': response.projects});
+				this.setState({'macros': response.projects, 'totalRecords': response.total_records});
 				success(response);
 				this.setIsUserSuper(response.super);
 				this.setState({'processing': false});
@@ -64,7 +65,7 @@ class DataContextProvider extends Component {
 				error(response);
 				this.setState({'processing': false});
 			}
-			server.getMacros({ success:onOk, error })
+			server.getMacros({ success:onOk, error, limit })
 		} else {
 			error("sem token");
 		}
