@@ -36,18 +36,10 @@ class Loader extends React.Component {
 
 	componentWillMount() {
 		const success = res => {
-			console.log('ok', res)
-			const project = res.project
-			const { history } = this.props;
-			if(project.macro.protocol == 'CTRL'){
-				history.push(`/project/${project.id}`);
-			} else if (project.macro.protocol == 'NONE'){
-				history.push(`/project/flat/${project.id}`);
-			}	
-
+			//console.log('ok', res)
 		}
 		const error = err => {
-			console.log('error', err)
+			//console.log('error', err)
 		}
 		const id = this.props.match.params.id
 		this.props.getMacro({ id, success, error })
