@@ -50,6 +50,18 @@ class Server {
 
 	}
 
+	getMacro({ id, success, error }) {
+
+		const conn = this.getConnection();
+
+		conn.get(`/project/${id}`).then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			error(e.response);
+		})
+
+	}
+
 	getTemplates({ success, error }) {
 
 		const conn = this.getConnection();
