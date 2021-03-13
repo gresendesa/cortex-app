@@ -100,14 +100,16 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper,
 	},[searchString])
 
 	const onLoadOlderProjects = () => {
-		let limit = 0
-
-		const succs = () => {
-			setLoadingProjects(false)
+		if(!loadingProjects){
+			let limit = 0
+			const succs = () => {
+				setLoadingProjects(false)
+			}
+			const err = succs
+			setLoadingProjects(true)
+			fetchMacros({ limit, success: succs, error:err })
 		}
-		const err = succs
-		setLoadingProjects(true)
-		fetchMacros({ limit, success: succs, error:err })
+			
 	}
 
 	return (
@@ -146,9 +148,7 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper,
 						!loadingProjects &&	totalRecords > projects.length && 
 						<ListItem button onClick={onLoadOlderProjects} style={{display:'flex', justifyContent:'center'}}>
 							<Typography variant="overline" color="primary" align="center">
-
 								Load older projects
-
 							</Typography>
 						</ListItem>
 						
@@ -156,8 +156,8 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper,
 
 					{
 						loadingProjects && totalRecords > projects.length && 
-						<ListItem button onClick={onLoadOlderProjects} style={{display:'flex', justifyContent:'center'}}>
-							<CircularProgress color="secondary" />
+						<ListItem style={{display:'flex', justifyContent:'center'}}>
+							<CircularProgress color="secondary" size={30} />
 						</ListItem>
 						
 					}

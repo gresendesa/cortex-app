@@ -15,9 +15,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.15',
-		'release_date': '12 March 2021',
-		'short': 'Public templates importing button added ♥'
+		'number': '1.16',
+		'release_date': '13 March 2021',
+		'short': 'Performance update ^.^ Stuff is loaded faster'
 	}
 
 	setToken = (token) => {
@@ -51,7 +51,7 @@ class DataContextProvider extends Component {
 		}
 	}
 
-	fetchMacros = ({ limit=10, success=()=>{}, error=()=>{} }) => {
+	fetchMacros = ({ limit=7, success=()=>{}, error=()=>{} }) => {
 		if(this.state.token!==null){
 			const server = new Server({ token: this.state.token });
 			this.setState({'processing': true});
