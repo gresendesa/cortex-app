@@ -89,12 +89,15 @@ class DataContextProvider extends Component {
 			const server = new Server({ token: this.state.token });
 			const onOk = (response) => {
 				//remove a versão antiga da macro
-				var macros = this.state.macros.filter(m => {
+				var macros = this.state.macros.map(m => {
 					//console.log('update', `${m.id} !== ${id}`, String(m.id) !== String(id))
-					return String(m.id) !== String(id)
+					if(String(m.id) !== String(id)){
+						return m
+					}
+					return response.project
 				})
 				//atualiza com a nova versão do servidor
-				macros.unshift(response.project)
+				//macros.unshift(response.project)
 				this.setState({'macros': macros}, () => {
 					success(response);
 					this.setState({'processing': false});
@@ -124,11 +127,27 @@ class DataContextProvider extends Component {
 			const server = new Server({ token: this.state.token });
 			const onOk = (response) => {
 				//this.fetchMacros({});
-				const sucss = () => {}
-				const err = success
+				const sucss = (res) => {
+					
+				}
+				const err = () => {
+					
+				}	
 				this.getMacro({ id, sucss, err })
 				success(response);
 			}
+
+			var current_proj = null
+			var macros = this.state.macros.filter(m => {
+				if(String(m.id) !== String(id)){
+					return true
+				}
+				current_proj = m
+			})
+			current_proj.macro = macro
+			macros.unshift(current_proj)
+			this.setState({'macros': macros})
+
 			server.updateMacro({ id, macro, launch, success:onOk, error })
 		} else {
 			error("sem token");
