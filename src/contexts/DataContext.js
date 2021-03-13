@@ -89,11 +89,11 @@ class DataContextProvider extends Component {
 			const server = new Server({ token: this.state.token });
 			const onOk = (response) => {
 				//remove a versão antiga da macro
-				const macros = this.state.macros.filter(m => {
+				var macros = this.state.macros.filter(m => {
 					return m.id !== id
 				})
 				//atualiza com a nova versão do servidor
-				macros.push(response.project)
+				macros.unshift(response.project)
 				this.setState({'macros': macros}, () => {
 					success(response);
 					this.setState({'processing': false});
