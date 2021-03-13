@@ -90,7 +90,8 @@ class DataContextProvider extends Component {
 			const onOk = (response) => {
 				//remove a versão antiga da macro
 				var macros = this.state.macros.filter(m => {
-					return m.id !== id
+					//console.log('update', `${m.id} !== ${id}`, String(m.id) !== String(id))
+					return String(m.id) !== String(id)
 				})
 				//atualiza com a nova versão do servidor
 				macros.unshift(response.project)
@@ -311,6 +312,7 @@ class DataContextProvider extends Component {
 											setUsername: this.setUsername,
 											isUserSuper: this.state.isUserSuper,
 											fetchMacros: this.fetchMacros,
+											getMacro: this.getMacro,
 											addMacro: this.addMacro,
 											delMacro: this.delMacro,
 											saveMacro: this.saveMacro,

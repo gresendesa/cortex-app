@@ -38,11 +38,23 @@ class Server {
 	
 	}
 
-	getMacros({ success, error }) {
+	getMacrosOLD({ success, error }) {
 
 		const conn = this.getConnection();
 
 		conn.get('/project/getlist').then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			error(e.response);
+		})
+
+	}
+
+	getMacros({ success, error }) {
+
+		const conn = this.getConnection();
+
+		conn.get('/projects').then(r => {
 			success(r.data)
 		}).catch(function(e) {
 			error(e.response);

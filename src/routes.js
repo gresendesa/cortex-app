@@ -4,6 +4,9 @@ import history from './history';
 import ButtonAppBar from './components/NavBar';
 import { Container } from '@material-ui/core';
 import Macro from './Macro';
+
+import Loader from './Loader';
+
 import Projects from './Projects';
 import Templates from './Templates';
 import Login from './components/Login';
@@ -41,20 +44,30 @@ export default function Routes({ context }) {
 									//const macro = context.macros.some
 									const project = context.macros.find(m => m.id == props.match.params.id)
 
+
 									return (
-										project ?
-										<PlainMacro {...props} 
-											project={project} 
-											saveMacro={context.saveMacro} 
-											getBuild={context.getBuild}
-											getTemplateInfo={context.getTemplateInfo}
-											getPublicTemplates={context.getPublicTemplates}
-											editorMode={editorMode} 
-											getDoc={context.getDoc}
-											addCollaborator={context.addCollaborator}
-											removeCollaborator={context.removeCollaborator}
-										/>
+
+
+										(project) ? (
+											((project.macro) && (project.macro.code)) ?
+											<PlainMacro {...props} 
+												project={project} 
+												saveMacro={context.saveMacro} 
+												getBuild={context.getBuild}
+												getTemplateInfo={context.getTemplateInfo}
+												getPublicTemplates={context.getPublicTemplates}
+												editorMode={editorMode} 
+												getDoc={context.getDoc}
+												addCollaborator={context.addCollaborator}
+												removeCollaborator={context.removeCollaborator}
+											/>
+											 :
+											 <Loader {...props} 
+												getMacro={context.getMacro}
+											/>
+										)
 										:''
+									
 									)
 								}} />
 
@@ -64,22 +77,28 @@ export default function Routes({ context }) {
 									const project = context.macros.find(m => m.id == props.match.params.id)
 
 									return (
-										project ?
-										<Macro {...props} 
-											project={project} 
-											saveMacro={context.saveMacro} 
-											getTask={context.getTask} 
-											getTasks={context.getTasks} 
-											getBuild={context.getBuild} 
-											isUserSuper={context.isUserSuper} 
-											getActionCode={context.getActionCode}
-											getTemplateInfo={context.getTemplateInfo}
-											getDoc={context.getDoc}
-											editorMode={editorMode}
-											addCollaborator={context.addCollaborator}
-											removeCollaborator={context.removeCollaborator}
-											getPublicTemplates={context.getPublicTemplates}
-										 />
+										(project) ? (
+											((project.macro) && (project.macro.tasks)) ?
+											<Macro {...props} 
+												project={project} 
+												saveMacro={context.saveMacro} 
+												getTask={context.getTask} 
+												getTasks={context.getTasks} 
+												getBuild={context.getBuild} 
+												isUserSuper={context.isUserSuper} 
+												getActionCode={context.getActionCode}
+												getTemplateInfo={context.getTemplateInfo}
+												getDoc={context.getDoc}
+												editorMode={editorMode}
+												addCollaborator={context.addCollaborator}
+												removeCollaborator={context.removeCollaborator}
+												getPublicTemplates={context.getPublicTemplates}
+											 />
+											 :
+											 <Loader {...props} 
+												getMacro={context.getMacro}
+											/>
+										)
 										:''
 									)
 
@@ -97,6 +116,7 @@ export default function Routes({ context }) {
 										editorMode={editorMode}
 									/>
 								)} />
+
 								<Route render={(props) => (
 									<Projects {...props} 
 										addMacro={context.addMacro} 
