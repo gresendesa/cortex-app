@@ -180,9 +180,9 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
     copyTemplate.code = content;
     copyTemplate.description = description;
 
-    if(copyTemplate.name.match(/[^a-zA-Z0-9\_-]|^$/)){
+    if(copyTemplate.name.match(/[^a-zA-Z0-9À-ÿ\_-]|^$/)){
 
-      showAlert({message: "Template name should contain just [^a-zA-Z0-9\_-] chars", severity: "error"});
+      showAlert({message: "Template name should contain just [^a-zA-Z0-9À-ÿ\_-] chars", severity: "error"});
 
     } else {
 

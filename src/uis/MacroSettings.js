@@ -47,8 +47,8 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask,
 	});
 
 	const handleClose = () => {
-		if(config.name.match(/[^a-zA-Z0-9\_-]|^$/)){
-			alert("Project name should have just [a-zA-Z0-9\_-]", "error");
+		if(config.name.match(/[^a-zA-Z0-9À-ÿ\_-]|^$/)){
+			alert("Project name should have just [a-zA-Z0-9À-ÿ\_-]", "error");
 		} else if(config.pname.match(/[^a-zA-Z0-9\_]|^$/)){
 			alert("pname should have just [a-zA-Z0-9\_]", "error");
 		} else if(config.csid.match(/[^a-zA-Z0-9\_.-]|^$/)){

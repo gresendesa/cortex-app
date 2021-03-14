@@ -203,9 +203,9 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
     copyMacro.description = description;
     copyMacro.type = isOnChat ? 'onChat' : 'Main';
 
-    if(copyMacro.name.match(/[^a-zA-Z0-9\_-]|^$/)){
+    if(copyMacro.name.match(/[^a-zA-Z0-9À-ÿ\_-]|^$/)){
 
-      alert().show({message: "Project name should contain just [^a-zA-Z0-9\_-] chars", severity: "error"});
+      alert().show({message: "Project name should contain just [^a-zA-Z0-9À-ÿ\_-] chars", severity: "error"});
 
     } else if (copyMacro.csid.match(/[^a-zA-Z0-9\_.-]|^$/)) {
 

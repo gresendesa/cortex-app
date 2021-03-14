@@ -43,8 +43,8 @@ export default function ProjectCreateDialog({ open, setOpen, createProject, aler
       
     }
 
-    if(name.match(/[^a-zA-Z0-9\_-]|^$/)){
-      window.alert("Project name should have just [a-zA-Z0-9\_-]", "error");
+    if(name.match(/[^a-zA-Z0-9À-ÿ\_-]|^$/)){
+      window.alert("Project name should have just [a-zA-Z0-9À-ÿ\_-]", "error");
     } else {
       
       var model = null;

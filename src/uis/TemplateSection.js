@@ -374,7 +374,7 @@ export default function TemplateSection({ namespaces, templatesHook, getTemplate
   }
 
   const isValidName = (name) => {
-    if(name.match(/^[a-zA-Z0-9_-áéíóúçÁÉÍÓÚÇàèìòùÀÈÌÒÙ]+$/)){
+    if(name.match(/^[a-zA-Z0-9À-ÿ_-]+$/)){
       return true;
     }
     return false;
