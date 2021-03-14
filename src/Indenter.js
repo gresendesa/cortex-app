@@ -54,7 +54,14 @@ class Indenter {
 			['(',')',					c1('\\('),c3('\\)')],
 			['{','}',					c1('\\{'),c3('\\}')],
 			['[',']',					c1('\\['),c3('\\]')],
-			['SE','FIMSE',				c0('SE'),c0('FIMSE')]
+			['SE','FIM_SE',				c0('SE'),c0('FIM_SE')],
+			['SE','SENÃO',				c0('SE'),c0('SENÃO')],
+			['SE','SENÃO_SE',			c0('SE'),c0('SENÃO_SE')],
+			['REPITA','ATÉ',			c0('REPITA'),c0('ATÉ')],
+			['REPITA','ENQUANTO',		c0('REPITA'),c0('ENQUANTO')],
+			['REPITA','CONTINUE',		c0('REPITA'),c0('CONTINUE')],
+			['ITERE','PRÓXIMO',			c0('ITERE'),c0('PRÓXIMO')],
+			['ITERE_CADA','PRÓXIMO',	c0('ITERE_CADA'),c0('PRÓXIMO')],
 		]
 
 	}
