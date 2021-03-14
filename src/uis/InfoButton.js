@@ -38,7 +38,7 @@ export default function InfoButton({ subject, sourcesHook, editorMode, project=n
 
 		const infoRoutes = [
 			{
-				pattern: /[^"']*(?:[{*]+)\s* (?:import|include|extends) ["'](.+)["']\s*.*\s*(?:[}*]+).*/,
+				pattern: /[^"']*(?:[{*]+)\s* (?:import|include|extends|from) ["'](.+)["']\s*.*\s*(?:[}*]+).*/,
 				type: 'template'
 			},
 			{
