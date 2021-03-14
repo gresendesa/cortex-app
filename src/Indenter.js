@@ -12,8 +12,9 @@ class Indenter {
 
 		const es = this.escapeRegExp
 
-		const c0 = snippet => `^[ \t\n]*(${snippet}).*?$`
+		const c0 = snippet => `^[ \t\n]*(${snippet})(\\b|$).*?`
 		const c1 = snippet => `^.*?(${snippet})[ \t\n]*$`
+		const c3 = snippet => `^.*?(${snippet}).*?`
 
 		this.lines = lines;
 		this.level = [];
@@ -45,8 +46,8 @@ class Indenter {
 			['DO','LOOP',				c0('DO'),c0('LOOP')],
 			['UNSAFE','ENDUNSAFE',		c0('UNSAFE'),c0('ENDUNSAFE')],
 			['{{','}}',					c0('\\{\\{'),c0('\\}\\}')],
-			['(',')',					c1('\\('),c0('\\)')],
-			['{','}',					c1('\\{'),c0('\\}')],
+			['(',')',					c1('\\('),c1('\\)')],
+			['{','}',					c1('\\{'),c3('\\}')],
 			['SE','FIMSE',				c0('SE'),c0('FIMSE')]
 		]
 
