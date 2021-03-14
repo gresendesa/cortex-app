@@ -12,7 +12,7 @@ class Indenter {
 
 		const es = this.escapeRegExp
 
-		const c0 = snippet => `^[ \t\n]*(${snippet})(\\b|$).*?`
+		const c0 = snippet => `^[ \t\n]*(${snippet}).*?$`
 		const c1 = snippet => `^.*?(${snippet})[ \t\n]*$`
 
 		this.lines = lines;
