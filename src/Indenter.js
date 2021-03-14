@@ -46,6 +46,7 @@ class Indenter {
 			['UNSAFE','ENDUNSAFE',		c0('UNSAFE'),c0('ENDUNSAFE')],
 			['{{','}}',					c0('\\{\\{'),c0('\\}\\}')],
 			['(',')',					c1('\\('),c1('\\)')],
+			['{','}',					c1('\\{'),c1('\\}')],
 			['SE','FIMSE',				c0('SE'),c0('FIMSE')]
 		]
 
