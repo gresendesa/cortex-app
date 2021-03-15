@@ -209,7 +209,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
       const editor = aceEditor.current.editor
       const currentLineContent = editor.session.getLine(editor.getCursorPosition().line)
       if(currentLineContent.length > 0){
-        editor.session.insert(currentLineContent.length, '\n');
+        editor.session.insert({column: currentLineContent.length, line:editor.getCursorPosition().line}, '\n');
       }
       editor.session.insert(editor.getCursorPosition(), line)
     }
