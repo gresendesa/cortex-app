@@ -246,11 +246,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
 
   const addLineAtCurrentPosition = line => {
     if(aceEditor.current !== undefined){
-      const editor = aceEditor.current.editor
-      const currentLineContent = editor.session.getLine(editor.getCursorPosition().line)
-      if(currentLineContent.length > 0){
-        editor.session.insert({column: currentLineContent.length, line:editor.getCursorPosition().line}, '\n');
-      }
+      let editor = aceEditor.current.editor
       editor.session.insert(editor.getCursorPosition(), line)
     }
   }
