@@ -206,7 +206,11 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
 
   const addLineAtCurrentPosition = line => {
     if(aceEditor.current !== undefined){
-      let editor = aceEditor.current.editor
+      const editor = aceEditor.current.editor
+      const currentLineContent = editor.session.getLine(editor.getCursorPosition().line)
+      if(currentLineContent.length > 0){
+        editor.session.insert(currentLineContent.length, '\n');
+      }
       editor.session.insert(editor.getCursorPosition(), line)
     }
   }

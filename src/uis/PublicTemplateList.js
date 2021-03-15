@@ -50,7 +50,7 @@ function Library(props) {
 
   const handlePick = e => {
     successAlert(`'${devname}.${lib.name}.${e}' imported sucessfully`)
-    addLine(`\n{* import '${devname}.${lib.name}.${e}' as ${e.toUpperCase()} *}`)
+    addLine(`{* import '${devname}.${lib.name}.${e}' as ${e.toUpperCase()} *}`)
   }
 
   const classes = useStyles();
