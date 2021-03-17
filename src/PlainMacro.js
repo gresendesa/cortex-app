@@ -43,6 +43,7 @@ import AddTemplateButton from './uis/AddTemplateButton';
 import { onLoadAce } from './uis/utils';
 
 import AceEditor from "react-ace";
+import "ace-builds/src-noconflict/ext-searchbox";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools";

@@ -25,6 +25,7 @@ import TextField from '@material-ui/core/TextField';
 import translateTriggerGroup from './utils';
 import { triggerModel } from '../mock/models'
 import AceEditor from "react-ace";
+import "ace-builds/src-noconflict/ext-searchbox";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools";
