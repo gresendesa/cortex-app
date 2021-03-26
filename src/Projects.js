@@ -28,6 +28,7 @@ import InputBase from '@material-ui/core/InputBase';
 import GroupIcon from '@material-ui/icons/Group';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import ReactHtmlParser from 'react-html-parser';
 
 import { timeDifference } from './uis/utils';
 
@@ -233,8 +234,20 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 			<Tooltip title={"Saved " + lastSave + " before"}>
 				<ListItemText
 					className={classes.projectItem}
-					primary={p.macro.name}
-					secondary={username != p.dev ? (p.dev + (p.macro.description ? ' • ' + p.macro.description : '')) : (p.macro.description)}
+					primary={
+						<Typography variant="h6">
+							{p.macro.name}
+						</Typography>
+					}
+					//(ReactHtmlParser(p.markdown_description))
+
+					secondary={
+						<React.Fragment>
+							<Typography variant="subtitle2">{username != p.dev ? p.dev : ''}</Typography>
+							<React.Fragment>{(ReactHtmlParser(p.markdown_description))}</React.Fragment>
+						</React.Fragment>
+
+						}
 					/>
 			</Tooltip>
 				
