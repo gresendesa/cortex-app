@@ -15,9 +15,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.18',
-		'release_date': '26 March 2021',
-		'short': 'Markdown support on project description'
+		'number': '1.19',
+		'release_date': '08 July 2021',
+		'short': 'Theme support and bug fixes. Thanks Tony 💓'
 	}
 
 	setToken = (token) => {
