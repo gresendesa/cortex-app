@@ -1,13 +1,13 @@
 export const cortexMacroModCommands = [
 
   {
-    "value": "HTTPREQUEST(\"GET\",\"http://site.com?param1=a\",\"\",\"\",5000,&response,#statuscode); //It requires MacrosoftNET module",
+    "value": "REQUEST(\"GET\",\"http://site.com?param1=a\",\"\",\"\",5000,&response,#statuscode); //It requires MacrosoftNET module",
     "score": 2,
     "meta": "Performs HTTP GET request example"
   },
 
   {
-    "value": "HTTPREQUEST(\"POST\",\"http://site.com?param1=a\",\"somemessage\",\"Content-Type: text/html,Authorization: token 000000\",5000,&response,#statuscode); //It requires MacrosoftNET module",
+    "value": "REQUEST(\"POST\",\"http://site.com?param1=a\",\"somemessage\",\"Content-Type: text/html,Authorization: token 000000\",5000,&response,#statuscode); //It requires MacrosoftNET module",
     "score": 2,
     "meta": "Performs HTTP POST request example"
   },
@@ -95,6 +95,30 @@ export const cortexMacroModCommands = [
     "value": '{* import "library.template" as ALIAS *}',
     "score": 2,
     "meta": "import snippet"
+  },
+
+  {
+    "value": '{* from "library.template" import foo, baz, bar *}',
+    "score": 3,
+    "meta": "import snippet"
+  },
+
+  {
+    "value": '{* if variable == 'value' *}\n{* elif variable == 'other value' *}\n{* else *}\n{* endif *}',
+    "score": 2,
+    "meta": "Templating if"
+  },
+
+  {
+    "value": '{* for item in items *}\n{* endfor *}',
+    "score": 2,
+    "meta": "Templating for"
+  },
+
+  {
+    "value": '{* set variable = 'value' *}',
+    "score": 2,
+    "meta": "Templating set"
   },
 
   {
