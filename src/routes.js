@@ -49,7 +49,7 @@ export default function Routes({ context }) {
 
 
 										(project) ? (
-											((project.macro) && (project.macro.code)) ?
+											((project.macro) && (project.macro.type)) ?
 											<PlainMacro {...props} 
 												project={project} 
 												saveMacro={context.saveMacro} 
