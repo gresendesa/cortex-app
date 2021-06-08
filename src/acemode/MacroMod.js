@@ -149,9 +149,9 @@ export class CustomHighlightRules extends window.ace.acequire("ace/mode/text_hig
 
 	            "jump|call|return|"																+
 
-	            "HTTPREQUEST|httprequest|"                                                      + //Federal commands
+	            "REQUEST|request|"                                                      + //Federal commands
 
-	            "import|extends|macro|include|endmacro|block|endblock|from|as", //Cortex templates call
+	            "import|extends|macro|include|endmacro|block|endblock|from|as|elif", //Cortex templates call
 	        "storage.type":
 	            "const|let|var|function",
 	        "constant.language":

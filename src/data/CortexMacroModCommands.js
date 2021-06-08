@@ -104,7 +104,7 @@ export const cortexMacroModCommands = [
   },
 
   {
-    "value": '{* if variable == 'value' *}\n{* elif variable == 'other value' *}\n{* else *}\n{* endif *}',
+    "value": "{* if variable == 'value' *}\n{* elif variable == 'other value' *}\n{* else *}\n{* endif *}",
     "score": 2,
     "meta": "Templating if"
   },
@@ -116,7 +116,7 @@ export const cortexMacroModCommands = [
   },
 
   {
-    "value": '{* set variable = 'value' *}',
+    "value": "{* set variable = 'value' *}",
     "score": 2,
     "meta": "Templating set"
   },

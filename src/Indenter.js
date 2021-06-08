@@ -49,6 +49,19 @@ class Indenter {
 			['{* block ','{* endblock ',c0('\\{\\* block '),c3('\\{\\* endblock ')],
 			['{* macro ','{*- endmacro ',c0('\\{\\* macro '),c3('\\{\\*\\- endmacro ')],
 			['{* block ','{*- endblock ',c0('\\{\\* block '),c3('\\{\\*\\- endblock ')],
+			
+			['{* for ','{* endfor ',c0('\\{\\* for '),c3('\\{\\* endfor ')],
+
+			['{* else ','{* endif ',c0('\\{\\* else '),c3('\\{\\* endif ')],
+
+			['{* if ','{* endif ',c0('\\{\\* if '),c3('\\{\\* endif ')],
+			['{* if ','{* elif ',c0('\\{\\* if '),c3('\\{\\* elif ')],
+			['{* if ','{* else ',c0('\\{\\* if '),c3('\\{\\* else ')],
+
+			['{* elif ','{* endif ',c0('\\{\\* elif '),c3('\\{\\* endif ')],
+			['{* elif ','{* elif ',c0('\\{\\* elif '),c3('\\{\\* elif ')],
+			['{* elif ','{* else ',c0('\\{\\* elif '),c3('\\{\\* else ')],
+
 			['{{','}}',					c0('\\{\\{'),c0('\\}\\}')],
 			['{*','*}',					c0('\\{\\*'),c0('\\*\\}')],
 			['(',')',					c1('\\('),c3('\\)')],
@@ -129,7 +142,18 @@ class Indenter {
 		var indented_lines = []
 
 		for (var index = 0; index < this.lines.length; index++) {
-			const line = this.lines[index];
+
+			var line = this.lines[index];
+
+
+			line = line.replace(/\{\{([^ ])/, (group0, group1, group2) => {
+				return `{{ ${group1}`
+			})
+
+			line = line.replace(/\{\*([^ ])/, (group0, group1, group2) => {
+				return `{* ${group1}`
+			})
+
 
 			var checking = this.check_closing(line);
 			if(checking !== null){
