@@ -38,6 +38,7 @@ import { plainCortexMacroModCommands } from './data/PlainCortexMacroModCommands'
 import InfoButton from './uis/InfoButton';
 import BuildPanel from './uis/BuildPanel';
 import AddTemplateButton from './uis/AddTemplateButton';
+import ChangeThemeButton from './uis/ChangeThemeButton';
 
 
 import { onLoadAce } from './uis/utils';
@@ -46,6 +47,10 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/ext-searchbox";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/theme-dracula";
+import "ace-builds/src-noconflict/theme-chaos";
+import "ace-builds/src-noconflict/theme-dawn";
+import "ace-builds/src-noconflict/theme-pastel_on_dark";
 import "ace-builds/src-noconflict/ext-language_tools";
 
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -305,10 +310,8 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
               <IconTipButton edge="start" tip="Indent code" color="inherit" onClick={handleIndent} onDoubleClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
               </IconTipButton>
-              
 
               <AddTemplateButton getPublicTemplates={getPublicTemplates} addLine={addLineAtCurrentPosition} successAlert={(message) =>  alert().show({message, severity: "success"})}/>
-
 
               <InfoButton editorMode={editorMode} subject={infoButtonSubject} sourcesHook={infoSourcesHook} project={project} error_alert={(message) =>  alert().show({message, severity: "error"})}/>
             </Grid>
@@ -336,7 +339,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
             <AceEditor 
               onLoad={ onLoadAce({ editorMode, setInfoButtonSubject, completer: CortexCompleter }) }
               mode="javascript"
-              theme="monokai"
+              theme="pastel_on_dark"
               value={code}
               ref={aceEditor}
               onChange={handleTemplateCodeChange}
