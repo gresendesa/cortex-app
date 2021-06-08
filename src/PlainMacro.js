@@ -339,7 +339,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
             <AceEditor 
               onLoad={ onLoadAce({ editorMode, setInfoButtonSubject, completer: CortexCompleter }) }
               mode="javascript"
-              theme="pastel_on_dark"
+              theme="monokai"
               value={code}
               ref={aceEditor}
               onChange={handleTemplateCodeChange}
