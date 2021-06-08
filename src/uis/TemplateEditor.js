@@ -26,7 +26,47 @@ import translateTriggerGroup from './utils';
 import { templateModel, triggerModel } from '../mock/models'
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
+
+import "ace-builds/src-noconflict/theme-ambiance";
+import "ace-builds/src-noconflict/theme-chaos";
+import "ace-builds/src-noconflict/theme-chrome";
+import "ace-builds/src-noconflict/theme-clouds";
+import "ace-builds/src-noconflict/theme-clouds_midnight";
+import "ace-builds/src-noconflict/theme-cobalt";
+import "ace-builds/src-noconflict/theme-dawn";
+import "ace-builds/src-noconflict/theme-dracula";
+import "ace-builds/src-noconflict/theme-dreamweaver";
+import "ace-builds/src-noconflict/theme-eclipse";
+import "ace-builds/src-noconflict/theme-github";
+import "ace-builds/src-noconflict/theme-gob";
+import "ace-builds/src-noconflict/theme-gruvbox";
+import "ace-builds/src-noconflict/theme-idle_fingers";
+import "ace-builds/src-noconflict/theme-iplastic";
+import "ace-builds/src-noconflict/theme-katzenmilch";
+import "ace-builds/src-noconflict/theme-kr_theme";
+import "ace-builds/src-noconflict/theme-kuroir";
+import "ace-builds/src-noconflict/theme-merbivore";
+import "ace-builds/src-noconflict/theme-merbivore_soft";
+import "ace-builds/src-noconflict/theme-mono_industrial";
 import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/theme-nord_dark";
+import "ace-builds/src-noconflict/theme-pastel_on_dark";
+import "ace-builds/src-noconflict/theme-solarized_dark";
+import "ace-builds/src-noconflict/theme-solarized_light";
+import "ace-builds/src-noconflict/theme-sqlserver";
+import "ace-builds/src-noconflict/theme-terminal";
+import "ace-builds/src-noconflict/theme-textmate";
+import "ace-builds/src-noconflict/theme-tomorrow";
+import "ace-builds/src-noconflict/theme-tomorrow_night";
+import "ace-builds/src-noconflict/theme-tomorrow_night_blue";
+import "ace-builds/src-noconflict/theme-tomorrow_night_bright";
+import "ace-builds/src-noconflict/theme-tomorrow_night_eighties";
+import "ace-builds/src-noconflict/theme-twilight";
+import "ace-builds/src-noconflict/theme-vibrant_ink";
+import "ace-builds/src-noconflict/theme-xcode";
+
+import ChangeThemeButton from './ChangeThemeButton';
+
 import "ace-builds/src-noconflict/ext-language_tools";
 
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -46,7 +86,7 @@ import EventIcon from '@material-ui/icons/Event';
 
 import InfoButton from './InfoButton';
 
-import { onLoadAce } from './utils';
+import { onLoadAce, editorThemer } from './utils';
 
 import { eventModel } from '../mock/models';
 
@@ -215,6 +255,12 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
     console.log(aceEditor)
   }, [aceEditor])
 
+  const themeContext = 'template';
+  const [theme, setTheme] = useState(editorThemer().loadTheme(themeContext));
+  const updateTheme = (theme) => {
+    editorThemer().updateTheme(themeContext, aceEditor.current.editor, theme)
+  }
+
   return (
     <div>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} >
@@ -253,6 +299,8 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
               
               <AddTemplateButton getPublicTemplates={getPublicTemplates} addLine={addLineAtCurrentPosition} successAlert={(message) =>  showAlert({message, severity: "success"})}/>
 
+              <ChangeThemeButton context={themeContext} theme={theme} setTheme={updateTheme} />
+
 
               <InfoButton editorMode={editorMode} subject={infoButtonSubject} sourcesHook={infoSourcesHook} error_alert={(message) => showAlert({message, severity: "error"})}/>
             </Grid>
@@ -280,7 +328,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
             <AceEditor 
               onLoad={ onLoadAce({ editorMode, setInfoButtonSubject, completer: CortexCompleter }) }
               mode="javascript"
-              theme="monokai"
+              theme={theme}
               value={code}
               ref={aceEditor}
               onChange={handleTemplateCodeChange}

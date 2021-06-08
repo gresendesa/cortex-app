@@ -27,7 +27,6 @@ import { triggerModel } from '../mock/models'
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/ext-searchbox";
 import "ace-builds/src-noconflict/mode-javascript";
-import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools";
 
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -45,7 +44,7 @@ import Indenter from '../Indenter';
 import EventIcon from '@material-ui/icons/Event';
 import CodeIcon from '@material-ui/icons/Code';
 
-import { onLoadAce } from './utils';
+import { onLoadAce, editorThemer } from './utils';
 
 import { eventModel } from '../mock/models';
 
@@ -57,6 +56,48 @@ import IconTipButton from './IconTipButton';
 import InfoButton from './InfoButton';
 
 import AddTemplateButton from './AddTemplateButton';
+
+
+import "ace-builds/src-noconflict/theme-ambiance";
+import "ace-builds/src-noconflict/theme-chaos";
+import "ace-builds/src-noconflict/theme-chrome";
+import "ace-builds/src-noconflict/theme-clouds";
+import "ace-builds/src-noconflict/theme-clouds_midnight";
+import "ace-builds/src-noconflict/theme-cobalt";
+import "ace-builds/src-noconflict/theme-dawn";
+import "ace-builds/src-noconflict/theme-dracula";
+import "ace-builds/src-noconflict/theme-dreamweaver";
+import "ace-builds/src-noconflict/theme-eclipse";
+import "ace-builds/src-noconflict/theme-github";
+import "ace-builds/src-noconflict/theme-gob";
+import "ace-builds/src-noconflict/theme-gruvbox";
+import "ace-builds/src-noconflict/theme-idle_fingers";
+import "ace-builds/src-noconflict/theme-iplastic";
+import "ace-builds/src-noconflict/theme-katzenmilch";
+import "ace-builds/src-noconflict/theme-kr_theme";
+import "ace-builds/src-noconflict/theme-kuroir";
+import "ace-builds/src-noconflict/theme-merbivore";
+import "ace-builds/src-noconflict/theme-merbivore_soft";
+import "ace-builds/src-noconflict/theme-mono_industrial";
+import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/theme-nord_dark";
+import "ace-builds/src-noconflict/theme-pastel_on_dark";
+import "ace-builds/src-noconflict/theme-solarized_dark";
+import "ace-builds/src-noconflict/theme-solarized_light";
+import "ace-builds/src-noconflict/theme-sqlserver";
+import "ace-builds/src-noconflict/theme-terminal";
+import "ace-builds/src-noconflict/theme-textmate";
+import "ace-builds/src-noconflict/theme-tomorrow";
+import "ace-builds/src-noconflict/theme-tomorrow_night";
+import "ace-builds/src-noconflict/theme-tomorrow_night_blue";
+import "ace-builds/src-noconflict/theme-tomorrow_night_bright";
+import "ace-builds/src-noconflict/theme-tomorrow_night_eighties";
+import "ace-builds/src-noconflict/theme-twilight";
+import "ace-builds/src-noconflict/theme-vibrant_ink";
+import "ace-builds/src-noconflict/theme-xcode";
+
+import ChangeThemeButton from './ChangeThemeButton';
+
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -128,6 +169,12 @@ export default function TriggerForm({ project, task, trigger, open, toggleEditor
       getTemplateInfo:getTemplateInfo,
       getDoc: getDoc
     }
+  }
+
+  const themeContext = 'trigger';
+  const [theme, setTheme] = useState(editorThemer().loadTheme(themeContext));
+  const updateTheme = (theme) => {
+    editorThemer().updateTheme(themeContext, aceEditor.current.editor, theme)
   }
 
   const handleClose = () => {
@@ -308,6 +355,8 @@ export default function TriggerForm({ project, task, trigger, open, toggleEditor
 
               <AddTemplateButton getPublicTemplates={getPublicTemplates} addLine={addLineAtCurrentPosition} successAlert={(message) =>  alert(message, 'success')}/>
 
+              <ChangeThemeButton context={themeContext} theme={theme} setTheme={updateTheme} />
+
               <InfoButton editorMode={editorMode} subject={infoButtonSubject} sourcesHook={infoSourcesHook} project={project} error_alert={(message) => alert(message, 'error')}/>
 
             </Grid>
@@ -335,7 +384,7 @@ export default function TriggerForm({ project, task, trigger, open, toggleEditor
             <AceEditor 
               onLoad={ onLoadAce({ editorMode, setInfoButtonSubject, completer: CortexCompleter }) }
               mode="javascript"
-              theme="monokai"
+              theme={theme}
               value={action}
               ref={aceEditor}
               onChange={handleActionChange}

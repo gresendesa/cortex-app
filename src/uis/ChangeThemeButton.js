@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 
 import InfoTwoToneIcon from '@material-ui/icons/InfoTwoTone';
 import IconTipButton from './IconTipButton';
+import EditorThemeList from './EditorThemeList';
 import PublicTemplateList from './PublicTemplateList';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import LibraryAdd from '@material-ui/icons/LibraryAdd';
@@ -13,10 +14,10 @@ import { Snackbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 
-export default function ChangeThemeButton({ setThemeName }) {
+export default function ChangeThemeButton(props) {
 
 
-	const [popUp, setPopUp] = useState(true);
+	const [popUp, setPopUp] = useState(false);
 	const [openDialog, setOpenDialog] = useState(false);
 
 	const handleDialogClose = () => {
@@ -24,26 +25,16 @@ export default function ChangeThemeButton({ setThemeName }) {
 	}
 
 	const handleClick = () => {
-
-		setPopUp(false);
-
-		const success = res => {
-			setPopUp(true);
-		}
-
-		const error = res => {
-			setPopUp(true);
-			console.log(res)
-		}
-
-		
+		setPopUp(true);
+		console.log('opba')
 	}
 
 	return (
-		<IconTipButton tip={'Change editor theme'}>
+		<IconTipButton tip={'Tony\'s themes'}>
 
 			<PaletteIcon onClick={handleClick}/>
 			
+			<EditorThemeList setOpen={setPopUp} open={popUp} theme={props.theme} setTheme={props.setTheme} context={props.context} />
 
 		</IconTipButton>
 	);

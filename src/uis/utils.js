@@ -74,3 +74,75 @@ export const onLoadAce = ({ editorMode, setInfoButtonSubject, completer }) => {
 
 	return onload;
 }
+
+
+export const editorThemer = () => {
+
+	const getListThemes = () => {
+		return [
+			{name: 'ambiance', label: 'Ambiance'},
+			{name: 'chaos', label: 'Chaos'},
+			{name: 'chrome', label: 'Chrome'},
+			{name: 'clouds', label: 'Clouds'},
+			{name: 'clouds_midnight', label: 'Clouds Midnight'},
+			{name: 'cobalt', label: 'cobalt'},
+			{name: 'crimson_editor', label: 'Crimson Editor'},
+			{name: 'dawn', label: 'Dawn'},
+			{name: 'dracula', label: 'Dracula'},
+			{name: 'dreamweaver', label: 'Dreamweaver'},
+			{name: 'eclipse', label: 'Eclipse'},
+			{name: 'github', label: 'Github'},
+			{name: 'gob', label: 'Gob'},
+			{name: 'gruvbox', label: 'Gruvbox'},
+			{name: 'idle_fingers', label: 'Idle Fingers'},
+			{name: 'iplastic', label: 'IPlastic'},
+			{name: 'katzenmilch', label: 'Katzenmilch'},
+			{name: 'kr_theme', label: 'KR'},
+			{name: 'kuroir', label: 'Kuroir'},
+			{name: 'merbivore', label: 'Merbivore'},
+			{name: 'merbivore_soft', label: 'Merbivore Soft'},
+			{name: 'mono_industrial', label: 'Mono Industrial'},
+			{name: 'monokai', label: 'Monokai (default)'},
+			{name: 'nord_dark', label: 'Nord Dark'},
+			{name: 'pastel_on_dark', label: 'Pastel On Dark'},
+			{name: 'solarized_dark', label: 'Solarized Dark'},
+			{name: 'solarized_light', label: 'Solarized Light'},
+			{name: 'sqlserver', label: 'SQLServer'},
+			{name: 'terminal', label: 'Terminal'},
+			{name: 'textmate', label: 'Textmate'},
+			{name: 'tomorrow', label: 'Tomorrow'},
+			{name: 'tomorrow_night', label: 'Tomorrow Night'},
+			{name: 'tomorrow_night_blue', label: 'Tomorrow Night Blue'},
+			{name: 'tomorrow_night_bright', label: 'Tomorrow Night Bright'},
+			{name: 'tomorrow_night_eighties', label: 'Tomorrow Night Eighties'},
+			{name: 'twilight', label: 'Twilight'},
+			{name: 'vibrant_ink', label: 'Vibrant Ink'},
+			{name: 'xcode', label: 'XCode'}
+		]
+	}
+
+	const updateTheme = (context, AceEditor, name) => {
+		localStorage.setItem(`rocket:editor:theme:${context}`,name);
+		AceEditor.setTheme(`ace/theme/${name}`);
+	}
+
+	const loadTheme = (context) => {
+
+		let theme = localStorage.getItem(`rocket:editor:theme:${context}`);
+
+		if(theme !== null){
+			return theme
+		}
+
+		return 'monokai'
+	}
+
+	return {
+
+		getListThemes,
+		updateTheme,
+		loadTheme
+
+	}
+
+}

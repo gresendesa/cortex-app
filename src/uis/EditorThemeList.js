@@ -30,63 +30,11 @@ import Grid from '@material-ui/core/Grid';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
-function Library(props) {
-
-  const [open, setOpen] = useState(false);
-  const { key, lib, devname, addLine, successAlert } = props; 
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
-
-  const useStyles = makeStyles((theme) => ({
-
-    nested: {
-      paddingLeft: theme.spacing(4),
-    },
-
-  }));
-
-  const handlePick = e => {
-    successAlert(`'${devname}.${lib.name}.${e}' imported sucessfully`)
-    addLine(`\n{* import '${devname}.${lib.name}.${e}' as ${e.toUpperCase()} *}`)
-  }
-
-  const classes = useStyles();
-
-  return (
-
-    <React.Fragment>
-      <ListItem button onClick={handleClick}>
-        <ListItemIcon>
-          <FolderIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText primary={<i>{lib.name}</i>} />
-        {open ? <ExpandLess fontSize="small" /> : <ExpandMore fontSize="small" />}
-      </ListItem>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding dense>
-          {
-            lib.templates.map((templateName, index) => {
-              return (
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <AssignmentIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText primary={<i>{templateName}</i>} onClick={() => {
-                    handlePick(templateName)
-                  }} />
-                </ListItem>
-              )
-            })
-          }
-        </List>
-      </Collapse>
-    </React.Fragment>
-  )
-}
-
+import { editorThemer } from './utils';
 
 const styles = (theme) => ({
   root: {
@@ -98,7 +46,11 @@ const styles = (theme) => ({
     right: theme.spacing(1),
     top: theme.spacing(1),
     color: theme.palette.grey[500],
-  }
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
 });
 
 const DialogTitleClose = withStyles(styles)((props) => {
@@ -117,7 +69,7 @@ const DialogTitleClose = withStyles(styles)((props) => {
 
 
 
-export default function SimpleDialog(props) {
+export default function ThemeDialog(props) {
 
 
   const useStyles = makeStyles((theme) => ({
@@ -140,21 +92,26 @@ export default function SimpleDialog(props) {
   }));
 
   const classes = useStyles();
-  const { onClose, libraries, setLibraries, addLine, successAlert } = props;
+  const { onClose } = props;
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(props.open);
 
-  const handleClose = () => {
-    setOpen(false)
-    setLibraries([])
-  };
+  const [theme, setTheme] = useState(props.theme)
+
+  const handleChangeTheme = (event) => {
+    const value = event.target.value;
+    setTheme(value)
+    props.setTheme(value)
+    //props.updateTheme(props.context, value)
+  }
 
   useEffect(() => {
-    console.log(libraries)
-    if(libraries.length > 0){
-      setOpen(true)
-    }
-  },[libraries])
+    setOpen(props.open)
+  },[props.open])
+
+  const handleClose = () => {
+    props.setOpen(false)
+  };
 
   return (
     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth={'sm'} fullWidth>
@@ -163,10 +120,32 @@ export default function SimpleDialog(props) {
           Editor themes
         </Typography>
       </DialogTitleClose>
-      fdsfdf
+
+      <FormControl variant="outlined" className={styles.formControl}>
+        <InputLabel htmlFor="outlined-age-native-simple">Theme</InputLabel>
+        <Select
+          native
+          value={theme}
+          onChange={handleChangeTheme}
+          label="Themes"
+          inputProps={{
+            name: 'theme',
+            id: 'outlined-age-native-simple',
+          }}
+        >
+          {
+            editorThemer().getListThemes().map((item, indice) => {
+              return(
+                <option value={item.name} key={indice}>{item.label}</option>
+              )
+            })
+          }
+        </Select>
+      </FormControl>
+
       <DialogTitle>
         <Typography variant={'subtitle2'}>
-          Click over a theme to apply it
+          Feel free to choose a theme ^.^
         </Typography>
       </DialogTitle>
     </Dialog>
