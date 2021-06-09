@@ -54,7 +54,7 @@ export const onLoadAce = ({ editorMode, setInfoButtonSubject, completer }) => {
 
 		editor.setOptions({
 			fontFamily: "Monospace",
-			fontSize: "16pt"
+			fontSize: "15pt"
 		});
 
 		editor.focus();
