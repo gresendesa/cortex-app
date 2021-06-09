@@ -145,7 +145,7 @@ export default function ThemeDialog(props) {
 
       <DialogTitle>
         <Typography variant={'subtitle2'}>
-          Feel free to choose a theme ^.^
+          🌟 Themes for ya ^.^
         </Typography>
       </DialogTitle>
     </Dialog>
