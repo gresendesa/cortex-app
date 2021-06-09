@@ -28,14 +28,14 @@ export class CustomHighlightRules extends window.ace.acequire("ace/mode/text_hig
 		DocCommentHighlightRules.getTagRule = function(start) {
 		    return {
 		        token : "comment.doc.tag.storage.type",
-		        regex : "\\b(?:TODO|FIXME|XXX|HACK)\\b"
+		        regex : "\\b(?:TODO|FIXME|XXX|HACK|AUTHOR|AUTHORS|CONTRIBUTORS|CHANGELOG|DESCRIPTION|DEV|DATE|SHORT|TITLE|NAME|DESCRIÇÃO|AUTOR|TÍTULO|NOME|DATA|AUTORES|CONTRIBUIÇÕES|BUG|ATUALIZAÇÕES)\\b"
 		    };
 		};
 
 		DocCommentHighlightRules.getStartRule = function(start) {
 		    return {
 		        token : "comment.doc", // doc comment
-		        regex : "\\/\\*(?=\\*)",
+		        regex : "\\/\\*(?=\\*)|\\{\\!\\!(?=\\*)",
 		        next  : start
 		    };
 		};
@@ -43,7 +43,7 @@ export class CustomHighlightRules extends window.ace.acequire("ace/mode/text_hig
 		DocCommentHighlightRules.getEndRule = function (start) {
 		    return {
 		        token : "comment.doc", // closing comment
-		        regex : "\\*\\/",
+		        regex : "\\*\\/|\\!\\!\\}",
 		        next  : start
 		    };
 		};
@@ -53,10 +53,10 @@ export class CustomHighlightRules extends window.ace.acequire("ace/mode/text_hig
 		    return [
 		        {
 		            token : "comment", // multi line comment
-		            regex : /\/\*/,
+		            regex : /\/\*|\{\!\!/,
 		            next: [
 		                DocCommentHighlightRules.getTagRule(),
-		                {token : "comment", regex : "\\*\\/", next : next || "pop"},
+		                {token : "comment", regex : "\\*\\/|\\!\\!\\}", next : next || "pop"},
 		                {defaultToken : "comment", caseInsensitive: true}
 		            ]
 		        }, {
