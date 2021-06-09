@@ -92,7 +92,7 @@ export const editorThemer = () => {
 			{name: 'chrome', label: 'Chrome'},
 			{name: 'clouds', label: 'Clouds'},
 			{name: 'clouds_midnight', label: 'Clouds Midnight'},
-			{name: 'cobalt', label: 'cobalt'},
+			{name: 'cobalt', label: 'Cobalt'},
 			{name: 'crimson_editor', label: 'Crimson Editor'},
 			{name: 'dawn', label: 'Dawn'},
 			{name: 'dracula', label: 'Dracula'},
