@@ -87,7 +87,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function BuildPanel({ open, setOpen, code, projectName, editorMode }) {
+export default function BuildPanel({ open, setOpen, code, projectName, editorMode, theme = 'monokai' }) {
   const classes = useStyles();
 
   const handleClose = () => {
@@ -120,14 +120,18 @@ export default function BuildPanel({ open, setOpen, code, projectName, editorMod
             <AceEditor 
               onLoad={(editor) => {
                 editor.getSession().setMode(editorMode);
+
+                editor.setOptions({
+                  fontFamily: "Monospace",
+                  fontSize: "12pt"
+                });
               }}
 
               mode="javascript"
-              theme="monokai"
+              theme={theme}
               value={code}
               name="UNIQUE_ID_OF_DIV"
               editorProps={{ $blockScrolling: true }}
-              fontSize={20}
               tabSize={2}
               readOnly={true}
               showPrintMargin={false}

@@ -11,6 +11,8 @@ import GorlemCommandInfo from './GorlemCommandInfo';
 
 import axios from 'axios';
 
+import { editorThemer } from './utils';
+
 export default function InfoButton({ subject, sourcesHook, editorMode, project=null, error_alert=(window.alert) }) {
 
 	const [infoTemplateOpen, setInfoTemplateOpen] = useState(false);
@@ -168,7 +170,7 @@ export default function InfoButton({ subject, sourcesHook, editorMode, project=n
 
 			<GorlemCommandInfo open={commandDocOpen} setOpen={setCommandDocOpen} doc={commandDoc} />
 
-			<BuildPanel editorMode={editorMode} open={infoTemplateCodeOpen} setOpen={setInfoTemplateCodeOpen} code={infoTemplate.code} projectName={infoTemplate.dev + ' • ' + infoTemplate.library + ' • ' + infoTemplate.name}/>
+			<BuildPanel editorMode={editorMode} open={infoTemplateCodeOpen} setOpen={setInfoTemplateCodeOpen} code={infoTemplate.code} theme={editorThemer().loadTheme('template')} projectName={infoTemplate.dev + ' • ' + infoTemplate.library + ' • ' + infoTemplate.name}/>
 		
 		</React.Fragment>
 	);

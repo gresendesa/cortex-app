@@ -475,7 +475,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
 
       </Dialog>
 
-      <BuildPanel editorMode={editorMode} open={build.open} setOpen={setBuildOpen} code={build.code} projectName={name} />
+      <BuildPanel editorMode={editorMode} open={build.open} setOpen={setBuildOpen} code={build.code} projectName={name} theme={theme} />
 
       
     </div>

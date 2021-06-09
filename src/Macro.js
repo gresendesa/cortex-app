@@ -18,6 +18,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
 import BuildPanel from './uis/BuildPanel';
 import translateTriggerGroup from './uis/utils';
+import { editorThemer } from './uis/utils';
 
 
 class Macro extends React.Component {
@@ -363,7 +364,7 @@ class Macro extends React.Component {
 					</MuiAlert>
 				</Snackbar>
 
-				<BuildPanel open={this.state.openBuild} setOpen={this.setOpenBuild} code={this.state.build} projectName={this.state.buildName} editorMode={this.props.editorMode} />
+				<BuildPanel open={this.state.openBuild} setOpen={this.setOpenBuild} code={this.state.build} projectName={this.state.buildName} editorMode={this.props.editorMode} theme={editorThemer().loadTheme('trigger')} />
 
 				<MacroSettings openConfig={this.state.openConfig} settings={settings} hookTask={this.hookTask} devName={this.state.devName} project={this.state.project} addCollaborator={this.props.addCollaborator} removeCollaborator={this.props.removeCollaborator} updateCollaborators={this.updateCollaborators} />
 
