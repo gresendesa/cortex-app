@@ -29,6 +29,7 @@ import GroupIcon from '@material-ui/icons/Group';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ReactHtmlParser from 'react-html-parser';
+import ViewListIcon from '@material-ui/icons/ViewList';
 
 import { timeDifference } from './uis/utils';
 
@@ -205,7 +206,7 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 		return (
 			<div>
 				{p.macro.protocol == 'CTRL' && <Avatar className={classes.avatarProject}>
-					<PlayArrowRoundedIcon />
+					<ViewListIcon />
 				</Avatar>}
 				{p.macro.protocol == 'NONE' && <Avatar className={classes.avatarNoneProject}>
 					<CodeIcon /> 
@@ -221,11 +222,11 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 					<Avatar className={classes.sharedProject}>
 						{
 							p.macro.protocol == 'CTRL' &&
-								<GroupIcon fontSize='small' />
+								<ViewListIcon />
 						}
 						{
 							p.macro.protocol == 'NONE' &&
-								<PeopleOutlineIcon fontSize='small' />
+								<CodeIcon />
 						}
 					</Avatar>
 				:
