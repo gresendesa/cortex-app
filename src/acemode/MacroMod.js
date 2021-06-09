@@ -151,14 +151,14 @@ export class CustomHighlightRules extends window.ace.acequire("ace/mode/text_hig
 
 	            "REQUEST|request|"                                                      + //Federal commands
 
-	            "import|extends|macro|include|endmacro|block|endblock|from|as|elif", //Cortex templates call
+	            "import|extends|macro|include|endmacro|block|endblock|from|as|elif|endfor", //Cortex templates call
 	        "storage.type":
 	            "const|let|var|function",
 	        "constant.language":
 	            "build|ms|t|\$\$",
 	        "support.function":
 	            "alert",
-	        "constant.language.boolean": "true|false|True|False"
+	        "constant.language.boolean": "true|false|True|False|None|none"
 	    }, "identifier");
 
 		var kwBeforeRe = "case|do|else|finally|in|instanceof|return|throw|try|typeof|yield|void";

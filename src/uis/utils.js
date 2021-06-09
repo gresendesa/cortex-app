@@ -50,6 +50,13 @@ export const timeDifference = (timestamp) => {
 export const onLoadAce = ({ editorMode, setInfoButtonSubject, completer }) => {
 	
 	const onload = (editor) => {
+
+
+		editor.setOptions({
+			fontFamily: "Monospace",
+			fontSize: "16pt"
+		});
+
 		editor.focus();
 		editor.setValue(editor.getValue(), -1);
 		editor.completers = [editor.completers[0],editor.completers[1],completer];
