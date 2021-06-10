@@ -144,6 +144,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
   const [description, setDescription] = useState(project.macro.description); 
   const [processing, setProcessing] = useState(false);
   const [indentSwitch, setIndentSwitch] = useState(false);
+  const [isPublic, setIsPublic] = useState(project.macro.public ? true : false);
 
 
   const themeContext = 'plainmacro';
@@ -249,6 +250,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
     copyMacro.csid = csid;
     copyMacro.description = description;
     copyMacro.type = isOnChat ? 'onChat' : 'Main';
+    copyMacro.public = isPublic;
 
     if(copyMacro.name.match(/[^a-zA-Z0-9À-ÿ·•\_-]|^$/)){
 
@@ -464,6 +466,20 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
                 <ListItem>
                   <SharingArea project={project} addCollaborator={addCollaborator} removeCollaborator={removeCollaborator} updateCollaborators={updateCollaborators} alert={alert} />
                 </ListItem>
+
+                <ListItem>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={isPublic}
+                        onChange={() => {setIsPublic(!isPublic)}}
+                        color="primary"
+                      />
+                    }
+                    label="Public"
+                  />
+                </ListItem>
+
               </List>
 
             </Drawer>
