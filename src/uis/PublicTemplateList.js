@@ -30,6 +30,7 @@ import Grid from '@material-ui/core/Grid';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import PublicIcon from '@material-ui/icons/Public';
 
 function Library(props) {
 
@@ -76,6 +77,63 @@ function Library(props) {
                   </ListItemIcon>
                   <ListItemText primary={<i>{templateName}</i>} onClick={() => {
                     handlePick(templateName)
+                  }} />
+                </ListItem>
+              )
+            })
+          }
+        </List>
+      </Collapse>
+    </React.Fragment>
+  )
+}
+
+
+function PublicProjects(props) {
+
+  const [open, setOpen] = useState(false);
+  const { key, projects, devname, addLine, successAlert } = props; 
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
+  const useStyles = makeStyles((theme) => ({
+
+    nested: {
+      paddingLeft: theme.spacing(4),
+    },
+
+  }));
+
+  const handlePick = e => {
+    successAlert(`'${devname}.@.${e}' imported sucessfully`)
+    addLine(`\n{* import '${devname}.@.${e}' as ${e.toUpperCase()} *}`)
+  }
+
+  const classes = useStyles();
+
+  return (
+
+    <React.Fragment>
+      <ListItem button onClick={handleClick}>
+        <ListItemIcon>
+          <PublicIcon fontSize="small" />
+        </ListItemIcon>
+        <ListItemText secondary={'@ public flat projects'}/>
+        {open ? <ExpandLess fontSize="small" /> : <ExpandMore fontSize="small" />}
+      </ListItem>
+      <Collapse in={open} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding dense>
+          {
+            projects.map((projectName, index) => {
+              return (
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <AssignmentIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary={<i>{projectName.name}</i>} onClick={() => {
+                    handlePick(projectName.name)
                   }} />
                 </ListItem>
               )
@@ -140,7 +198,7 @@ export default function SimpleDialog(props) {
   }));
 
   const classes = useStyles();
-  const { onClose, libraries, setLibraries, addLine, successAlert } = props;
+  const { onClose, libraries, setLibraries, addLine, successAlert, isProject=false } = props;
 
   const [open, setOpen] = useState(false);
 
@@ -175,6 +233,25 @@ export default function SimpleDialog(props) {
               <Typography className={classes.heading}><i>{libs.devname}</i></Typography>
               </AccordionSummary>
               
+              {libs.projects.length > 0 && 
+
+
+                <Grid container>
+                  <Grid item xs={12}>
+                    <List
+                      component="nav"
+                      aria-labelledby="nested-list-subheader"
+                      className={classes.root}
+                      dense
+                    >
+
+                      <PublicProjects projects={libs.projects} devname={libs.devname} addLine={addLine} successAlert={successAlert} isProject={true} />
+
+                    </List>
+                  </Grid>
+                </Grid>
+              } 
+
               {
                 libs.libraries.map((lib, index2) => {
 
