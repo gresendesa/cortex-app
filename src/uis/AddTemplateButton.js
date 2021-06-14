@@ -45,7 +45,7 @@ export default function AddTemplateButton({ getPublicTemplates, addLine, success
 	}
 
 	return (
-		<IconTipButton tip={'Import public template'}>
+		<IconTipButton tip={'Import public resource'}>
 
 			{popUp && <LibraryAdd onClick={handleClick}/>}
 

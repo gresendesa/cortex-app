@@ -218,7 +218,7 @@ export default function SimpleDialog(props) {
     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth={'sm'} fullWidth>
       <DialogTitleClose onClose={handleClose}>
         <Typography variant={'h6'}>
-          Public templates
+          Public resources
         </Typography>
       </DialogTitleClose>
       {
@@ -281,7 +281,7 @@ export default function SimpleDialog(props) {
       }
       <DialogTitle>
         <Typography variant={'subtitle2'}>
-          Click over a template to import it automatically
+          Click over a resource to import it automatically
         </Typography>
       </DialogTitle>
     </Dialog>
