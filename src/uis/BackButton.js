@@ -13,12 +13,12 @@ export default function BackButton({ backline, setBackline, aceEditor }) {
 	useEffect(() => {
 		if(backline !== null){
 			setPopUp(true)
-			setTimeout(() => {
+			/*setTimeout(() => {
 				if(backline !== null){
 					setBackline(null)
 					setPopUp(false)
 				}	
-			}, 10000)
+			}, 10000)*/
 		}
 	},[backline])
 
@@ -31,7 +31,7 @@ export default function BackButton({ backline, setBackline, aceEditor }) {
 
 	return (
 		<React.Fragment>
-			{popUp && <IconTipButton tip={`back to line ${backline.lineNumber}`}>
+			{popUp && <IconTipButton tip={`back to line ${backline !== null ? backline.lineNumber : '0'}`}>
 				<ArrowBackIcon onClick={handleClick} />
 			</IconTipButton>}
 		</React.Fragment>
