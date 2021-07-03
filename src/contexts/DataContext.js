@@ -17,7 +17,7 @@ class DataContextProvider extends Component {
 	version = {
 		'number': '1.20',
 		'release_date': '03 July 2021',
-		'short': 'Goto/home marks added'
+		'short': 'Goto/home marks added : )'
 	}
 
 	setToken = (token) => {
