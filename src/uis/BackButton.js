@@ -31,7 +31,7 @@ export default function BackButton({ backline, setBackline, aceEditor }) {
 
 	return (
 		<React.Fragment>
-			{popUp && <IconTipButton tip={`back to line ${backline !== null ? backline.lineNumber : '0'}`}>
+			{popUp && <IconTipButton tip={`Back to line ${backline !== null ? backline.lineNumber : '0'}`}>
 				<ArrowBackIcon onClick={handleClick} />
 			</IconTipButton>}
 		</React.Fragment>
