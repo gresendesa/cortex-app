@@ -28,7 +28,7 @@ export class CustomHighlightRules extends window.ace.acequire("ace/mode/text_hig
 		DocCommentHighlightRules.getTagRule = function(start) {
 		    return {
 		        token : "comment.doc.tag.storage.type",
-		        regex : "\\b(?:TODO|FIXME|XXX|HACK|AUTHOR|AUTHORS|CONTRIBUTORS|CHANGELOG|DESCRIPTION|DEV|DATE|SHORT|TITLE|NAME|DESCRIÇÃO|AUTOR|TÍTULO|NOME|DATA|AUTORES|CONTRIBUIÇÕES|BUG|ATUALIZAÇÕES)\\b"
+		        regex : "\\b(?:TODO|FIXME|XXX|HACK|AUTHOR|AUTHORS|CONTRIBUTORS|CHANGELOG|DESCRIPTION|DEV|DATE|SHORT|TITLE|NAME|DESCRIÇÃO|AUTOR|TÍTULO|NOME|DATA|AUTORES|CONTRIBUIÇÕES|BUG|ATUALIZAÇÕES|GOTO ?-> ?\\w+|HERE ?<- ?\\w+)\\b"
 		    };
 		};
 

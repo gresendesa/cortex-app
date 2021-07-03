@@ -78,6 +78,18 @@ export const plainCortexMacroModCommands = [
     "meta": "import snippet"
   },
 
+  {
+    "value": "//HERE <- label",
+    "score": 2,
+    "meta": "Definir uma label"
+  },
+
+  {
+    "value": "//GOTO -> label",
+    "score": 2,
+    "meta": "Ir a uma label"
+  },
+
 
   {
     "value": "ACHIEVEMENTGET(<text>,[itemid[:damage]]);",

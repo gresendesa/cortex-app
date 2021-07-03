@@ -36,6 +36,7 @@ import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 import { plainCortexMacroModCommands } from './data/PlainCortexMacroModCommands';
 
 import InfoButton from './uis/InfoButton';
+import BackButton from './uis/BackButton';
 import BuildPanel from './uis/BuildPanel';
 import AddTemplateButton from './uis/AddTemplateButton';
 import ChangeThemeButton from './uis/ChangeThemeButton';
@@ -133,6 +134,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPublicTemplates, getDoc, alert, editorMode, addCollaborator, removeCollaborator, updateCollaborators }) {
   const classes = useStyles();
+  
+  const [backline, setBackline] = useState(null);//Para o botão de voltar
+
   const [open, setOpen] = React.useState(true);
 
   const [openConfig, setOpenConfig] = useState(false);
@@ -154,6 +158,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
   }
 
   const [infoButtonSubject, setInfoButtonSubject] = useState(null);
+  const [backButton, setBackButton] = useState(null);
   const infoSourcesHook = () => {
     return {
       getTemplateInfo:getTemplateInfo,
@@ -358,7 +363,10 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
 
               <ChangeThemeButton context={themeContext} theme={theme} setTheme={updateTheme} />
 
+              <BackButton backline={backline} setBackline={setBackline} aceEditor={aceEditor} />
+
               <InfoButton editorMode={editorMode} subject={infoButtonSubject} sourcesHook={infoSourcesHook} project={project} error_alert={(message) =>  alert().show({message, severity: "error"})}/>
+
             </Grid>
 
             <Grid item>
@@ -382,7 +390,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
 
           <Grid item xs={12} className={classes.editor}>
             <AceEditor 
-              onLoad={ onLoadAce({ editorMode, setInfoButtonSubject, completer: CortexCompleter }) }
+              onLoad={ onLoadAce({ editorMode, setInfoButtonSubject, completer: CortexCompleter, setBackline }) }
               mode="javascript"
               theme={theme}
               value={code}

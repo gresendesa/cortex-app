@@ -47,14 +47,35 @@ export const timeDifference = (timestamp) => {
 		return `${daysPart}${hoursPart}${minutesPart}${secondsDifference}sec`;
 }
 
-export const onLoadAce = ({ editorMode, setInfoButtonSubject, completer }) => {
-	
+export const handleJump = ({ line, word, editor, sourceLineNumber, handle=null }) => {
+	const gotoRegexString = `[Gg][Oo][Tt][Oo] ?-> ?${word}\\b`
+	const hereRegexString = `[Hh][Ee][Rr][Ee] ?<- ?${word}\\b`
+	if(line.match(new RegExp(gotoRegexString))){
+		const lines = editor.session.doc.getAllLines()
+		var lineNumber = sourceLineNumber + 1;
+		for (var i = 0; i < lines.length; i++) {
+			if(lines[i].match(new RegExp(hereRegexString))){
+				lineNumber = i + 1;
+				editor.gotoLine(lineNumber, lines[i].length, true);
+				if(handle!==null){
+					handle({lineNumber: sourceLineNumber + 1, line: line})
+				}
+				break
+			}
+		}
+	} 
+}
+
+export const onLoadAce = ({ editorMode, setInfoButtonSubject, completer, setBackline }) => {
+
+
+
 	const onload = (editor) => {
 
 
 		editor.setOptions({
 			fontFamily: "Monospace",
-			fontSize: "15pt"
+			fontSize: "15.5pt"
 		});
 
 		editor.focus();
@@ -72,9 +93,10 @@ export const onLoadAce = ({ editorMode, setInfoButtonSubject, completer }) => {
 					if(start==end){
 						var wholelinetxt = editor.session.getLine(start);
 						setInfoButtonSubject({line: wholelinetxt, word: selectedText});
+						handleJump({line: wholelinetxt, word: selectedText, editor: editor, sourceLineNumber: start, handle: setBackline})
 					}
 				}
-			}, 50);
+			}, 1);
 
 		});
 	}

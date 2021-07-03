@@ -25,6 +25,9 @@ import TextField from '@material-ui/core/TextField';
 import translateTriggerGroup from './utils';
 import { templateModel, triggerModel } from '../mock/models'
 import AceEditor from "react-ace";
+
+import BackButton from './BackButton';
+
 import "ace-builds/src-noconflict/mode-javascript";
 
 import "ace-builds/src-noconflict/theme-ambiance";
@@ -147,6 +150,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function TemplateEditor({ open, setOpen, template, namespace, saveTemplate, getTemplateInfo, getDoc, showAlert, editorMode, getPublicTemplates }) {
   
   const classes = useStyles();
+
+  const [backline, setBackline] = useState(null);//Para o botão de voltar
+
   const [openConfig, setOpenConfig] = useState(false);
 
   const [name, setName] = useState(template.name);
@@ -301,6 +307,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
 
               <ChangeThemeButton context={themeContext} theme={theme} setTheme={updateTheme} />
 
+              <BackButton backline={backline} setBackline={setBackline} aceEditor={aceEditor} />
 
               <InfoButton editorMode={editorMode} subject={infoButtonSubject} sourcesHook={infoSourcesHook} error_alert={(message) => showAlert({message, severity: "error"})}/>
             </Grid>
@@ -326,7 +333,8 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
 
           <Grid item xs={12} className={classes.editor}>
             <AceEditor 
-              onLoad={ onLoadAce({ editorMode, setInfoButtonSubject, completer: CortexCompleter }) }
+              //onLoad={ onLoadAce({ editorMode, setInfoButtonSubject, completer: CortexCompleter }) }
+              onLoad={ onLoadAce({ editorMode, setInfoButtonSubject, completer: CortexCompleter, setBackline }) }
               mode="javascript"
               theme={theme}
               value={code}

@@ -44,6 +44,8 @@ import DrawerHeader from './DrawerHeader';
 import Indenter from '../Indenter';
 import EventIcon from '@material-ui/icons/Event';
 
+import { handleJump } from './utils';
+
 
 import { eventModel } from '../mock/models';
 
@@ -119,12 +121,33 @@ export default function BuildPanel({ open, setOpen, code, projectName, editorMod
           <Grid item xs={12} className={classes.editor}>
             <AceEditor 
               onLoad={(editor) => {
-                editor.getSession().setMode(editorMode);
 
                 editor.setOptions({
                   fontFamily: "Monospace",
                   fontSize: "12pt"
                 });
+
+                editor.focus();
+                editor.setValue(editor.getValue(), -1);
+                editor.getSession().setMode(editorMode);
+
+                editor.getSession().getSelection().on('changeSelection',(delta)=>{
+      
+                  setTimeout(() => {
+                    const selectedText = editor.getSession().getTextRange();
+                    if(selectedText.length!=0){
+                      const start = editor.getSelectionRange().start.row;
+                      const end = editor.getSelectionRange().end.row;
+                      if(start==end){
+                        var wholelinetxt = editor.session.getLine(start);
+                        handleJump({line: wholelinetxt, word: selectedText, editor: editor, sourceLineNumber: start})
+                      }
+                    }
+                  }, 1);
+
+                });
+
+
               }}
 
               mode="javascript"
