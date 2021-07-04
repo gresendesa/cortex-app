@@ -56,6 +56,7 @@ export const handleJump = ({ line, word, editor, sourceLineNumber, handle=null }
 		for (var i = 0; i < lines.length; i++) {
 			if(lines[i].match(new RegExp(hereRegexString))){
 				lineNumber = i + 1;
+				editor.getSelection().clearSelection();
 				editor.gotoLine(lineNumber, lines[i].length, true);
 				if(handle!==null){
 					handle({lineNumber: sourceLineNumber + 1, line: line})

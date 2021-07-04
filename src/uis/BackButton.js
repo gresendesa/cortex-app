@@ -24,6 +24,7 @@ export default function BackButton({ backline, setBackline, aceEditor }) {
 
 	const handleClick = () => {
 		let editor = aceEditor.current.editor
+		editor.getSelection().clearSelection();
 		editor.gotoLine(backline.lineNumber, backline.line.length, true);
 		setBackline(null)
 		setPopUp(false)

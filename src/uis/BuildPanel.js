@@ -133,17 +133,18 @@ export default function BuildPanel({ open, setOpen, code, projectName, editorMod
 
                 editor.getSession().getSelection().on('changeSelection',(delta)=>{
       
-                  setTimeout(() => {
-                    const selectedText = editor.getSession().getTextRange();
-                    if(selectedText.length!=0){
-                      const start = editor.getSelectionRange().start.row;
-                      const end = editor.getSelectionRange().end.row;
-                      if(start==end){
-                        var wholelinetxt = editor.session.getLine(start);
-                        handleJump({line: wholelinetxt, word: selectedText, editor: editor, sourceLineNumber: start})
-                      }
+                  
+                  const selectedText = editor.getSession().getTextRange();
+                  if(selectedText.length!=0){
+                    const start = editor.getSelectionRange().start.row;
+                    const end = editor.getSelectionRange().end.row;
+                    if(start==end){
+                      var wholelinetxt = editor.session.getLine(start);
+                      editor.getSelection().clearSelection();
+                      handleJump({line: wholelinetxt, word: selectedText, editor: editor, sourceLineNumber: start})
                     }
-                  }, 1);
+                  }
+                  
 
                 });
 
