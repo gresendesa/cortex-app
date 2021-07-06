@@ -47,9 +47,13 @@ export const timeDifference = (timestamp) => {
 		return `${daysPart}${hoursPart}${minutesPart}${secondsDifference}sec`;
 }
 
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+
 export const handleJump = ({ line, word, editor, sourceLineNumber, handle=null }) => {
-	const gotoRegexString = `[Gg][Oo][Tt][Oo] ?-> ?${word}\\b`
-	const hereRegexString = `[Hh][Ee][Rr][Ee] ?<- ?${word}\\b`
+	const gotoRegexString = `[Gg][Oo][Tt][Oo] ?-> ?${escapeRegExp(word)}\\b`
+	const hereRegexString = `[Hh][Ee][Rr][Ee] ?<- ?${escapeRegExp(word)}\\b`
 	if(line.match(new RegExp(gotoRegexString))){
 		const lines = editor.session.doc.getAllLines()
 		var lineNumber = sourceLineNumber + 1;
