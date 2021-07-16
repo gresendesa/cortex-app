@@ -147,9 +147,9 @@ export class CustomHighlightRules extends window.ace.acequire("ace/mode/text_hig
 	            "UNTIL|VOLUME|WAIT|WHILE|"                                                      +
 	            "ENDIF|NEXT|LOOP|ENDUNSAFE|"                                                    +
 
-	            "jump|call|return|"																+
+	            "jump|call|return|pause|stop"													+
 
-	            "REQUEST|request|"                                                      + //Federal commands
+	            "REQUEST|request|"                                                      		+ //Federal commands
 
 	            "import|extends|macro|include|endmacro|block|endblock|from|as|elif|endfor", //Cortex templates call
 	        "storage.type":
