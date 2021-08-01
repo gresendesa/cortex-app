@@ -140,7 +140,7 @@ export default function BuildPanel({ open, setOpen, code, projectName, editorMod
                     const end = editor.getSelectionRange().end.row;
                     if(start==end){
                       var wholelinetxt = editor.session.getLine(start);
-                      editor.getSelection().clearSelection();
+                      //editor.getSelection().clearSelection();
                       handleJump({line: wholelinetxt, word: selectedText, editor: editor, sourceLineNumber: start})
                     }
                   }
