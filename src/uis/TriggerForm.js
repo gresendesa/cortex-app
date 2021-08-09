@@ -301,7 +301,7 @@ export default function TriggerForm({ project, task, trigger, open, toggleEditor
   }
 
   useEffect(() => {
-    console.log(aceEditor)
+    //console.log(aceEditor)
   }, [aceEditor])
 
   //<Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>

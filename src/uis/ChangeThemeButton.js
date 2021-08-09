@@ -26,7 +26,7 @@ export default function ChangeThemeButton(props) {
 
 	const handleClick = () => {
 		setPopUp(true);
-		console.log('opba')
+		//console.log('opba')
 	}
 
 	return (

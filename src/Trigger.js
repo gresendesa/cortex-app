@@ -191,15 +191,7 @@ class Trigger extends React.Component {
 		  },
 		}))(Tooltip);
 
-		/*argument: "EVENT"
-​​
-		id: 0.6855183031923985
-		​​
-		match: false
-		​​
-		rule: "fdsafdsa"*/
-
-		console.log(this.props.trigger.events)
+		//console.log(this.props.trigger.events)
 
 		return (
 			<React.Fragment>

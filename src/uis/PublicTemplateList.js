@@ -208,7 +208,7 @@ export default function SimpleDialog(props) {
   };
 
   useEffect(() => {
-    console.log(libraries)
+    //console.log(libraries)
     if(libraries.length > 0){
       setOpen(true)
     }

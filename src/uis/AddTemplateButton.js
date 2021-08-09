@@ -26,7 +26,7 @@ export default function AddTemplateButton({ getPublicTemplates, addLine, success
 
 		setPopUp(false);
 
-		console.log('ata')
+		//console.log('ata')
 
 		//const { getPublicTemplates } = sourcesHook();
 
@@ -37,7 +37,7 @@ export default function AddTemplateButton({ getPublicTemplates, addLine, success
 
 		const error = res => {
 			setPopUp(true);
-			console.log(res)
+			//console.log(res)
 		}
 
 		getPublicTemplates({ success, error })

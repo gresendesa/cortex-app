@@ -245,7 +245,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
   }
 
   const handleAddTemplate = () => {
-    console.log("opa")
+    //console.log("opa")
   }
 
   const handleSave = (launch=false) => {
@@ -306,7 +306,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
   }
 
   useEffect(() => {
-    console.log(aceEditor)
+    //console.log(aceEditor)
   }, [aceEditor])
 
   const saveButtonRef = useRef(null);

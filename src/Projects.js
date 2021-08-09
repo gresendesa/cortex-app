@@ -76,7 +76,7 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper,
 	}));
 
 
-	console.log('totalRecords', totalRecords)
+	//console.log('totalRecords', totalRecords)
 	const classes = useStyles();
 
 	const [searchResultProjects, setsearchResultProjects] = useState(projects);

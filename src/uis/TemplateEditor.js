@@ -258,7 +258,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
   }
 
   useEffect(() => {
-    console.log(aceEditor)
+    //console.log(aceEditor)
   }, [aceEditor])
 
   const themeContext = 'template';
