@@ -4,7 +4,7 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 import TaskPanel from './TaskPanel';
 import uuid from 'uuid';
 
-export default function TasksSection({ project, tasks, hasDependencies, hookTask, editorMode }) {
+export default function TasksSection({ project, tasks, disabledTasks, hasDependencies, hookTask, editorMode }) {
 
 	return (
 
@@ -13,7 +13,7 @@ export default function TasksSection({ project, tasks, hasDependencies, hookTask
 			tasks.length > 0 ?
 			tasks.map((task, indice) => {
 				return (
-					<TaskPanel project={project} indice={indice} task={task} key={task.id} hookTask={hookTask} editorMode={editorMode} />
+					<TaskPanel project={project} disabledTasks={disabledTasks} indice={indice} task={task} key={task.id} hookTask={hookTask} editorMode={editorMode} />
 				)
 			})
 			:

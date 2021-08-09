@@ -15,9 +15,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.20.1',
-		'release_date': '30 July 2021',
-		'short': 'Indenter improvements'
+		'number': '1.21',
+		'release_date': '09 August 2021',
+		'short': 'Tasks can be enabled/disabled'
 	}
 
 	setToken = (token) => {

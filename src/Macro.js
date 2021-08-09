@@ -151,6 +151,24 @@ class Macro extends React.Component {
 		});
 	}
 
+	toggleTaskStatus = (task) => {
+
+		const disabled_tasks = this.state.disabled_tasks
+
+		if(disabled_tasks == undefined){
+			//console.log('adicionando pela primeira vez')
+			this.setState({'disabled_tasks': [task.name]})
+		} else 
+		
+		if(!disabled_tasks.includes(task.name)){
+			//console.log('adicionando')
+			this.setState({'disabled_tasks': this.state.disabled_tasks.concat(task.name)})
+		} else {
+			//console.log('removendo')
+			this.setState({'disabled_tasks': this.state.disabled_tasks.filter(t => t != task.name)})
+		}
+	}
+
 	hookTask = () => {
 		return {
 			'open': this.state.openCreateDialog, //open flag
@@ -180,7 +198,8 @@ class Macro extends React.Component {
 			'getActionCode': this.getActionCode,
 			'getTemplateInfo': this.props.getTemplateInfo,
 			'getDoc': this.props.getDoc,
-			'getPublicTemplates': this.props.getPublicTemplates
+			'getPublicTemplates': this.props.getPublicTemplates,
+			'toggleTaskStatus': this.toggleTaskStatus
 		}
 	}
 
@@ -353,7 +372,7 @@ class Macro extends React.Component {
 
 				</Grid>
 
-				<TasksSection project={this.state.project} tasks={this.state.tasks} hasDependencies={this.state.dependencies.length} hookTask={this.hookTask} editorMode={this.props.editorMode}/>
+				<TasksSection project={this.state.project} disabledTasks={this.state.disabled_tasks} tasks={this.state.tasks} hasDependencies={this.state.dependencies.length} hookTask={this.hookTask} editorMode={this.props.editorMode}/>
 				<TaskCreateDialog hookTask={this.hookTask}/>
 
 				<DependenciesSection dependencies={this.state.dependencies} hookTask={this.hookTask} />

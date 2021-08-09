@@ -12,6 +12,8 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import BlockIcon from '@material-ui/icons/Block';
+import CheckIcon from '@material-ui/icons/Check';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 
 import DeleteButtonTask from './DeleteButton';
@@ -37,23 +39,36 @@ const useStyles = makeStyles((theme) => ({
 }));*/
 
 const useStyles = makeStyles((theme) => ({
-  title: {
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    textAlign:'center',
-    maxWidth: '35vw'
-  },
   panel: {
   	marginTop: theme.spacing(1),
   }
 }));
 
-export default function TasksPanel({ project, task, hookTask, indice, editorMode }) {
+function TypographyCustom({ color, children }) {
+	const useStyles = makeStyles((theme) => ({
+	  title: {
+	    overflow: 'hidden',
+    	textOverflow: 'ellipsis',
+    	whiteSpace: 'nowrap',
+    	textAlign:'center',
+    	maxWidth: '35vw'
+	  },
+	}));
 
 	const classes = useStyles();
 
-	const { deleteTask, editTask, hasTask, alert, focus, setFocus, getFocus, moveTaskUp, hasMacroUnsafe } = hookTask();
+	return (
+		<Typography color={color} className={classes.title}>
+			{ children }
+		</Typography>
+	)
+}
+
+export default function TasksPanel({ project, disabledTasks, task, hookTask, indice, editorMode }) {
+
+	const classes = useStyles();
+
+	const { deleteTask, editTask, hasTask, alert, focus, setFocus, getFocus, moveTaskUp, hasMacroUnsafe, toggleTaskStatus } = hookTask();
 
 	var initial_expand = false;
 	if((getFocus().task!=null) && (getFocus().task.id==task.id)){
@@ -82,6 +97,16 @@ export default function TasksPanel({ project, task, hookTask, indice, editorMode
 		setExpand(!expand);
 	}	
 
+	const disableEnableTask = () => {
+		toggleTaskStatus(task);
+	}
+
+	const [enabled, setEnabled] = useState(((disabledTasks == undefined) || (!disabledTasks.includes(task.name))));
+
+	useEffect(() => {
+		setEnabled((disabledTasks == undefined) || (!disabledTasks.includes(task.name)));
+	},[disabledTasks])
+
 	return (
 
 		<Box>
@@ -93,9 +118,18 @@ export default function TasksPanel({ project, task, hookTask, indice, editorMode
 					aria-controls="panel1a-content"
 					id="panel1a-header"
 					className={classes.panel}>
-					<Typography variant="subtitle1" className={classes.title}>
-						<strong>{task.name}</strong>
-					</Typography>
+					
+					{
+						enabled ?
+							<TypographyCustom>
+								<strong>{task.name}</strong>
+							</TypographyCustom>
+							:
+							<TypographyCustom color="textSecondary">
+								<strike>{task.name}</strike>
+							</TypographyCustom>
+					}
+
 				</ExpansionPanelSummary>
 				<ExpansionPanelDetails>
 					
@@ -116,6 +150,14 @@ export default function TasksPanel({ project, task, hookTask, indice, editorMode
 									: ""
 								}
 								<BottomNavigationAction onClick={activeEditPanel} label="Edit" icon={<EditIcon />} />
+								
+								{
+									enabled ?
+										<BottomNavigationAction onClick={disableEnableTask} label="Disable task" icon={<BlockIcon />} />
+										:
+										<BottomNavigationAction onClick={disableEnableTask} label="Enable task" icon={<CheckIcon />} />
+								}
+								
 								<DeleteButtonTask type='task' callback={handleDeleteClick} />
 							</BottomNavigation>
 						</Grid>
