@@ -15,9 +15,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.21',
-		'release_date': '09 August 2021',
-		'short': 'Tasks can be enabled/disabled'
+		'number': '1.22',
+		'release_date': '14 August 2021',
+		'short': 'List of events added to plain macros on a field called type'
 	}
 
 	setToken = (token) => {

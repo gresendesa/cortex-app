@@ -180,9 +180,9 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask,
 				</ListItem>
 				<Divider />
 				<ListItem>
-                  <SharingArea project={project} addCollaborator={addCollaborator} removeCollaborator={removeCollaborator} updateCollaborators={updateCollaborators} alert={sharingAlertInterface} width={430} />
-                </ListItem>
-                <Divider />
+        	<SharingArea project={project} addCollaborator={addCollaborator} removeCollaborator={removeCollaborator} updateCollaborators={updateCollaborators} alert={sharingAlertInterface} />
+        </ListItem>
+        <Divider />
 			</List>
 			<List aria-label="main mailbox folders">
 				<ListItem>

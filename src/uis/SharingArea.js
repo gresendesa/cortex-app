@@ -95,7 +95,7 @@ export default function SharingArea({ project, addCollaborator, removeCollaborat
 	}
 
 	return (	
-		<Box width={width} >
+		<Box fullWidth>
 			
 			<TextField
 				margin="dense"

@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
 
 import { useHistory } from 'react-router-dom';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -27,6 +29,7 @@ import TextField from '@material-ui/core/TextField';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
+import Select from '@material-ui/core/Select';
 
 import SharingArea from './uis/SharingArea';
 
@@ -124,6 +127,10 @@ const useStyles = makeStyles((theme) => ({
   },
   breadCrumb: {
     marginRight: theme.spacing(1),
+  },
+  formControl: {
+    paddingTop: '8px',
+    fontSize: '5px'
   }
 }));
 
@@ -149,7 +156,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
   const [processing, setProcessing] = useState(false);
   const [indentSwitch, setIndentSwitch] = useState(false);
   const [isPublic, setIsPublic] = useState(project.macro.public ? true : false);
-
+  const [type, setType] = useState(project.macro.type)
 
   const themeContext = 'plainmacro';
   const [theme, setTheme] = useState(editorThemer().loadTheme(themeContext));
@@ -163,6 +170,13 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
     return {
       getTemplateInfo:getTemplateInfo,
       getDoc: getDoc
+    }
+  }
+
+  const onChangeType = (e) => {
+    const value = e.target.value;
+    if(value.length>0){
+      setType(value);
     }
   }
 
@@ -254,7 +268,8 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
     copyMacro.code = code;
     copyMacro.csid = csid;
     copyMacro.description = description;
-    copyMacro.type = isOnChat ? 'onChat' : 'Main';
+    //copyMacro.type = isOnChat ? 'onChat' : 'Main';
+    copyMacro.type = type;
     copyMacro.public = isPublic;
 
     if(copyMacro.name.match(/[^a-zA-Z0-9À-ÿ·•\_-]|^$/)){
@@ -271,7 +286,11 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
 
       const success = (message) => {
         if(launch){
-          alert().show({message: "Launched as "+csid, severity: "success"});
+          if(type !== 'Main'){
+            alert().show({message: "Launched as "+csid+" ("+type+")", severity: "success"});
+          } else {
+            alert().show({message: "Launched as "+csid, severity: "success"});
+          }
         } else {
           alert().show({message: "Saved", severity: "success"});
         } 
@@ -438,10 +457,10 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
 
               <List aria-label="main mailbox folders">
                 <ListItem>
-                  <TextField margin="dense" value={name} small="small" onChange={handleNameChange} label="Project name" variant="outlined" />  
+                  <TextField fullWidth margin="dense" value={name} small="small" onChange={handleNameChange} label="Project name" variant="outlined" />  
                 </ListItem>
                 <ListItem>
-                  <TextField margin="dense" value={csid} small="small" onChange={handleCsidChange} label="CloudScript id" variant="outlined" />  
+                  <TextField fullWidth margin="dense" value={csid} small="small" onChange={handleCsidChange} label="CloudScript id" variant="outlined" />  
                 </ListItem>
                 <ListItem>
                   <TextField
@@ -459,16 +478,48 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
                 </ListItem>
 
                 <ListItem>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={isOnChat}
-                        onChange={() => {setIsOnChat(!isOnChat)}}
-                        color="primary"
-                      />
-                    }
-                    label="onChat"
-                  />
+                  <FormControl variant="outlined" className={classes.formControl} fullWidth>
+                    <InputLabel htmlFor="macro-type">Type</InputLabel>
+                    <Select
+                      native
+                      value={type}
+                      onChange={onChangeType}
+                      label="Type"
+                      margin="dense"
+                      inputProps={{
+                        name: 'type',
+                        id: 'macro-type' 
+                      }}
+                    >
+                      <option value={'Main'}>default</option>
+                      <option value={'onChat'}>onChat</option>
+                      <option value={'onWhitelist'}>onWhitelist</option>
+                      <option aria-label="None" value="" />
+                      <option value={'onArmourChange'}>onArmourChange</option>
+                      <option value={'onArmourDurabilityChange'}>onArmourDurabilityChange</option>
+                      <option value={'onAutoCraftingComplete'}>onAutoCraftingComplete</option>
+                      <option value={'onConfigChange'}>onConfigChange</option>
+                      <option value={'onDeath'}>onDeath</option>
+                      <option value={'onFoodChange'}>onFoodChange</option>
+                      <option value={'onHealthChange'}>onHealthChange</option>
+                      <option value={'onInventorySlotChange'}>onInventorySlotChange</option>
+                      <option value={'onItemDurabilityChange'}>onItemDurabilityChange</option>
+                      <option value={'onJoinGame'}>onJoinGame</option>
+                      <option value={'onLevelChange'}>onLevelChange</option>
+                      <option value={'onModeChange'}>onModeChange</option>
+                      <option value={'onOxygenChange'}>onOxygenChange</option>
+                      <option value={'onPickupItem'}>onPickupItem</option>
+                      <option value={'onPlayerJoined'}>onPlayerJoined</option>
+                      <option value={'onPotionEffect'}>onPotionEffect</option>
+                      <option value={'onRespawn'}>onRespawn</option>
+                      <option value={'onSendChatMessage'}>onSendChatMessage</option>
+                      <option value={'onShowGui'}>onShowGui</option>
+                      <option value={'onWeatherChange'}>onWeatherChange</option>
+                      <option value={'onWebSocketMessage'}>onWebSocketMessage</option>
+                      <option value={'onWorldChange'}>onWorldChange</option>
+                      <option value={'onXPChange'}>onXPChange</option>
+                    </Select>
+                  </FormControl>
                 </ListItem>
 
                 <ListItem>
@@ -484,6 +535,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
                         color="primary"
                       />
                     }
+                    fullWidth
                     label="Public"
                   />
                 </ListItem>
