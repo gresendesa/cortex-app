@@ -207,6 +207,21 @@ class Server {
 		})
 	}
 
+	buildLocalCode({ macro, success, error }) {
+
+		const conn = this.getConnection();
+
+		conn.post(`/project/buildlocalcode`, macro).then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			try {
+				error(e.response.data.detail);
+			} catch {
+				error(e.message);
+			}
+		})
+	}
+
 	getTemplateInfo({ library, name, project_id, success, error }) {
 
 		const conn = this.getConnection();

@@ -77,6 +77,7 @@ export const onLoadAce = ({ editorMode, setInfoButtonSubject, completer, setBack
 
 	const onload = (editor) => {
 
+		//editor.container.classList.add('editorImage')
 
 		editor.setOptions({
 			fontFamily: "Monospace",

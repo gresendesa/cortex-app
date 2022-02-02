@@ -15,9 +15,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.22',
-		'release_date': '14 August 2021',
-		'short': 'List of events added to plain macros on a field called type'
+		'number': '1.23',
+		'release_date': '02 February 2022',
+		'short': 'Public editor added'
 	}
 
 	setToken = (token) => {
@@ -155,6 +155,28 @@ class DataContextProvider extends Component {
 		}
 	}
 
+	saveLocalMacro = ({ id, macro, launch=false, success=()=>{}, error=()=>{} }) => {
+	
+		const onOk = (response) => {
+			//this.fetchMacros({});
+			const sucss = (res) => {
+				
+			}
+			const err = () => {
+				
+			}	
+			//this.getMacro({ id, sucss, err })
+			success(response);
+		}
+
+		localStorage.setItem('localMacro', JSON.stringify({
+			id: 0,
+			macro: macro
+		}));
+		onOk('Saved')
+
+	}
+
 	getTask = ({ dev, project, task, success=()=>{}, error=()=>{} }) => {
 		if(this.state.token!==null){
 			this.setState({'processing': true});
@@ -200,6 +222,15 @@ class DataContextProvider extends Component {
 		}
 	}
 
+	buildLocalCode = ({ macro, success=()=>{}, error=()=>{} }) => {
+		//if(this.state.token!==null){
+			const server = new Server({ token: this.state.token });
+			server.buildLocalCode({ macro, success, error })
+		/*} else {
+			error("sem token");
+		}*/
+	}
+
 	getActionCode = ({ id, name, project_id, task_name, section, success=()=>{}, error=()=>{} }) => {
 		if(this.state.token!==null){
 			const server = new Server({ token: this.state.token });
@@ -211,7 +242,7 @@ class DataContextProvider extends Component {
 
 	getTemplateInfo = ({ library, name, project_id=null, success=()=>{}, error=()=>{} }) => {
 
-		if(this.state.token!==null){
+		//if(this.state.token!==null){
 			this.setState({'processing': true});
 			const server = new Server({ token: this.state.token });
 			const onOk = (response) => {
@@ -223,9 +254,9 @@ class DataContextProvider extends Component {
 				this.setState({'processing': false});
 			}
 			server.getTemplateInfo({ library, name, project_id, success: onOk, error: onIssue })
-		} else {
+		/*} else {
 			error("sem token");
-		}
+		}*/
 	}
 
 	getTemplates = ({ success=()=>{}, error=()=>{} }) => {
@@ -247,7 +278,8 @@ class DataContextProvider extends Component {
 	}
 
 	getPublicTemplates = ({ success=()=>{}, error=()=>{} }) => {
-		if(this.state.token!==null){
+
+		//if(this.state.token!==null){
 			this.setState({'processing': true});
 			const server = new Server({ token: this.state.token });
 			const onOk = (response) => {
@@ -259,13 +291,13 @@ class DataContextProvider extends Component {
 				this.setState({'processing': false});
 			}
 			server.getPublicTemplates({ success: onOk, error: onIssue })
-		} else {
+		/*} else {
 			error("sem token");
-		}
+		}*/
 	}
 
 	getDoc = ({ source, type, target, success=()=>{}, error=()=>{} }) => {
-		if(this.state.token!==null){
+		//if(this.state.token!==null){
 			this.setState({'processing': true});
 			const server = new Server({ token: this.state.token });
 			const onOk = (response) => {
@@ -277,9 +309,9 @@ class DataContextProvider extends Component {
 				this.setState({'processing': false});
 			}
 			server.getDoc({ source, type, target, success: onOk, error: onIssue })
-		} else {
+		/*} else {
 			error("sem token");
-		}
+		}*/
 	}
 
 	saveTemplates = ({ templates, success=()=>{}, error=()=>{} }) => {
@@ -336,6 +368,7 @@ class DataContextProvider extends Component {
 											addMacro: this.addMacro,
 											delMacro: this.delMacro,
 											saveMacro: this.saveMacro,
+											saveLocalMacro: this.saveLocalMacro,
 											getTask: this.getTask,
 											getTasks: this.getTasks,
 											processing: this.state.processing,
@@ -343,6 +376,7 @@ class DataContextProvider extends Component {
 											getPublicTemplates: this.getPublicTemplates,
 											getDoc: this.getDoc,
 											getBuild: this.getBuild,
+											buildLocalCode: this.buildLocalCode,
 											getActionCode: this.getActionCode,
 											getTemplates: this.getTemplates,
 											saveTemplates: this.saveTemplates,

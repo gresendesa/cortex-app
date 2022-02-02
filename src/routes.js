@@ -11,6 +11,7 @@ import Projects from './Projects';
 import Templates from './Templates';
 import Login from './components/Login';
 import PlainMacro from './PlainMacro';
+import PublicEditor from './PublicEditor';
 import Footer from './uis/Footer';
 import TemplateForm from './uis/TemplateForm';
 import { DataContext } from './contexts/DataContext';
@@ -21,6 +22,7 @@ import AceEditor from 'react-ace';
 import MacroModHighlight from './acemode/MacroMod.js'
 
 import 'brace/theme/github';
+import { plainMacroModel } from './mock/models';
 
 export default function Routes({ context }) {
 
@@ -132,11 +134,41 @@ export default function Routes({ context }) {
 							</Switch>
 							:
 							<Switch>
-								<Route exact path="/editor" component={TemplateForm} />
 								<Route 
+									exact path="/login" 
 									render={(props) => (
 										<Login {...props} setToken={context.setToken} setUsername={context.setUsername} setIsUserSuper={context.setIsUserSuper} /> 
 									)} />
+								<Route 
+									render={(props) => {
+										//const macro = context.macros.some
+										var project = JSON.parse(localStorage.getItem('localMacro'));
+										if(project === null){
+											project = {
+												id: 0,
+												macro: plainMacroModel({ name: 'localMacro', csid: 'NA', description: 'this is a local macro' })
+											}
+										}
+										//component={PublicEditor}
+	
+										return (
+
+											<PublicEditor {...props} 
+												project={project} 
+												saveMacro={context.saveLocalMacro} 
+												getBuild={context.buildLocalCode}
+												getTemplateInfo={context.getTemplateInfo}
+												getPublicTemplates={context.getPublicTemplates}
+												editorMode={editorMode} 
+												getDoc={context.getDoc}
+												//addCollaborator={context.addCollaborator}
+												//removeCollaborator={context.removeCollaborator}
+											/>
+										
+										)
+									}}
+									
+								/>
 							</Switch>
 								
 						}
