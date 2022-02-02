@@ -129,7 +129,7 @@ export default function SignIn({ setToken, setUsername, setIsUserSuper }) {
 						justify="center"
 						alignItems="center">
 							<Grid item>
-								<Link href="https://cloudscript.bezouro.com.br/login" variant="body2">
+								<Link href="https://cloudscript.bezouro.com.br/login" target="_blank" variant="body2">
 									{"Don't have an account? Sign Up on CloudScript"}
 								</Link>
 							</Grid>

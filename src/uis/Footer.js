@@ -19,7 +19,7 @@ export default function Footer({ version }) {
 				<Box mt={5}>
 					<Typography variant="body2" color="textSecondary" align="center">
 						{'Federal • '}
-						<Link color="inherit" href="https://webmacrosoft.herokuapp.com/">
+						<Link color="inherit" href="https://webmacrosoft.herokuapp.com/" target="_blank">
 							Macrosoft
 						</Link>{' '}
 						{' ®'}
@@ -37,7 +37,7 @@ export default function Footer({ version }) {
 					<Typography variant="caption" color="textSecondary" align="center">
 
 						{'Supported by '}
-						<Link color="inherit" href="https://cloudscript.bezouro.com.br/">
+						<Link color="inherit" href="https://cloudscript.bezouro.com.br/" target="_blank">
 							CloudScript
 						</Link>{' '}
 						{'technology • Bezouro'}
