@@ -115,7 +115,7 @@ export default function GorlemCommandInfo({ open, setOpen, doc }) {
             </Grid>
 
             <Grid item>
-             from <a href={"https://beta.mkb.gorlem.ml/docs/actions/" + name }>Gorlem doc</a>
+             from <a href={"https://beta.mkb.gorlem.ml/docs/actions/" + name } target="_blank">Gorlem doc</a>
             </Grid>
 
           </Grid>
