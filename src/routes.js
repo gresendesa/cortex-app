@@ -146,7 +146,7 @@ export default function Routes({ context }) {
 										if(project === null){
 											project = {
 												id: 0,
-												macro: plainMacroModel({ name: 'Processed kode', csid: 'NA', description: 'this is a local macro' })
+												macro: plainMacroModel({ name: 'Kode', csid: 'NA', description: 'this is a local macro' })
 											}
 										}
 										//component={PublicEditor}
