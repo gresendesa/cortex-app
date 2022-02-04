@@ -456,7 +456,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
               <IconTipButton edge="end" tip="See Kode CTRL+K" disabled={processing} color="inherit" reference={kodeButtonRef} onClick={() => {handleBuild()}}>
                 <CodeIcon />
               </IconTipButton>
-              <IconTipButton edge="end" tip="Launch CTRL+L" color="inherit" reference={launchButtonRef}  onClick={() => handleSave(true)}>
+              <IconTipButton edge="end" tip="Launch CTRL+L" color="inherit" disabled={processing} reference={launchButtonRef}  onClick={() => handleSave(true)}>
                 <Icon name='rocket' size='small' className={isServerOnline ? classes.serverOnline : classes.serverOffline} />
               </IconTipButton>
             </ButtonGroup>
