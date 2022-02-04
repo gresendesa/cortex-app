@@ -41,6 +41,7 @@ import { plainCortexMacroModCommands } from './data/PlainCortexMacroModCommands'
 import InfoButton from './uis/InfoButton';
 import BackButton from './uis/BackButton';
 import BuildPanel from './uis/BuildPanel';
+import DownloadLocalServer from './uis/DownloadLocalServer';
 import AddTemplateButton from './uis/AddTemplateButton';
 import ChangeThemeButton from './uis/ChangeThemeButton';
 
@@ -96,6 +97,7 @@ import Switch from '@material-ui/core/Switch';
 import Drawer from '@material-ui/core/Drawer';
 
 import EditIcon from '@material-ui/icons/Edit';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -132,7 +134,16 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     paddingTop: '8px',
     fontSize: '5px'
+  },
+
+  serverOffline: {
+    color: '#f1b2a8'
+  },
+
+  serverOnline: {
+    color: 'inherit'
   }
+
 }));
 
 
@@ -140,7 +151,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
- function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPublicTemplates, getDoc, alert, editorMode, addCollaborator, removeCollaborator, updateCollaborators }) {
+ function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPublicTemplates, getDoc, alert, editorMode, addCollaborator, removeCollaborator, updateCollaborators, localServerOnline, localConnection }) {
 
   const classes = useStyles();
   
@@ -150,7 +161,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
   const [openConfig, setOpenConfig] = useState(false);
 
-  const [name, setName] = useState(project.macro.name);
+  const [name, setName] = useState('mymacro');
   const [code, setCode] = useState(project.macro.code);
   const [csid, setCsid] = useState(project.macro.csid);
   const [isOnChat, setIsOnChat] = useState(project.macro.type == 'onChat');
@@ -160,11 +171,30 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   const [isPublic, setIsPublic] = useState(project.macro.public ? true : false);
   const [type, setType] = useState(project.macro.type)
 
+  const [downloadOpen, setDownloadOpen] = useState(false)
+
   const themeContext = 'plainmacro';
   const [theme, setTheme] = useState(editorThemer().loadTheme(themeContext));
   const updateTheme = (theme) => {
     editorThemer().updateTheme(themeContext, aceEditor.current.editor, theme)
   }
+
+  const [isServerOnline, setIsServerOnline] = useState(localServerOnline);
+
+  useEffect(() => {
+    if(isServerOnline){
+      alert().show({message: 'Rocket Local Server is now online!', severity: "success"});
+      setDownloadOpen(false);
+    } else {
+      alert().show({message: 'Rocket Local Server is offline!', severity: "info"});
+    }
+  },[isServerOnline])
+
+  useEffect(() => {
+    setIsServerOnline(localServerOnline, () => {
+      
+    });
+  },[localServerOnline]);
 
   const [infoButtonSubject, setInfoButtonSubject] = useState(null);
   const [backButton, setBackButton] = useState(null);
@@ -267,9 +297,28 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   const handleAddTemplate = () => {
     //console.log("opa")
   }
+  
+  const saveMacroOnLocalHost = ({ name, macro, success = () => {}, error = () => {} }) => {
+
+    localConnection.post('/saveMacro',JSON.stringify({'macro': macro, 'name': name }))
+    .then(r => {
+      if(r.status < 300){
+        success(r)
+      } else {
+        if(r.data.directory.length == 0){
+          error(`Go to Rocket Local Server, select a directory and try again!`)
+        } else {
+          error(`Unable to save "${r.data.file}" on "${r.data.directory}"`)
+        }
+      }
+    })
+    .catch(r => {
+      error('Unable to save: network error')
+    })
+  }
 
   const handleSave = (launch=false) => {
-    launch = false
+    //launch = false
     const copyMacro = Object.assign({}, project.macro);
     copyMacro.name = name;
     copyMacro.code = code;
@@ -281,7 +330,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
     if(copyMacro.name.match(/[^a-zA-Z0-9À-ÿ·•\_-]|^$/)){
 
-      alert().show({message: "Project name should contain just [^a-zA-Z0-9À-ÿ·•\_-] chars", severity: "error"});
+      alert().show({message: "Script name should contain just [^a-zA-Z0-9À-ÿ·•\_-] chars", severity: "error"});
 
     } else if (copyMacro.csid.match(/[^a-zA-Z0-9\_.-]|^$/)) {
 
@@ -292,11 +341,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
       setProcessing(true);
 
       const success = (message) => {
+
         if(launch){
           if(type !== 'Main'){
-            alert().show({message: "Launched as "+csid+" ("+type+")", severity: "success"});
+            alert().show({message: "Launched as "+name+".txt"+" ("+type+")", severity: "success"});
           } else {
-            alert().show({message: "Launched as "+csid, severity: "success"});
+            alert().show({message: "Launched as "+name+".txt", severity: "success"});
           }
         } else {
           alert().show({message: "Saved", severity: "success"});
@@ -313,7 +363,41 @@ const Transition = React.forwardRef(function Transition(props, ref) {
         setProcessing(false);
       }
 
-      saveMacro({ id: project.id, macro: copyMacro, launch:launch, success, error });
+      if(!launch){
+        saveMacro({ id: project.id, macro: copyMacro, launch:launch, success, error });
+      } else {
+
+
+        if(!isServerOnline){
+          //alert().show({message: 'The local server is not online!', severity: "error"});
+          setProcessing(false);
+          setDownloadOpen(true);
+        } else {
+
+          const saveLocalMacroAfter = () => {
+
+            console.log('ok tá salvo, agora vamos enviar para servidor!')
+
+            getBuild({ 
+              macro: project.macro, 
+              success: (message) => {
+                saveMacroOnLocalHost({
+                  macro: message.build,
+                  name: name,
+                  success: success,
+                  error: error
+                })
+              }, 
+              error 
+            });
+          }
+
+          saveMacro({ id: project.id, macro: copyMacro, launch:launch, success:saveLocalMacroAfter, error });
+
+          
+
+        }
+      }
 
     }
 
@@ -346,6 +430,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
   return (
     <div>
+      <DownloadLocalServer
+        open={downloadOpen}
+        setOpen={setDownloadOpen}
+      />
       <Dialog fullScreen open={open} TransitionComponent={Transition} disableBackdropClick>
         <AppBar className={classes.appBar}>
           <Toolbar>
@@ -363,8 +451,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
               <IconTipButton edge="end" tip="See Kode CTRL+K" disabled={processing} color="inherit" reference={kodeButtonRef} onClick={() => {handleBuild()}}>
                 <CodeIcon />
               </IconTipButton>
-              <IconTipButton edge="end" tip="Launch CTRL+L" disabled={true} color="inherit" reference={launchButtonRef}  onClick={() => handleSave(true)}>
-                <Icon name='rocket' size='small' />
+              <IconTipButton edge="end" tip="Launch CTRL+L" color="inherit" reference={launchButtonRef}  onClick={() => handleSave(true)}>
+                <Icon name='rocket' size='small' className={isServerOnline ? classes.serverOnline : classes.serverOffline} />
               </IconTipButton>
             </ButtonGroup>
 
@@ -397,7 +485,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
             <Grid item>
               <Box>
-                <IconButton ref={editButtonRef} onClick={handleOpenConfig} disabled={true}>
+                <IconButton ref={editButtonRef} onClick={handleOpenConfig} disabled={!isServerOnline}>
                   <SettingsIcon fontSize="small"/>
                 </IconButton>
               </Box>
@@ -464,89 +552,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
               <List aria-label="main mailbox folders">
                 <ListItem>
-                  <TextField fullWidth margin="dense" value={name} small="small" onChange={handleNameChange} label="Project name" variant="outlined" />  
+                  <TextField fullWidth margin="dense" value={name} small="small" onChange={handleNameChange} label="Script name" variant="outlined" />  
                 </ListItem>
-                <ListItem>
-                  <TextField fullWidth margin="dense" value={csid} small="small" onChange={handleCsidChange} label="CloudScript id" variant="outlined" />  
-                </ListItem>
-                <ListItem>
-                  <TextField
-                    margin="dense"
-                    id="name"
-                    label="Description"
-                    type="text"
-                    value={description}
-                    onChange={(e) => {setDescription(e.target.value)}}
-                    fullWidth
-                    multiline
-                    variant="outlined"
-                    inputProps={{ className: classes.textarea }}
-                  />
-                </ListItem>
-
-                <ListItem>
-                  <FormControl variant="outlined" className={classes.formControl} fullWidth>
-                    <InputLabel htmlFor="macro-type">Type</InputLabel>
-                    <Select
-                      native
-                      value={type}
-                      onChange={onChangeType}
-                      label="Type"
-                      margin="dense"
-                      inputProps={{
-                        name: 'type',
-                        id: 'macro-type' 
-                      }}
-                    >
-                      <option value={'Main'}>default</option>
-                      <option value={'onChat'}>onChat</option>
-                      <option value={'onWhitelist'}>onWhitelist</option>
-                      <option aria-label="None" value="" />
-                      <option value={'onArmourChange'}>onArmourChange</option>
-                      <option value={'onArmourDurabilityChange'}>onArmourDurabilityChange</option>
-                      <option value={'onAutoCraftingComplete'}>onAutoCraftingComplete</option>
-                      <option value={'onConfigChange'}>onConfigChange</option>
-                      <option value={'onDeath'}>onDeath</option>
-                      <option value={'onFoodChange'}>onFoodChange</option>
-                      <option value={'onHealthChange'}>onHealthChange</option>
-                      <option value={'onInventorySlotChange'}>onInventorySlotChange</option>
-                      <option value={'onItemDurabilityChange'}>onItemDurabilityChange</option>
-                      <option value={'onJoinGame'}>onJoinGame</option>
-                      <option value={'onLevelChange'}>onLevelChange</option>
-                      <option value={'onModeChange'}>onModeChange</option>
-                      <option value={'onOxygenChange'}>onOxygenChange</option>
-                      <option value={'onPickupItem'}>onPickupItem</option>
-                      <option value={'onPlayerJoined'}>onPlayerJoined</option>
-                      <option value={'onPotionEffect'}>onPotionEffect</option>
-                      <option value={'onRespawn'}>onRespawn</option>
-                      <option value={'onSendChatMessage'}>onSendChatMessage</option>
-                      <option value={'onShowGui'}>onShowGui</option>
-                      <option value={'onWeatherChange'}>onWeatherChange</option>
-                      <option value={'onWebSocketMessage'}>onWebSocketMessage</option>
-                      <option value={'onWorldChange'}>onWorldChange</option>
-                      <option value={'onXPChange'}>onXPChange</option>
-                    </Select>
-                  </FormControl>
-                </ListItem>
-
-                <ListItem>
-                  <SharingArea project={project} addCollaborator={addCollaborator} removeCollaborator={removeCollaborator} updateCollaborators={updateCollaborators} alert={alert} />
-                </ListItem>
-
-                <ListItem>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={isPublic}
-                        onChange={() => {setIsPublic(!isPublic)}}
-                        color="primary"
-                      />
-                    }
-                    fullWidth
-                    label="Public"
-                  />
-                </ListItem>
-
               </List>
 
             </Drawer>
@@ -573,7 +580,34 @@ class PublicEditor extends React.Component {
       severity: null,
       message: null
     },
+    localServerOnline: false,
     project: this.props.project
+  }
+
+  localServerAddress = 'http://127.0.0.1:8081';
+
+  getConnection = ({ post }) => {
+		const instance = axios.create({
+			baseURL: this.localServerAddress,
+      timeout: 500,
+      validateStatus: function (status) {
+        return status < 500;
+      }
+		});
+    if(post) instance.defaults.headers.post['Content-Type'] = 'application/json';
+		return instance;
+	}
+
+  localConnection = this.getConnection(true);
+
+  componentWillMount(){
+    setInterval(() => {
+
+      this.localConnection.get('/ping')
+        .then(r => this.setState({'localServerOnline': r.status === 204}))
+        .catch(r => this.setState({'localServerOnline': false}))
+    
+    }, 1000)
   }
 
   render(){
@@ -620,6 +654,8 @@ class PublicEditor extends React.Component {
           removeCollaborator={this.props.removeCollaborator}
           getCollaborators={this.props.getCollaborators}
           updateCollaborators={updateCollaborators}
+          localServerOnline={this.state.localServerOnline}
+          localConnection={this.localConnection}
 				/>
 				<Snackbar open={this.state.alert.popUp} autoHideDuration={4000} onClose={alertHook().close} >
 					<MuiAlert elevation={6} variant="filled" severity={this.state.alert.severity}>
