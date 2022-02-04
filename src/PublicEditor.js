@@ -490,7 +490,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
             <Grid item>
               <Box>
-                <IconButton ref={editButtonRef} onClick={handleOpenConfig} disabled={!isServerOnline}>
+                <IconButton ref={editButtonRef} onClick={handleOpenConfig} disabled={(!isServerOnline) || processing}>
                   <SettingsIcon fontSize="small"/>
                 </IconButton>
               </Box>
