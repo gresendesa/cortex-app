@@ -163,7 +163,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
   const [name, setName] = useState(project.id);
   const [code, setCode] = useState(project.macro.code);
-  const [csid, setCsid] = useState(project.macro.csid);
+  const [csid, setCsid] = useState(project.id);
   const [isOnChat, setIsOnChat] = useState(project.macro.type == 'onChat');
   const [description, setDescription] = useState(project.macro.description); 
   const [processing, setProcessing] = useState(false);
@@ -322,7 +322,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     const copyMacro = Object.assign({}, project.macro);
     copyMacro.name = name;
     copyMacro.code = code;
-    copyMacro.csid = csid;
+    copyMacro.csid = name;
     copyMacro.description = description;
     //copyMacro.type = isOnChat ? 'onChat' : 'Main';
     copyMacro.type = type;
