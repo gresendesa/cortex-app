@@ -142,6 +142,10 @@ const useStyles = makeStyles((theme) => ({
 
   serverOnline: {
     color: 'inherit'
+  },
+  buttonLogin: {
+    color: '#FFF',
+    backgroundColor: '#424242'
   }
 
 }));
@@ -442,7 +446,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
       <Dialog fullScreen open={open} TransitionComponent={Transition} disableBackdropClick>
         <AppBar className={classes.appBar}>
           <Toolbar>
-          <Button variant="contained" color="primary" onClick={goToLogin}>
+          <Button variant="contained" color="primary" className={classes.buttonLogin} onClick={goToLogin}>
             Log in
           </Button>
 
