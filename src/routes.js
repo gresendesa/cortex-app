@@ -145,8 +145,8 @@ export default function Routes({ context }) {
 										var project = JSON.parse(localStorage.getItem('localMacro'));
 										if(project === null){
 											project = {
-												id: 0,
-												macro: plainMacroModel({ name: 'Kode', csid: 'NA', description: 'this is a local macro' })
+												id: 'mymacro',
+												macro: plainMacroModel({ name: 'mymacro', csid: 'NA', description: 'this is a local macro' })
 											}
 										}
 										//component={PublicEditor}

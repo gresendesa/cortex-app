@@ -170,7 +170,7 @@ class DataContextProvider extends Component {
 		}
 
 		localStorage.setItem('localMacro', JSON.stringify({
-			id: 0,
+			id: id,
 			macro: macro
 		}));
 		onOk('Saved')

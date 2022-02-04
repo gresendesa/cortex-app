@@ -161,7 +161,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
   const [openConfig, setOpenConfig] = useState(false);
 
-  const [name, setName] = useState('mymacro');
+  const [name, setName] = useState(project.id);
   const [code, setCode] = useState(project.macro.code);
   const [csid, setCsid] = useState(project.macro.csid);
   const [isOnChat, setIsOnChat] = useState(project.macro.type == 'onChat');
@@ -355,6 +355,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
         const tempProj = JSON.parse(localStorage.getItem('localMacro'))
         project.macro = tempProj.macro
+        project.name = tempProj.id
 
       }
 
@@ -364,7 +365,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
       }
 
       if(!launch){
-        saveMacro({ id: project.id, macro: copyMacro, launch:launch, success, error });
+        saveMacro({ id: name, macro: copyMacro, launch:launch, success, error });
       } else {
 
 
@@ -392,7 +393,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
             });
           }
 
-          saveMacro({ id: project.id, macro: copyMacro, launch:launch, success:saveLocalMacroAfter, error });
+          saveMacro({ id: name, macro: copyMacro, launch:launch, success:saveLocalMacroAfter, error });
 
           
 
