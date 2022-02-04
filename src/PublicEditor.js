@@ -185,9 +185,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     if(isServerOnline){
       alert().show({message: 'Rocket Local Server is now online!', severity: "success"});
       setDownloadOpen(false);
-    } else {
+    } /*else {
       alert().show({message: 'Rocket Local Server is offline!', severity: "info"});
-    }
+    }*/
   },[isServerOnline])
 
   useEffect(() => {
