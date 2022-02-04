@@ -600,14 +600,26 @@ class PublicEditor extends React.Component {
 
   localConnection = this.getConnection(true);
 
+  pingInterval = null;
+
   componentWillMount(){
-    setInterval(() => {
+    this.pingInterval = setInterval(() => {
 
       this.localConnection.get('/ping')
         .then(r => this.setState({'localServerOnline': r.status === 204}))
         .catch(r => this.setState({'localServerOnline': false}))
     
     }, 1000)
+  }
+
+  componentWillUnmount(){
+    if(this.pingInterval !== null){
+      try {
+        clearInterval(this.pingInterval)
+      } catch {
+        console.log('error on clearing ping interval!')
+      }
+    }
   }
 
   render(){

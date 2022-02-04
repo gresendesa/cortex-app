@@ -15,9 +15,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.23',
-		'release_date': '02 February 2022',
-		'short': 'Public editor added'
+		'number': '1.24',
+		'release_date': '04 February 2022',
+		'short': 'Support to Rocket Local Server'
 	}
 
 	setToken = (token) => {
