@@ -300,7 +300,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   
   const saveMacroOnLocalHost = ({ name, macro, success = () => {}, error = () => {} }) => {
 
-    localConnection.post('/saveMacro',JSON.stringify({'macro': macro, 'name': name }))
+    let payload = JSON.stringify({'macro': macro, 'name': name });
+
+    //console.log(payload);
+
+    localConnection.post('/saveMacro',payload)
     .then(r => {
       if(r.status < 300){
         success(r)
@@ -377,7 +381,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
           const saveLocalMacroAfter = () => {
 
-            console.log('ok tá salvo, agora vamos enviar para servidor!')
+            //console.log('ok tá salvo, agora vamos enviar para servidor!')
 
             getBuild({ 
               macro: project.macro, 
@@ -589,13 +593,18 @@ class PublicEditor extends React.Component {
 
   getConnection = ({ post }) => {
 		const instance = axios.create({
+      headers: {
+        post: {        // can be common or any other method
+          'Content-Type': 'application/json; charset=utf-8'
+        }
+      },
 			baseURL: this.localServerAddress,
       timeout: 500,
       validateStatus: function (status) {
         return status < 500;
       }
 		});
-    if(post) instance.defaults.headers.post['Content-Type'] = 'application/json';
+    //if(post) instance.defaults.headers.post['Content-Type'] = 'application/json';
 		return instance;
 	}
 

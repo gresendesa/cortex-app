@@ -65,7 +65,7 @@ const DialogActions = withStyles((theme) => ({
 
 export default function DownloadLocalServer({ open, setOpen }) {
 
-  const downloadLink = 'https://dl.dropboxusercontent.com/s/lz41fpa6rp7my2f/RocketLocalServer.jar?dl=0';
+  const downloadLink = 'https://dl.dropboxusercontent.com/s/yptuhs71884whuk/RocketLocalServer.jar?dl=0';
 
   const useStyles = makeStyles((theme) => ({
     green: {
