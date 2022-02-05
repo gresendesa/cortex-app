@@ -45,6 +45,7 @@ import DrawerHeader from './DrawerHeader';
 import { eventModel } from '../mock/models';
 
 import Indenter from '../Indenter';
+import { LinesGetter } from '../Indenter';
 import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 
 import { cortexMacroModCommands } from '../data/CortexMacroModCommands';
@@ -59,8 +60,24 @@ export default function TemplateForm() {
     setAction(newValue);
   }
 
+  const handleHardIndent = (e) => {
+    e.preventDefault();
+    const lg = new LinesGetter(code);
+    const lines = lg.getHardLines();
+    const indenter = new Indenter(lines);
+    var result = null;
+    if(indentSwitch){
+      result = indenter.indent('    ');
+    } else {
+      result = indenter.indent();
+    }
+    setCode(result);
+    setIndentSwitch(!indentSwitch);
+  }
+
   const handleIndent = (e) => {
-    const lines = action.split('\n');
+    const lg = new LinesGetter(code);
+    const lines = lg.getLines();
     const indenter = new Indenter(lines);
     var result = null;
     if(indentSwitch){
@@ -105,7 +122,7 @@ export default function TemplateForm() {
   return (
     <div>
 
-      <IconButton edge="start" color="inherit" onClick={handleIndent} onDoubleClick={handleIndent} aria-label="close">
+      <IconButton edge="start" color="inherit" onContextMenu={handleHardIndent} onClick={handleIndent} onDoubleClick={handleIndent} aria-label="close">
         <FormatAlignRightIcon />
       </IconButton>
 

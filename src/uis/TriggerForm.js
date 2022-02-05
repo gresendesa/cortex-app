@@ -41,6 +41,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Event from './Event';
 import DrawerHeader from './DrawerHeader';
 import Indenter from '../Indenter';
+import { LinesGetter } from '../Indenter';
 import EventIcon from '@material-ui/icons/Event';
 import CodeIcon from '@material-ui/icons/Code';
 
@@ -271,8 +272,24 @@ export default function TriggerForm({ project, task, trigger, open, toggleEditor
     setEvents(copyEvents);
   }
 
+  const handleHardIndent = (e) => {
+    e.preventDefault();
+    const lg = new LinesGetter(code);
+    const lines = lg.getHardLines();
+    const indenter = new Indenter(lines);
+    var result = null;
+    if(indentSwitch){
+      result = indenter.indent('    ');
+    } else {
+      result = indenter.indent();
+    }
+    setCode(result);
+    setIndentSwitch(!indentSwitch);
+  }
+
   const handleIndent = (e) => {
-    const lines = action.split('\n');
+    const lg = new LinesGetter(code);
+    const lines = lg.getLines();
     const indenter = new Indenter(lines);
     var result = null;
     if(indentSwitch){
@@ -349,7 +366,7 @@ export default function TriggerForm({ project, task, trigger, open, toggleEditor
               <IconTipButton edge="start" tip="Manage events CTRL+E" color="inherit" reference={eventsButtonRef} onClick={handleOpenEvents} className={classes.actionButton} aria-label="close">
                 <EventIcon />
               </IconTipButton>
-              <IconTipButton edge="start" tip="Indent code" color="inherit" reference={indentButtonRef} onClick={handleIndent} onDoubleClick={handleIndent} className={classes.actionButton} aria-label="close">
+              <IconTipButton edge="start" tip="Indent code" color="inherit" onContextMenu={handleHardIndent} reference={indentButtonRef} onClick={handleIndent} onDoubleClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
               </IconTipButton>
 

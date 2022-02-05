@@ -85,6 +85,7 @@ import IconTipButton from './IconTipButton'
 import Event from './Event';
 import DrawerHeader from './DrawerHeader';
 import Indenter from '../Indenter';
+import { LinesGetter } from '../Indenter';
 import EventIcon from '@material-ui/icons/Event';
 
 import InfoButton from './InfoButton';
@@ -171,8 +172,24 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
   const indentButtonRef = useRef(null);
   const editButtonRef = useRef(null);
 
+  const handleHardIndent = (e) => {
+    e.preventDefault();
+    const lg = new LinesGetter(code);
+    const lines = lg.getHardLines();
+    const indenter = new Indenter(lines);
+    var result = null;
+    if(indentSwitch){
+      result = indenter.indent('    ');
+    } else {
+      result = indenter.indent();
+    }
+    setCode(result);
+    setIndentSwitch(!indentSwitch);
+  }
+  
   const handleIndent = (e) => {
-    const lines = code.split('\n');
+    const lg = new LinesGetter(code);
+    const lines = lg.getLines();
     const indenter = new Indenter(lines);
     var result = null;
     if(indentSwitch){
@@ -299,7 +316,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
             sm={12}> 
             
             <Grid item>
-              <IconTipButton edge="start" tip="Indent code" color="inherit" reference={indentButtonRef} onClick={handleIndent} onDoubleClick={handleIndent} className={classes.actionButton} aria-label="close">
+              <IconTipButton edge="start" tip="Indent code" color="inherit" reference={indentButtonRef} onContextMenu={handleHardIndent} onClick={handleIndent} onDoubleClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
               </IconTipButton>
               

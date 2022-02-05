@@ -226,4 +226,26 @@ class Indenter {
 	}
 
 }
+
+export class LinesGetter {
+	constructor(code) {
+		this.code = code;
+	}
+	getLines(){
+		return this.code.split('\n');
+	}
+
+	getHardLines(){
+		var rawCode = this.code;
+		const codeCommaedLines = rawCode.split(';').join(';\n')
+		const codeBoundUpped = codeCommaedLines.split('$${').join('$${\n')
+		const codeBoundDowned = codeBoundUpped.split('}$$').join('}$$\n')
+		return codeBoundDowned.split('\n').filter((i) => {
+			return !i.match(/^\s*$/);
+		});
+	}
+}
+
 export default Indenter;
+
+
