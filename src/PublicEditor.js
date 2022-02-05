@@ -155,7 +155,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
- function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPublicTemplates, getDoc, alert, editorMode, addCollaborator, removeCollaborator, updateCollaborators, localServerOnline, localConnection }) {
+ function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPublicTemplates, getDoc, alert, editorMode, addCollaborator, removeCollaborator, updateCollaborators, localServerOnline, localConnection, localServerDir }) {
 
   const classes = useStyles();
   
@@ -175,6 +175,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   const [isPublic, setIsPublic] = useState(project.macro.public ? true : false);
   const [type, setType] = useState(project.macro.type)
 
+  const [localServerDirectory, setLocalServerDirectory] = useState(localServerDir);
+
   const [downloadOpen, setDownloadOpen] = useState(false)
 
   const themeContext = 'plainmacro';
@@ -193,6 +195,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
       alert().show({message: 'Rocket Local Server is offline!', severity: "info"});
     }*/
   },[isServerOnline])
+
+  useEffect(() => {
+    setLocalServerDirectory(localServerDir, () => {
+      console.log("agora ",localServerDir);
+    });
+  },[localServerDir])
 
   useEffect(() => {
     setIsServerOnline(localServerOnline, () => {
@@ -450,7 +458,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
             Log in
           </Button>
 
-            <Typography variant="h6" className={classes.title}>
+            <Typography variant="caption" className={classes.title}>
+            {isServerOnline ? localServerDirectory + ' • ' + name + '.txt' : ''}
             </Typography>
 
             <ButtonGroup color="primary" aria-label="outlined primary button group">
@@ -590,6 +599,7 @@ class PublicEditor extends React.Component {
       message: null
     },
     localServerOnline: false,
+    localServerDir: 'No directory selected.',
     project: this.props.project
   }
 
@@ -620,7 +630,10 @@ class PublicEditor extends React.Component {
     this.pingInterval = setInterval(() => {
 
       this.localConnection.get('/ping')
-        .then(r => this.setState({'localServerOnline': r.status === 204}))
+        .then(r => {
+          this.setState({'localServerOnline': (r.status === 200 || r.status === 204)})
+          this.setState({'localServerDir': r.data.directory})
+        })
         .catch(r => this.setState({'localServerOnline': false}))
     
     }, 1000)
@@ -682,6 +695,7 @@ class PublicEditor extends React.Component {
           updateCollaborators={updateCollaborators}
           localServerOnline={this.state.localServerOnline}
           localConnection={this.localConnection}
+          localServerDir={this.state.localServerDir}
 				/>
 				<Snackbar open={this.state.alert.popUp} autoHideDuration={4000} onClose={alertHook().close} >
 					<MuiAlert elevation={6} variant="filled" severity={this.state.alert.severity}>
