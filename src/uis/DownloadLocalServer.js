@@ -64,8 +64,7 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 export default function DownloadLocalServer({ open, setOpen }) {
-
-  const downloadLink = 'https://dl.dropboxusercontent.com/s/yptuhs71884whuk/RocketLocalServer.jar?dl=0';
+  const downloadLink = 'https://dl.dropboxusercontent.com/s/ttkn584nj5a6gpm/RocketLocalServer.jar?dl=0';
 
   const useStyles = makeStyles((theme) => ({
     green: {
