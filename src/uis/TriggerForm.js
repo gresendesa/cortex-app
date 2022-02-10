@@ -274,9 +274,10 @@ export default function TriggerForm({ project, task, trigger, open, toggleEditor
 
   const handleHardIndent = (e) => {
     e.preventDefault();
-    const lg = new LinesGetter(result);
+    const lg = new LinesGetter(action);
     const lines = lg.getHardLines();
     const indenter = new Indenter(lines);
+
     var result = null;
     if(indentSwitch){
       result = indenter.indent('    ');
@@ -288,9 +289,10 @@ export default function TriggerForm({ project, task, trigger, open, toggleEditor
   }
 
   const handleIndent = (e) => {
-    const lg = new LinesGetter(result);
+    const lg = new LinesGetter(action);
     const lines = lg.getLines();
     const indenter = new Indenter(lines);
+
     var result = null;
     if(indentSwitch){
       result = indenter.indent('    ');
