@@ -218,6 +218,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
   }
 
   const handleHardIndent = (e) => {
+    e.preventDefault();
     const lg = new LinesGetter(code);
     const lines = lg.getHardLines();
     const indenter = new Indenter(lines);
