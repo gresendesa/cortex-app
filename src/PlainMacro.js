@@ -24,6 +24,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import { Icon } from 'semantic-ui-react';
 import CodeIcon from '@material-ui/icons/Code';
 import Indenter from './Indenter';
+import { LinesGetter } from './Indenter';
 import DrawerHeader from './uis/DrawerHeader';
 import TextField from '@material-ui/core/TextField';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -202,8 +203,25 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
   };
 
   const handleIndent = (e) => {
-    const lines = code.split('\n');
+    const lg = new LinesGetter(code);
+    const lines = lg.getLines();
     const indenter = new Indenter(lines);
+
+    var result = null;
+    if(indentSwitch){
+      result = indenter.indent('    ');
+    } else {
+      result = indenter.indent();
+    }
+    setCode(result);
+    setIndentSwitch(!indentSwitch);
+  }
+
+  const handleHardIndent = (e) => {
+    const lg = new LinesGetter(code);
+    const lines = lg.getHardLines();
+    const indenter = new Indenter(lines);
+
     var result = null;
     if(indentSwitch){
       result = indenter.indent('    ');
@@ -374,7 +392,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
             sm={12}> 
             
             <Grid item>
-              <IconTipButton edge="start" tip="Indent code" color="inherit" onClick={handleIndent} onDoubleClick={handleIndent} className={classes.actionButton} aria-label="close">
+              <IconTipButton edge="start" tip="Indent code" color="inherit" onContextMenu={handleHardIndent} onClick={handleIndent} onDoubleClick={handleIndent} className={classes.actionButton} aria-label="close">
                 <FormatAlignRightIcon />
               </IconTipButton>
 
