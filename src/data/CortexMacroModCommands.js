@@ -195,9 +195,21 @@ export const cortexMacroModCommands = [
   },
 
   {
+    "value": '{{ force_pause("msg") }}',
+    "score": 2,
+    "meta": "Pauses execution from on the process forcely"
+  },
+
+  {
     "value": '{{ stop("msg") }}',
     "score": 2,
     "meta": "Stops the execution on the process"
+  },
+
+  {
+    "value": '{{ force_stop("msg") }}',
+    "score": 2,
+    "meta": "Stops the execution on the process forcely"
   },
 
   {
