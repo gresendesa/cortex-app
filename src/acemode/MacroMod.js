@@ -147,7 +147,7 @@ export class CustomHighlightRules extends window.ace.acequire("ace/mode/text_hig
 	            "UNTIL|VOLUME|WAIT|WHILE|"                                                      +
 	            "ENDIF|NEXT|LOOP|ENDUNSAFE|"                                                    +
 
-	            "jump|call|return|pause|stop"													+
+	            "jump|call|return|pause|stop|force_pause|force_stop"													+
 
 	            "REQUEST|request|"                                                      		+ //Federal commands
 
