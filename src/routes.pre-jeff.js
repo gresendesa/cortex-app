@@ -43,10 +43,9 @@ export default function Routes({ context }) {
 							<Switch>
 
 								<Route path="/project/flat/:id" render={(props) => {
-									
 									//const macro = context.macros.some
 									const project = context.macros.find(m => m.id == props.match.params.id)
-									document.title = `Rocket · ${project.macro.name}`
+
 
 									return (
 
