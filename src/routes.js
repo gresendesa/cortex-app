@@ -78,6 +78,7 @@ export default function Routes({ context }) {
 
 									//const macro = context.macros.some
 									const project = context.macros.find(m => m.id == props.match.params.id)
+									document.title = `Rocket · ${project.macro.name}`
 
 									return (
 										(project) ? (
@@ -108,7 +109,9 @@ export default function Routes({ context }) {
 									}}
 								/>
 
-								<Route exact path="/libs" render={(props) => (
+								<Route exact path="/libs" render={(props) => {
+									document.title = `Rocket`
+									return (
 									<Templates {...props} 
 										getTemplates={context.getTemplates} 
 										saveTemplates={context.saveTemplates} 
@@ -117,11 +120,12 @@ export default function Routes({ context }) {
 										getPublicTemplates={context.getPublicTemplates}
 										getDoc={context.getDoc}
 										editorMode={editorMode}
-									/>
-								)} />
+									/>)
+								}} />
 
-								<Route render={(props) => (
-									<Projects {...props} 
+								<Route render={(props) => {
+									document.title = `Rocket`
+									return (<Projects {...props} 
 										addMacro={context.addMacro} 
 										delMacro={context.delMacro}
 										macros={context.macros} 
@@ -130,16 +134,17 @@ export default function Routes({ context }) {
 										isUserSuper={context.isUserSuper} 
 										setIsUserSuper={context.setIsUserSuper}
 										username={context.username}
-									/> 
-								)} />
+									/>)
+								}} />
 							</Switch>
 							:
 							<Switch>
 								<Route 
 									exact path="/login" 
-									render={(props) => (
-										<Login {...props} setToken={context.setToken} setUsername={context.setUsername} setIsUserSuper={context.setIsUserSuper} /> 
-									)} />
+									render={(props) => {
+										document.title = `Rocket`
+										return (<Login {...props} setToken={context.setToken} setUsername={context.setUsername} setIsUserSuper={context.setIsUserSuper} /> )
+									}} />
 								<Route 
 									render={(props) => {
 										//const macro = context.macros.some

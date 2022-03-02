@@ -150,6 +150,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function TemplateEditor({ open, setOpen, template, namespace, saveTemplate, getTemplateInfo, getDoc, showAlert, editorMode, getPublicTemplates }) {
   
+  document.title = `Rocket · Template ${template.name}`
+  
   const classes = useStyles();
 
   const [backline, setBackline] = useState(null);//Para o botão de voltar
