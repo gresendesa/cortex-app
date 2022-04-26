@@ -15,9 +15,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.26',
-		'release_date': '02 March 2022',
-		'short': 'Projects name shows up at tab title. By Jeff'
+		'number': '1.26.1',
+		'release_date': '25 April 2022',
+		'short': 'Projects url may be refreshed without crashing now'
 	}
 
 	setToken = (token) => {
