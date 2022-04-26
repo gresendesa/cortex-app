@@ -46,6 +46,13 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask,
 		'verbose': settings.verbose
 	});
 
+	useEffect(() => {
+    if(!project) return;
+    if(!project.macro) return;
+    if(!project.macro.name) return;
+    document.title = `Rocket · ${project.macro.name}`
+  }, [project])
+
 	const handleClose = () => {
 		if(config.name.match(/[^a-zA-Z0-9À-ÿ·•\_-]|^$/)){
 			alert("Project name should have just [a-zA-Z0-9À-ÿ·•\_-]", "error");

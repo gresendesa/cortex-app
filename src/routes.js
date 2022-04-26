@@ -46,7 +46,7 @@ export default function Routes({ context }) {
 									
 									//const macro = context.macros.some
 									const project = context.macros.find(m => m.id == props.match.params.id)
-									document.title = `Rocket · ${project.macro.name}`
+									//document.title = `Rocket · ${project.macro.name}`
 
 									return (
 
@@ -78,7 +78,7 @@ export default function Routes({ context }) {
 
 									//const macro = context.macros.some
 									const project = context.macros.find(m => m.id == props.match.params.id)
-									document.title = `Rocket · ${project.macro.name}`
+									//document.title = `Rocket · ${project.macro.name}`
 
 									return (
 										(project) ? (

@@ -159,6 +159,13 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
   const [isPublic, setIsPublic] = useState(project.macro.public ? true : false);
   const [type, setType] = useState(project.macro.type)
 
+  useEffect(() => {
+    if(!project) return;
+    if(!project.macro) return;
+    if(!project.macro.name) return;
+    document.title = `Rocket · ${project.macro.name}`
+  }, [project])
+
   const themeContext = 'plainmacro';
   const [theme, setTheme] = useState(editorThemer().loadTheme(themeContext));
   const updateTheme = (theme) => {
