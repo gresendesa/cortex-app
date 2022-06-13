@@ -38,6 +38,18 @@ class Server {
 	
 	}
 
+	getCsKey({ username, password, success, error }) {
+
+		const conn = this.getConnection({});
+
+		conn.post('/cs_key', {'username': username, 'password': password}).then(r => {
+			success(r.data)
+		}).catch(function(e) {
+			error(e.response);
+		})
+	
+	}
+
 	getMacrosOLD({ success, error }) {
 
 		const conn = this.getConnection();

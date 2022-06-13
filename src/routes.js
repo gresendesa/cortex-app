@@ -13,6 +13,7 @@ import Login from './components/Login';
 import PlainMacro from './PlainMacro';
 import PublicEditor from './PublicEditor';
 import Footer from './uis/Footer';
+import CSKeyGenerator from './uis/CSKeyGenerator';
 import TemplateForm from './uis/TemplateForm';
 import { DataContext } from './contexts/DataContext';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -123,6 +124,13 @@ export default function Routes({ context }) {
 									/>)
 								}} />
 
+								<Route 
+									exact path="/cskey" 
+									render={(props) => {
+										document.title = `Rocket`
+										return (<CSKeyGenerator {...props} setToken={context.setToken} setUsername={context.setUsername} setIsUserSuper={context.setIsUserSuper} /> )
+									}} />
+
 								<Route render={(props) => {
 									document.title = `Rocket`
 									return (<Projects {...props} 
@@ -139,6 +147,12 @@ export default function Routes({ context }) {
 							</Switch>
 							:
 							<Switch>
+								<Route 
+									exact path="/cskey" 
+									render={(props) => {
+										document.title = `Rocket`
+										return (<CSKeyGenerator {...props} setToken={context.setToken} setUsername={context.setUsername} setIsUserSuper={context.setIsUserSuper} /> )
+									}} />
 								<Route 
 									exact path="/login" 
 									render={(props) => {
