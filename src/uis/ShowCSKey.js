@@ -89,7 +89,12 @@ export default function ShowCSKey({ csKey, setCsKey }) {
   const inputRef = useRef(null);
 
   const handleCopy = (e) => {
-    inputRef.current.focus();
+    inputRef.current.select();
+    document.execCommand('copy');
+    setShowMessage(true);
+  }
+
+  const handleSelect = (e) => {
     inputRef.current.select();
     document.execCommand('copy');
     setShowMessage(true);
@@ -122,7 +127,7 @@ export default function ShowCSKey({ csKey, setCsKey }) {
         </DialogTitle>
         <DialogContent>
 
-          <TextField fullWidth margin="dense" value={csKey} inputRef={inputRef} small="small" label="Your CloudScript key" variant="outlined" />  
+          <TextField fullWidth margin="dense" value={csKey} onFocus={handleSelect} inputRef={inputRef} small="small" label="Your CloudScript key" variant="outlined" />  
 
           <Box mt={2}>
             Do not share this key with other people! 
