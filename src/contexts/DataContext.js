@@ -15,9 +15,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.26.1',
-		'release_date': '25 April 2022',
-		'short': 'Projects url may be refreshed without crashing now'
+		'number': '1.27',
+		'release_date': '14 June 2022',
+		'short': '/cskey a new page to generate CloudScript keys'
 	}
 
 	setToken = (token) => {
