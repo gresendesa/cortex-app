@@ -89,7 +89,7 @@ export default function TemplateForm() {
     setIndentSwitch(!indentSwitch);
   }
 
-  /*const dataa = https://beta.mkb.gorlem.ml/api/docs/
+  /*const dataa = https://mkb.ddoerr.com/api/docs/
 
   const arr = dataa.map(i => {
     if(i.type=='Variable'){
