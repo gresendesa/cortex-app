@@ -219,7 +219,7 @@ class Macro extends React.Component {
 		const success = (response) => {
 			this.setState({'deployLoading': false}, () => {
 				if (launch){
-					this.showAlert(`Launched as ${macro.csid}`, "success");
+					this.showAlert(`Launched as ${macro.csid} (${response.project_bytes} bytes)`, "success");
 				} else {
 					this.showAlert("Saved", "success");
 				}

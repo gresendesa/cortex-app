@@ -310,12 +310,12 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
 
       setProcessing(true);
 
-      const success = (message) => {
+      const success = (messg) => {
         if(launch){
           if(type !== 'Main'){
-            alert().show({message: "Launched as "+csid+" ("+type+")", severity: "success"});
+            alert().show({message: "Launched as "+csid+" ("+type+") ("+messg.project_bytes+ " bytes)", severity: "success"});
           } else {
-            alert().show({message: "Launched as "+csid, severity: "success"});
+            alert().show({message: "Launched as "+csid + " ("+messg.project_bytes+ " bytes)", severity: "success"});
           }
         } else {
           alert().show({message: "Saved", severity: "success"});
