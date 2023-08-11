@@ -8,7 +8,8 @@ class Server {
 
 	getConnection(){
 		
-		const url= window.location.href.split('/')[2] === 'rocket.macrosoft.localhost' ? 'http://www.macrosoft.localhost/cortex' : 'https://www.macrosoft.website/cortex';
+		//const url= window.location.href.split('/')[2] === 'localhost' ? 'http://localhost:8000/cortex' : 'https://www.macrosoft.website/cortex';
+		const url= window.location.hostname.includes('localhost') ? 'http://localhost:8000/cortex' : 'https://www.macrosoft.website/cortex';
 
 		const instance = axios.create({
 			baseURL: url

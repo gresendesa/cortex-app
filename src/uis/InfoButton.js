@@ -34,6 +34,7 @@ export default function InfoButton({ subject, sourcesHook, editorMode, project=n
 	const [code, setCode] = useState(null);
 
 	const checkInput = (input) => {
+
 		const groups = null;
 		const line = input.line;
 		const word = input.word;
@@ -125,7 +126,12 @@ export default function InfoButton({ subject, sourcesHook, editorMode, project=n
 	      if(parts.length==3){
 	        library_name = `${parts[0]}.${parts[1]}`;
 	        template_name = parts[2];
-	        getTemplateInfo({library: library_name, name: template_name, success, error });
+	        //getTemplateInfo({library: library_name, name: template_name, success, error });
+			if((project)&&(project.id)){
+	        	getTemplateInfo({library: library_name, name: template_name, project_id:project.id, success, error });
+	        } else {
+	        	getTemplateInfo({library: library_name, name: template_name, success, error });
+	        }
 	      } else if(parts.length==2) {
 	        library_name = parts[0];
 	        template_name = parts[1];
