@@ -1,0 +1,14 @@
+services:
+
+
+  rocket:
+    #image: gresendesa/webrocket:1.0
+    build: .
+    container_name: rocket
+    restart: always
+    networks:
+      - macrosoft
+
+networks:
+  macrosoft:
+    driver: bridge
