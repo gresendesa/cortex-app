@@ -115,7 +115,7 @@ export default function GorlemCommandInfo({ open, setOpen, doc }) {
             </Grid>
 
             <Grid item>
-             from <a href={"https://www.macrosoft.website/mkb/docs/item/action-" + name.toLowerCase() + "/" } target="_blank">Macrosoft MKB doc</a>
+             from <a href={"https://www.macrosoft.website/mkb/docs/item/action-" + name.toLowerCase() + "/" } target="_blank">Macrosoft Mod/Keybind Macro docs</a>
             </Grid>
 
           </Grid>
