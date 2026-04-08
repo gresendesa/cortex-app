@@ -11,7 +11,18 @@ class DataContextProvider extends Component {
 		'username': null,
 		'processing': false,
 		'isUserSuper': false,
-		'totalRecords': 0
+		'totalRecords': 0,
+		'pagination': {
+			'page': 1,
+			'page_size': 20,
+			'total_pages': 0,
+			'total_records': 0,
+			'has_next': false,
+			'has_previous': false,
+			'next_page': null,
+			'previous_page': null,
+			'q': ''
+		}
 	}
 
 	version = {
@@ -51,12 +62,65 @@ class DataContextProvider extends Component {
 		}
 	}
 
-	fetchMacros = ({ limit=7, success=()=>{}, error=()=>{} }) => {
+	normalizeProject = (project) => {
+		if (project && project.macro) {
+			return project;
+		}
+
+		const safeProject = project || {};
+		const macro = {
+			name: safeProject.name || '',
+			description: safeProject.description || '',
+			protocol: safeProject.protocol || 'NONE',
+			public: safeProject.public || false
+		};
+
+		return {
+			id: safeProject.id,
+			macro,
+			dev: safeProject.dev,
+			date: safeProject.date,
+			collaborators: safeProject.collaborators || [],
+			markdown_description: safeProject.markdown_description || macro.description
+		};
+	}
+
+	fetchMacros = ({ page=1, pageSize=20, q='', append=false, success=()=>{}, error=()=>{} }) => {
 		if(this.state.token!==null){
 			const server = new Server({ token: this.state.token });
 			this.setState({'processing': true});
 			const onOk = (response) => {
-				this.setState({'macros': response.projects, 'totalRecords': response.total_records});
+				const normalizedProjects = (response.projects || []).map(this.normalizeProject);
+				const projects = append ? [...this.state.macros, ...normalizedProjects] : normalizedProjects;
+				const uniqueProjects = [];
+				const knownIds = new Set();
+
+				projects.forEach((project) => {
+					if (!knownIds.has(project.id)) {
+						knownIds.add(project.id);
+						uniqueProjects.push(project);
+					}
+				});
+
+				const pagination = response.pagination || {
+					page,
+					page_size: pageSize,
+					total_pages: 0,
+					total_records: response.total_records || 0,
+					has_next: false,
+					has_previous: page > 1,
+					next_page: null,
+					previous_page: page > 1 ? page - 1 : null
+				};
+
+				this.setState({
+					'macros': uniqueProjects,
+					'totalRecords': response.total_records || pagination.total_records || uniqueProjects.length,
+					'pagination': {
+						...pagination,
+						'q': (response.query && response.query.q !== undefined) ? response.query.q : q
+					}
+				});
 				success(response);
 				this.setIsUserSuper(response.super);
 				this.setState({'processing': false});
@@ -65,7 +129,7 @@ class DataContextProvider extends Component {
 				error(response);
 				this.setState({'processing': false});
 			}
-			server.getMacros({ success:onOk, error, limit })
+			server.getMacrosPaginated({ success:onOk, error:onIssue, page, pageSize, q })
 		} else {
 			error("sem token");
 		}
@@ -384,7 +448,8 @@ class DataContextProvider extends Component {
 											version: this.version,
 											addCollaborator: this.addCollaborator,
 											removeCollaborator: this.removeCollaborator,
-											getCollaborators: this.getCollaborators
+											getCollaborators: this.getCollaborators,
+											pagination: this.state.pagination
 
 										}}>
 				{this.props.children}

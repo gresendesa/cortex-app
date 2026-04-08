@@ -75,6 +75,53 @@ class Server {
 
 	}
 
+	getMacrosPaginated({ success, error, page=1, pageSize=20, q='' }) {
+
+		const conn = this.getConnection();
+
+		conn.get('/projects', {
+			params: {
+				page,
+				page_size: pageSize,
+				q
+			}
+		}).then(r => {
+			success(r.data)
+		}).catch((e) => {
+			// Fallback de compatibilidade para servidores antigos sem o endpoint novo.
+			if (e && e.response && e.response.status === 404) {
+				const fallbackLimit = page * pageSize;
+				conn.get(`/projects/${fallbackLimit}`).then((r) => {
+					const data = r.data || {};
+					const totalRecords = data.total_records || 0;
+					const totalPages = pageSize > 0 ? Math.ceil(totalRecords / pageSize) : 0;
+					success({
+						...data,
+						pagination: {
+							page,
+							page_size: pageSize,
+							total_pages: totalPages,
+							total_records: totalRecords,
+							has_next: page < totalPages,
+							has_previous: page > 1,
+							next_page: page < totalPages ? page + 1 : null,
+							previous_page: page > 1 ? page - 1 : null
+						},
+						query: {
+							q
+						}
+					});
+				}).catch((fallbackError) => {
+					error(fallbackError.response || fallbackError);
+				});
+				return;
+			}
+
+			error(e.response || e);
+		})
+
+	}
+
 	getMacro({ id, success, error }) {
 
 		const conn = this.getConnection();

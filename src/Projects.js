@@ -34,7 +34,7 @@ import PublicIcon from '@material-ui/icons/Public';
 
 import { timeDifference } from './uis/utils';
 
-function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper, username, totalRecords, fetchMacros }) {
+function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper, username, totalRecords, fetchMacros, pagination }) {
 	const useStyles = makeStyles((theme) => ({
 	  search: {
 	    position: 'relative',
@@ -93,24 +93,37 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper,
 	},[projects]);
 
 	useEffect(() => {
-		if(searchString!=''){
-			setsearchResultProjects(projects.filter((p) => {
-				return (p.macro.name.toLowerCase().includes(searchString.toLowerCase()) || p.dev.toLowerCase().includes(searchString.toLowerCase()) || p.macro.description.toLowerCase().includes(searchString.toLowerCase()));
-			}));
-		} else {
-			setsearchResultProjects(projects);
-		}
+		const handler = setTimeout(() => {
+			setLoadingProjects(true);
+			fetchMacros({
+				page: 1,
+				pageSize: (pagination && pagination.page_size) ? pagination.page_size : 20,
+				q: searchString,
+				append: false,
+				success: () => setLoadingProjects(false),
+				error: () => setLoadingProjects(false)
+			});
+		}, 300);
+
+		return () => clearTimeout(handler);
 	},[searchString])
 
 	const onLoadOlderProjects = () => {
-		if(!loadingProjects){
-			let limit = 0
+		if(!loadingProjects && pagination && pagination.has_next){
+			const nextPage = pagination.next_page;
 			const succs = () => {
 				setLoadingProjects(false)
 			}
 			const err = succs
 			setLoadingProjects(true)
-			fetchMacros({ limit, success: succs, error:err })
+			fetchMacros({
+				page: nextPage,
+				pageSize: pagination.page_size,
+				q: (pagination.q || ''),
+				append: true,
+				success: succs,
+				error: err
+			})
 		}
 			
 	}
@@ -148,7 +161,7 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper,
 					}
 
 					{
-						!loadingProjects &&	totalRecords > projects.length && 
+						!loadingProjects && pagination && pagination.has_next && 
 						<ListItem button onClick={onLoadOlderProjects} style={{display:'flex', justifyContent:'center'}}>
 							<Typography variant="overline" color="primary" align="center">
 								Load older projects
@@ -158,7 +171,7 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper,
 					}
 
 					{
-						loadingProjects && totalRecords > projects.length && 
+						loadingProjects && pagination && pagination.has_next && 
 						<ListItem style={{display:'flex', justifyContent:'center'}}>
 							<CircularProgress color="secondary" size={30} />
 						</ListItem>
@@ -200,18 +213,24 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 	}));
 
 	const classes = useStyles();
+	const projectMacro = p.macro || {
+		name: p.name || '',
+		description: p.description || '',
+		protocol: p.protocol || 'NONE',
+		public: p.public || false
+	};
 
 	const [lastSave, setLastSave] = useState(timeDifference(p.date));
 
 	const DefaultIcon = ({ p, classes }) => {
 		return (
 			<div>
-				{p.macro.protocol == 'CTRL' && <Avatar className={classes.avatarProject}>
+				{projectMacro.protocol == 'CTRL' && <Avatar className={classes.avatarProject}>
 					<ViewListIcon />
 				</Avatar>}
-				{p.macro.protocol == 'NONE' && <Avatar className={classes.avatarNoneProject}>
-					{p.macro.public && <PublicIcon />}
-					{!p.macro.public && <CodeIcon />}
+				{projectMacro.protocol == 'NONE' && <Avatar className={classes.avatarNoneProject}>
+					{projectMacro.public && <PublicIcon />}
+					{!projectMacro.public && <CodeIcon />}
 				</Avatar>}
 			</div>
 		)
@@ -223,13 +242,13 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 				{username != p.dev ? 
 					<Avatar className={classes.sharedProject}>
 						{
-							p.macro.protocol == 'CTRL' &&
+							projectMacro.protocol == 'CTRL' &&
 								<ViewListIcon />
 						}
 						{
-							p.macro.protocol == 'NONE' && <React.Fragment>
-								{p.macro.public && <PublicIcon />}
-								{!p.macro.public && <CodeIcon />}
+							projectMacro.protocol == 'NONE' && <React.Fragment>
+								{projectMacro.public && <PublicIcon />}
+								{!projectMacro.public && <CodeIcon />}
 							</React.Fragment>
 						}
 					</Avatar>
@@ -241,7 +260,7 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 					className={classes.projectItem}
 					primary={
 						<Typography variant="h6">
-							{p.macro.name}
+							{projectMacro.name}
 						</Typography>
 					}
 					//(ReactHtmlParser(p.markdown_description))
@@ -306,9 +325,10 @@ class Projects extends React.Component {
 
 	redirectToProject = (p) => {
 		const { history } = this.props;
-		if(p.macro.protocol == 'CTRL'){
+		const projectMacro = p.macro || { protocol: p.protocol || 'NONE' };
+		if(projectMacro.protocol == 'CTRL'){
 			history.push(`/project/${p.id}`);
-		} else if (p.macro.protocol == 'NONE'){
+		} else if (projectMacro.protocol == 'NONE'){
 			history.push(`/project/flat/${p.id}`);
 		}	
 	}
@@ -355,7 +375,7 @@ class Projects extends React.Component {
 				>
 				
 					<Grid item>
-						<SearchWidget projects={this.props.macros} redirectToProject={this.redirectToProject} removeProject={this.removeProject} isUserSuper={this.props.isUserSuper} username={this.props.username} totalRecords={this.props.totalRecords} fetchMacros={this.props.fetchMacros} />
+						<SearchWidget projects={this.props.macros} redirectToProject={this.redirectToProject} removeProject={this.removeProject} isUserSuper={this.props.isUserSuper} username={this.props.username} totalRecords={this.props.totalRecords} fetchMacros={this.props.fetchMacros} pagination={this.props.pagination} />
 					</Grid>
 				</Grid>
 
