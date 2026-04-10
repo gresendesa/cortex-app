@@ -6,6 +6,8 @@ services:
     build: .
     container_name: rocket
     restart: always
+    ports:
+      - "3001:80"
     networks:
       - macrosoft
 

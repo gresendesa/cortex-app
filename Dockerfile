@@ -1,6 +1,13 @@
 # base image 
 FROM node:20
 
+# Build tooling required by legacy native dependencies (e.g., node-sass).
+RUN apt-get update && apt-get install -y --no-install-recommends \
+		python3 \
+		make \
+		g++ \
+	&& rm -rf /var/lib/apt/lists/*
+
 # setup environment variable  
 ENV APPHOME=/home/app
 
