@@ -13,8 +13,9 @@ WORKDIR $APPHOME
 # copy whole project to your docker home directory. 
 COPY . $APPHOME
 
-# run this command to install all dependencies  
-RUN yarn install
+# run this command to install all dependencies
+# Increased timeout to reduce transient network failures during image build.
+RUN yarn install --network-timeout 600000
 
 # port where the Django app runs  
 EXPOSE 80

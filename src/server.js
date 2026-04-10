@@ -9,7 +9,10 @@ class Server {
 	getConnection(){
 		
 		//const url= window.location.href.split('/')[2] === 'localhost' ? 'http://localhost:8000/cortex' : 'https://www.macrosoft.website/cortex';
-		const url= window.location.hostname.includes('localhost') ? 'http://localhost:8000/cortex' : 'https://www.macrosoft.website/cortex';
+		const isLocal = window.location.hostname.includes('localhost');
+		const localApiPort = window.location.port === '3001' ? '8001' : '8000';
+		const localApiUrl = `${window.location.protocol}//${window.location.hostname}:${localApiPort}/cortex`;
+		const url = isLocal ? localApiUrl : 'https://www.macrosoft.website/cortex';
 
 		const instance = axios.create({
 			baseURL: url
