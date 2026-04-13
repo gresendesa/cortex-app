@@ -1,13 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Switch, Route, Redirect, useHistory, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, List, ListItem, ListItemText, Tooltip, Typography } from '@material-ui/core';
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, InputBase, List, ListItem, ListItemSecondaryAction, ListItemText, Tooltip, Typography } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import CloseIcon from '@material-ui/icons/Close';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import SearchIcon from '@material-ui/icons/Search';
 
 import Macro from '../Macro';
 import PlainMacro from '../PlainMacro';
@@ -15,9 +16,130 @@ import Loader from '../Loader';
 import Projects from '../Projects';
 import Templates from '../Templates';
 import CSKeyGenerator from '../uis/CSKeyGenerator';
+import DeleteButton from '../uis/DeleteButton';
 
 const ACTIVITY_KEY = 'cortex-workbench-activity';
 const SIDEBAR_KEY = 'cortex-workbench-sidebar-open';
+
+function ProjectsSidebarView({ macros, fetchMacros, pagination, delMacro, username, isUserSuper, onOpenProject }) {
+  const [searchString, setSearchString] = useState('');
+  const [loadingProjects, setLoadingProjects] = useState(false);
+  const scrollRef = useRef(null);
+  const loadingRef = useRef(false);
+
+  const startLoading = () => { loadingRef.current = true; setLoadingProjects(true); };
+  const stopLoading = () => { loadingRef.current = false; setLoadingProjects(false); };
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      startLoading();
+      fetchMacros({
+        page: 1,
+        pageSize: (pagination && pagination.page_size) ? pagination.page_size : 20,
+        q: searchString,
+        append: false,
+        success: stopLoading,
+        error: stopLoading
+      });
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchString]);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const handleScroll = () => {
+      if (loadingRef.current || !pagination || !pagination.has_next) return;
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      if (scrollTop + clientHeight >= scrollHeight * 0.8) {
+        startLoading();
+        fetchMacros({
+          page: pagination.next_page,
+          pageSize: pagination.page_size,
+          q: pagination.q !== undefined ? pagination.q : searchString,
+          append: true,
+          success: stopLoading,
+          error: stopLoading
+        });
+      }
+    };
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [pagination, fetchMacros, searchString]);
+
+  const handleDelete = (id) => {
+    delMacro({ id });
+  };
+
+  return (
+    <Box style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
+      <Box style={{ padding: '6px 8px', flexShrink: 0 }}>
+        <InputBase
+          fullWidth
+          placeholder="Buscar projetos…"
+          value={searchString}
+          onChange={(e) => setSearchString(e.target.value)}
+          startAdornment={<SearchIcon style={{ color: 'var(--wb-text-dim)', marginRight: 4, fontSize: 18 }} />}
+          inputProps={{ 'aria-label': 'buscar projetos' }}
+          style={{
+            color: 'var(--wb-text)',
+            fontSize: 13,
+            background: 'rgba(255,255,255,0.06)',
+            borderRadius: 4,
+            padding: '2px 8px',
+            width: '100%'
+          }}
+        />
+      </Box>
+      <Divider style={{ background: 'var(--wb-border)', flexShrink: 0 }} />
+      <Box ref={scrollRef} style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
+        <List dense disablePadding>
+          {macros.length === 0 && !loadingProjects && (
+            <ListItem>
+              <ListItemText
+                primary="Nenhum projeto encontrado."
+                primaryTypographyProps={{ style: { color: 'var(--wb-text-dim)', fontSize: 12 } }}
+              />
+            </ListItem>
+          )}
+          {macros.map((project) => {
+            const name = (project.macro && project.macro.name) ? project.macro.name : (project.name || `Projeto ${project.id}`);
+            const dev = project.dev || '';
+            const canDelete = isUserSuper || dev === username;
+            return (
+              <ListItem
+                key={project.id}
+                button
+                onClick={() => onOpenProject(project)}
+                style={{ paddingRight: canDelete ? 44 : 8 }}
+              >
+                <ListItemText
+                  primary={name}
+                  secondary={dev || undefined}
+                  primaryTypographyProps={{ style: { color: 'var(--wb-text)', fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }}
+                  secondaryTypographyProps={{ style: { color: 'var(--wb-text-dim)', fontSize: 11 } }}
+                />
+                {canDelete && (
+                  <ListItemSecondaryAction>
+                    <DeleteButton
+                      type="trigger"
+                      callback={() => handleDelete(project.id)}
+                    />
+                  </ListItemSecondaryAction>
+                )}
+              </ListItem>
+            );
+          })}
+          {loadingProjects && (
+            <ListItem style={{ display: 'flex', justifyContent: 'center' }}>
+              <CircularProgress size={18} style={{ color: 'var(--wb-text-dim)' }} />
+            </ListItem>
+          )}
+        </List>
+      </Box>
+    </Box>
+  );
+}
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -241,11 +363,15 @@ export default function WorkbenchShell({ context, editorMode }) {
     }
 
     return (
-      <List className={classes.sidebarList}>
-        <ListItem button onClick={() => history.push('/projects')}>
-          <ListItemText className={classes.sidebarItemText} primary="Explorar Projetos" secondary="Busca, criacao e acesso rapido" />
-        </ListItem>
-      </List>
+      <ProjectsSidebarView
+        macros={context.macros || []}
+        fetchMacros={context.fetchMacros}
+        pagination={context.pagination}
+        delMacro={context.delMacro}
+        username={context.username}
+        isUserSuper={context.isUserSuper}
+        onOpenProject={openProjectFromSidebar}
+      />
     );
   };
 
