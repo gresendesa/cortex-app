@@ -140,7 +140,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPublicTemplates, getDoc, alert, editorMode, addCollaborator, removeCollaborator, updateCollaborators }) {
+export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPublicTemplates, getDoc, alert, editorMode, addCollaborator, removeCollaborator, updateCollaborators, tabKey, setTabDirty, registerTabSaveHandler, unregisterTabSaveHandler }) {
   const classes = useStyles();
   
   const [backline, setBackline] = useState(null);//Para o botão de voltar
@@ -158,6 +158,23 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
   const [indentSwitch, setIndentSwitch] = useState(false);
   const [isPublic, setIsPublic] = useState(project.macro.public ? true : false);
   const [type, setType] = useState(project.macro.type)
+  const baselineRef = useRef(null);
+  const snapshotRef = useRef({});
+
+  const buildSnapshot = () => {
+    return JSON.stringify({
+      name,
+      code,
+      csid,
+      description,
+      type,
+      isPublic
+    });
+  };
+
+  useEffect(() => {
+    snapshotRef.current = { name, code, csid, description, type, isPublic };
+  }, [name, code, csid, description, type, isPublic]);
 
   useEffect(() => {
     if(!project) return;
@@ -321,6 +338,10 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
           alert().show({message: "Saved", severity: "success"});
         } 
         setProcessing(false);
+        baselineRef.current = buildSnapshot();
+        if (setTabDirty && tabKey) {
+          setTabDirty(tabKey, false);
+        }
       }
 
       const error = (message) => {
@@ -353,6 +374,56 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
   useEffect(() => {
     //console.log(aceEditor)
   }, [aceEditor])
+
+  useEffect(() => {
+    if (!tabKey) {
+      return;
+    }
+
+    baselineRef.current = buildSnapshot();
+    if (setTabDirty) {
+      setTabDirty(tabKey, false);
+    }
+
+    if (registerTabSaveHandler) {
+      registerTabSaveHandler(tabKey, () => {
+        return new Promise((resolve) => {
+          const copyMacro = Object.assign({}, project.macro);
+          copyMacro.name = snapshotRef.current.name;
+          copyMacro.code = snapshotRef.current.code;
+          copyMacro.csid = snapshotRef.current.csid;
+          copyMacro.description = snapshotRef.current.description;
+          copyMacro.type = snapshotRef.current.type;
+          copyMacro.public = snapshotRef.current.isPublic;
+
+          const success = () => {
+            baselineRef.current = JSON.stringify(snapshotRef.current);
+            if (setTabDirty) {
+              setTabDirty(tabKey, false);
+            }
+            resolve(true);
+          };
+          const error = () => resolve(false);
+
+          saveMacro({ id: project.id, macro: copyMacro, launch:false, success, error });
+        });
+      });
+    }
+
+    return () => {
+      if (unregisterTabSaveHandler) {
+        unregisterTabSaveHandler(tabKey);
+      }
+    };
+  }, [tabKey, project.id, saveMacro]);
+
+  useEffect(() => {
+    if (!tabKey || !baselineRef.current || !setTabDirty) {
+      return;
+    }
+    const isDirty = baselineRef.current !== buildSnapshot();
+    setTabDirty(tabKey, isDirty);
+  }, [name, code, csid, description, type, isPublic, tabKey]);
 
   const saveButtonRef = useRef(null);
   const kodeButtonRef = useRef(null);
@@ -639,6 +710,10 @@ class PlainMacro extends React.Component {
           removeCollaborator={this.props.removeCollaborator}
           getCollaborators={this.props.getCollaborators}
           updateCollaborators={updateCollaborators}
+          tabKey={this.props.tabKey}
+          setTabDirty={this.props.setTabDirty}
+          registerTabSaveHandler={this.props.registerTabSaveHandler}
+          unregisterTabSaveHandler={this.props.unregisterTabSaveHandler}
 				/>
 				<Snackbar open={this.state.alert.popUp} autoHideDuration={4000} onClose={alertHook().close} >
 					<MuiAlert elevation={6} variant="filled" severity={this.state.alert.severity}>

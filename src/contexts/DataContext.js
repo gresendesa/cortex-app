@@ -4,6 +4,9 @@ import Server from '../server';
 export const DataContext = createContext();
 
 class DataContextProvider extends Component {
+	WORKBENCH_TABS_KEY = 'cortex-workbench-tabs';
+	WORKBENCH_ACTIVE_TAB_KEY = 'cortex-workbench-active-tab-key';
+	tabSaveHandlers = {};
 	
 	state = {
 		'macros': [],
@@ -22,7 +25,9 @@ class DataContextProvider extends Component {
 			'next_page': null,
 			'previous_page': null,
 			'q': ''
-		}
+		},
+		'workbenchTabs': [],
+		'activeWorkbenchTabKey': null
 	}
 
 	version = {
@@ -40,6 +45,214 @@ class DataContextProvider extends Component {
 			localStorage.setItem('cortex-token', token);
 			this.setState({'token': token}, () => this.fetchMacros({}));
 		}	
+	}
+
+	loadWorkbenchTabs = () => {
+		try {
+			const persistedTabs = localStorage.getItem(this.WORKBENCH_TABS_KEY);
+			const persistedActiveTab = localStorage.getItem(this.WORKBENCH_ACTIVE_TAB_KEY);
+			const parsedTabs = persistedTabs ? JSON.parse(persistedTabs) : [];
+
+			if (parsedTabs && parsedTabs.length > 0) {
+				this.setState({
+					workbenchTabs: parsedTabs,
+					activeWorkbenchTabKey: persistedActiveTab || parsedTabs[0].key
+				});
+				return;
+			}
+		} catch (e) {
+			// ignore parse errors and fallback to defaults
+		}
+
+		this.setState({
+			workbenchTabs: [{ key: 'projects', path: '/projects', label: 'My Projects', closable: false }],
+			activeWorkbenchTabKey: 'projects'
+		});
+	}
+
+	persistWorkbenchTabs = (tabs, activeKey) => {
+		localStorage.setItem(this.WORKBENCH_TABS_KEY, JSON.stringify(tabs));
+		localStorage.setItem(this.WORKBENCH_ACTIVE_TAB_KEY, activeKey || 'projects');
+	}
+
+	setWorkbenchTabDirty = (tabKey, isDirty=true) => {
+		if (!tabKey) {
+			return;
+		}
+
+		this.setState((prevState) => {
+			let changed = false;
+			const tabs = prevState.workbenchTabs.map((tab) => {
+				if (tab.key !== tabKey) {
+					return tab;
+				}
+				if ((tab.isDirty || false) === isDirty) {
+					return tab;
+				}
+				changed = true;
+				return {
+					...tab,
+					isDirty
+				};
+			});
+
+			if (!changed) {
+				return null;
+			}
+
+			return { workbenchTabs: tabs };
+		}, () => {
+			this.persistWorkbenchTabs(this.state.workbenchTabs, this.state.activeWorkbenchTabKey);
+		});
+	}
+
+	registerWorkbenchTabSaveHandler = (tabKey, handler) => {
+		if (!tabKey || typeof handler !== 'function') {
+			return;
+		}
+		this.tabSaveHandlers[tabKey] = handler;
+	}
+
+	unregisterWorkbenchTabSaveHandler = (tabKey) => {
+		if (!tabKey) {
+			return;
+		}
+		delete this.tabSaveHandlers[tabKey];
+	}
+
+	invokeWorkbenchTabSave = async (tabKey) => {
+		const handler = this.tabSaveHandlers[tabKey];
+		if (!handler) {
+			return false;
+		}
+
+		try {
+			const result = await handler();
+			return result !== false;
+		} catch (e) {
+			return false;
+		}
+	}
+
+	resolveWorkbenchTab = (pathname) => {
+		if (pathname.startsWith('/project/flat/')) {
+			const id = pathname.split('/').pop();
+			const project = this.state.macros.find((m) => String(m.id) === String(id));
+			const name = (project && project.macro && project.macro.name) ? project.macro.name : `Flat ${id}`;
+			return {
+				key: pathname,
+				path: pathname,
+				label: name,
+				closable: true
+			};
+		}
+
+		if (pathname.startsWith('/project/')) {
+			const id = pathname.split('/').pop();
+			const project = this.state.macros.find((m) => String(m.id) === String(id));
+			const name = (project && project.macro && project.macro.name) ? project.macro.name : `Project ${id}`;
+			return {
+				key: pathname,
+				path: pathname,
+				label: name,
+				closable: true
+			};
+		}
+
+		if (pathname.startsWith('/libs')) {
+			return {
+				key: 'libs',
+				path: '/libs',
+				label: 'My Libraries',
+				closable: false
+			};
+		}
+
+		if (pathname.startsWith('/cskey')) {
+			return {
+				key: 'cskey',
+				path: '/cskey',
+				label: 'CSKey',
+				closable: false
+			};
+		}
+
+		return {
+			key: 'projects',
+			path: '/projects',
+			label: 'My Projects',
+			closable: false
+		};
+	}
+
+	ensureWorkbenchTab = (pathname) => {
+		const incomingTab = this.resolveWorkbenchTab(pathname);
+		this.setState((prevState) => {
+			const tabs = [...prevState.workbenchTabs];
+			const existingIndex = tabs.findIndex((t) => t.key === incomingTab.key);
+
+			if (existingIndex >= 0) {
+				tabs[existingIndex] = {
+					...tabs[existingIndex],
+					...incomingTab
+				};
+			} else {
+				tabs.push({
+					...incomingTab,
+					isDirty: false
+				});
+			}
+
+			return {
+				workbenchTabs: tabs,
+				activeWorkbenchTabKey: incomingTab.key
+			};
+		}, () => {
+			this.persistWorkbenchTabs(this.state.workbenchTabs, this.state.activeWorkbenchTabKey);
+		});
+	}
+
+	focusWorkbenchTab = (tabKey) => {
+		this.setState({ activeWorkbenchTabKey: tabKey }, () => {
+			this.persistWorkbenchTabs(this.state.workbenchTabs, this.state.activeWorkbenchTabKey);
+		});
+	}
+
+	closeWorkbenchTab = ({ tabKey, currentPath, onNavigate=()=>{} }) => {
+		let nextPath = currentPath;
+
+		this.setState((prevState) => {
+			const tabs = [...prevState.workbenchTabs];
+			const tabIndex = tabs.findIndex((t) => t.key === tabKey);
+
+			if (tabIndex < 0 || tabs[tabIndex].closable === false) {
+				return null;
+			}
+
+			const removedTab = tabs[tabIndex];
+			tabs.splice(tabIndex, 1);
+
+			if (tabs.length === 0) {
+				tabs.push({ key: 'projects', path: '/projects', label: 'My Projects', closable: false });
+			}
+
+			let nextActiveKey = prevState.activeWorkbenchTabKey;
+			const isClosingActive = prevState.activeWorkbenchTabKey === tabKey || currentPath === removedTab.path;
+
+			if (isClosingActive) {
+				const fallbackIndex = tabIndex > 0 ? tabIndex - 1 : 0;
+				nextActiveKey = tabs[fallbackIndex].key;
+				nextPath = tabs[fallbackIndex].path;
+			}
+
+			return {
+				workbenchTabs: tabs,
+				activeWorkbenchTabKey: nextActiveKey
+			};
+		}, () => {
+			this.persistWorkbenchTabs(this.state.workbenchTabs, this.state.activeWorkbenchTabKey);
+			onNavigate(nextPath);
+		});
 	}
 
 	setUsername = (username) => {
@@ -418,6 +631,7 @@ class DataContextProvider extends Component {
 		this.setToken(localStorage.getItem('cortex-token'));
 		this.setUsername(localStorage.getItem('cortex-username'));	
 		//this.setIsUserSuper(localStorage.getItem('cortex-is-user-super'));
+		this.loadWorkbenchTabs();
 	}
 
 	render() {
@@ -449,7 +663,16 @@ class DataContextProvider extends Component {
 											addCollaborator: this.addCollaborator,
 											removeCollaborator: this.removeCollaborator,
 											getCollaborators: this.getCollaborators,
-											pagination: this.state.pagination
+											pagination: this.state.pagination,
+											workbenchTabs: this.state.workbenchTabs,
+											activeWorkbenchTabKey: this.state.activeWorkbenchTabKey,
+											ensureWorkbenchTab: this.ensureWorkbenchTab,
+											focusWorkbenchTab: this.focusWorkbenchTab,
+											closeWorkbenchTab: this.closeWorkbenchTab,
+											setWorkbenchTabDirty: this.setWorkbenchTabDirty,
+											registerWorkbenchTabSaveHandler: this.registerWorkbenchTabSaveHandler,
+											unregisterWorkbenchTabSaveHandler: this.unregisterWorkbenchTabSaveHandler,
+											invokeWorkbenchTabSave: this.invokeWorkbenchTabSave
 
 										}}>
 				{this.props.children}

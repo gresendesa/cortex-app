@@ -45,6 +45,60 @@ class Macro extends React.Component {
 		super();
 		this.listRef = React.createRef();
 		this.pageY = null;
+		this.baselineSignature = null;
+	}
+
+	componentDidMount() {
+		this.resetDirtyBaseline();
+		if (this.props.tabKey && this.props.registerTabSaveHandler) {
+			this.props.registerTabSaveHandler(this.props.tabKey, () => {
+				return new Promise((resolve) => {
+					this.deployMacro({ launch:false, callback:(ok) => resolve(ok) });
+				});
+			});
+		}
+	}
+
+	componentWillUnmount() {
+		if (this.props.tabKey && this.props.unregisterTabSaveHandler) {
+			this.props.unregisterTabSaveHandler(this.props.tabKey);
+		}
+	}
+
+	componentDidUpdate() {
+		if (!this.props.tabKey || !this.props.setTabDirty) {
+			return;
+		}
+
+		if (!this.baselineSignature) {
+			return;
+		}
+
+		const current = this.computeMacroSignature();
+		if (current == null) {
+			return;
+		}
+
+		this.props.setTabDirty(this.props.tabKey, current !== this.baselineSignature);
+	}
+
+	computeMacroSignature = () => {
+		if (!this.state.project || !this.state.name) {
+			return null;
+		}
+
+		try {
+			return JSON.stringify(macroModel(this.state));
+		} catch (e) {
+			return null;
+		}
+	}
+
+	resetDirtyBaseline = () => {
+		this.baselineSignature = this.computeMacroSignature();
+		if (this.props.tabKey && this.props.setTabDirty) {
+			this.props.setTabDirty(this.props.tabKey, false);
+		}
 	}
 
 	deleteTask = (id) => {
@@ -223,14 +277,15 @@ class Macro extends React.Component {
 				} else {
 					this.showAlert("Saved", "success");
 				}
-				callback();
+				this.resetDirtyBaseline();
+				callback(true);
 			});
 		}
 		const error = (response) => {
 			this.setState({'deployLoading': false}, () => {
 				this.showAlert(`${response}`, "error");
 			});
-			callback();
+			callback(false);
 		}
 		const id = this.state.project.id;
 

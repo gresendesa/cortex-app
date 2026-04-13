@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Switch, Route, Redirect, useHistory, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Divider, IconButton, List, ListItem, ListItemText, Tooltip, Typography } from '@material-ui/core';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, List, ListItem, ListItemText, Tooltip, Typography } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import CloseIcon from '@material-ui/icons/Close';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
@@ -17,7 +18,6 @@ import CSKeyGenerator from '../uis/CSKeyGenerator';
 
 const ACTIVITY_KEY = 'cortex-workbench-activity';
 const SIDEBAR_KEY = 'cortex-workbench-sidebar-open';
-const TAB_KEY = 'cortex-workbench-active-tab';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -97,6 +97,7 @@ const useStyles = makeStyles(() => ({
   tab: {
     display: 'flex',
     alignItems: 'center',
+    gap: 6,
     height: '100%',
     padding: '0 14px',
     borderRight: '1px solid var(--wb-border)',
@@ -108,6 +109,15 @@ const useStyles = makeStyles(() => ({
   tabActive: {
     color: 'var(--wb-text)',
     background: 'var(--wb-panel-2)'
+  },
+  tabLabel: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: 180
+  },
+  tabClose: {
+    color: 'var(--wb-text-dim)',
+    padding: 2
   },
   content: {
     flex: 1,
@@ -155,7 +165,7 @@ export default function WorkbenchShell({ context, editorMode }) {
 
   const [sidebarOpen, setSidebarOpen] = useState(() => localStorage.getItem(SIDEBAR_KEY) !== 'false');
   const [activity, setActivity] = useState(() => localStorage.getItem(ACTIVITY_KEY) || 'projects');
-  const [activeTab, setActiveTab] = useState(() => localStorage.getItem(TAB_KEY) || 'projects');
+  const [closeDialog, setCloseDialog] = useState({ open: false, tab: null });
 
   const activityItems = useMemo(() => [
     { id: 'open', label: 'Projeto Aberto', icon: <FolderOpenIcon fontSize="small" />, path: '/projects' },
@@ -168,9 +178,9 @@ export default function WorkbenchShell({ context, editorMode }) {
     setActivity(selected);
     localStorage.setItem(ACTIVITY_KEY, selected);
 
-    const newTab = getTabFromPath(location.pathname);
-    setActiveTab(newTab);
-    localStorage.setItem(TAB_KEY, newTab);
+    if (context.ensureWorkbenchTab) {
+      context.ensureWorkbenchTab(location.pathname);
+    }
   }, [location.pathname]);
 
   const handleActivityClick = (item) => {
@@ -252,6 +262,77 @@ export default function WorkbenchShell({ context, editorMode }) {
     return 'My Projects';
   };
 
+  const onTabClick = (tab) => {
+    if (context.focusWorkbenchTab) {
+      context.focusWorkbenchTab(tab.key);
+    }
+    history.push(tab.path);
+  };
+
+  const onTabClose = (e, tab) => {
+    e.stopPropagation();
+
+    if (tab.isDirty) {
+      setCloseDialog({ open: true, tab });
+      return;
+    }
+
+    if (context.closeWorkbenchTab) {
+      context.closeWorkbenchTab({
+        tabKey: tab.key,
+        currentPath: location.pathname,
+        onNavigate: (nextPath) => {
+          if (nextPath && nextPath !== location.pathname) {
+            history.push(nextPath);
+          }
+        }
+      });
+    }
+  };
+
+  const closeTabWithoutSave = (tab) => {
+    if (!tab || !context.closeWorkbenchTab) {
+      return;
+    }
+    context.setWorkbenchTabDirty(tab.key, false);
+    context.closeWorkbenchTab({
+      tabKey: tab.key,
+      currentPath: location.pathname,
+      onNavigate: (nextPath) => {
+        if (nextPath && nextPath !== location.pathname) {
+          history.push(nextPath);
+        }
+      }
+    });
+  };
+
+  const onCloseDirtyDialog = () => {
+    setCloseDialog({ open: false, tab: null });
+  };
+
+  const onDirtySaveAndClose = async () => {
+    const tab = closeDialog.tab;
+    if (!tab) {
+      onCloseDirtyDialog();
+      return;
+    }
+
+    const ok = context.invokeWorkbenchTabSave ? await context.invokeWorkbenchTabSave(tab.key) : false;
+    if (ok) {
+      closeTabWithoutSave(tab);
+    }
+    onCloseDirtyDialog();
+  };
+
+  const onDirtyDiscardAndClose = () => {
+    closeTabWithoutSave(closeDialog.tab);
+    onCloseDirtyDialog();
+  };
+
+  const tabs = (context.workbenchTabs && context.workbenchTabs.length > 0)
+    ? context.workbenchTabs
+    : [{ key: getTabFromPath(location.pathname), path: location.pathname, label: currentTabLabel(), closable: false }];
+
   return (
     <Box className={classes.root}>
       <Box className={classes.activityBar}>
@@ -287,9 +368,19 @@ export default function WorkbenchShell({ context, editorMode }) {
 
       <Box className={classes.editor}>
         <Box className={classes.tabs}>
-          <Box className={`${classes.tab} ${classes.tabActive}`} onClick={() => history.push(location.pathname)}>
-            {currentTabLabel()}
-          </Box>
+          {tabs.map((tab) => {
+            const isActive = (context.activeWorkbenchTabKey && context.activeWorkbenchTabKey === tab.key) || tab.path === location.pathname;
+            return (
+              <Box key={tab.key} className={`${classes.tab} ${isActive ? classes.tabActive : ''}`} onClick={() => onTabClick(tab)}>
+                <span className={classes.tabLabel}>{tab.isDirty ? `* ${tab.label || currentTabLabel()}` : (tab.label || currentTabLabel())}</span>
+                {tab.closable && (
+                  <IconButton size="small" className={classes.tabClose} onClick={(e) => onTabClose(e, tab)} aria-label="close tab">
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                )}
+              </Box>
+            );
+          })}
         </Box>
         <Box className={classes.content}>
           <Switch>
@@ -309,6 +400,10 @@ export default function WorkbenchShell({ context, editorMode }) {
                       getDoc={context.getDoc}
                       addCollaborator={context.addCollaborator}
                       removeCollaborator={context.removeCollaborator}
+                      tabKey={location.pathname}
+                      setTabDirty={context.setWorkbenchTabDirty}
+                      registerTabSaveHandler={context.registerWorkbenchTabSaveHandler}
+                      unregisterTabSaveHandler={context.unregisterWorkbenchTabSaveHandler}
                     />
                     :
                     <Loader {...props} getMacro={context.getMacro} />
@@ -336,6 +431,10 @@ export default function WorkbenchShell({ context, editorMode }) {
                       addCollaborator={context.addCollaborator}
                       removeCollaborator={context.removeCollaborator}
                       getPublicTemplates={context.getPublicTemplates}
+                      tabKey={location.pathname}
+                      setTabDirty={context.setWorkbenchTabDirty}
+                      registerTabSaveHandler={context.registerWorkbenchTabSaveHandler}
+                      unregisterTabSaveHandler={context.unregisterWorkbenchTabSaveHandler}
                     />
                     :
                     <Loader {...props} getMacro={context.getMacro} />
@@ -384,6 +483,20 @@ export default function WorkbenchShell({ context, editorMode }) {
           </Switch>
         </Box>
       </Box>
+
+      <Dialog open={closeDialog.open} onClose={onCloseDirtyDialog}>
+        <DialogTitle>Fechar Aba com Alteracoes?</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2">
+            Esta aba possui alteracoes nao salvas. Deseja salvar antes de fechar?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onCloseDirtyDialog} color="default">Cancelar</Button>
+          <Button onClick={onDirtyDiscardAndClose} color="secondary">Nao salvar</Button>
+          <Button onClick={onDirtySaveAndClose} color="primary" variant="contained">Salvar</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
