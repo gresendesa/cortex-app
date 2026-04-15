@@ -10,6 +10,7 @@ import ListAltIcon from '@material-ui/icons/ListAlt';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import SearchIcon from '@material-ui/icons/Search';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 import Macro from '../Macro';
 import PlainMacro from '../PlainMacro';
@@ -25,11 +26,22 @@ const SIDEBAR_KEY = 'cortex-workbench-sidebar-open';
 function ProjectsSidebarView({ macros, fetchMacros, pagination, delMacro, username, isUserSuper, onOpenProject }) {
   const [searchString, setSearchString] = useState('');
   const [loadingProjects, setLoadingProjects] = useState(false);
+  const [hoveredProjectId, setHoveredProjectId] = useState(null);
+  const [infoDialog, setInfoDialog] = useState({ open: false, project: null });
   const scrollRef = useRef(null);
   const loadingRef = useRef(false);
 
   const startLoading = () => { loadingRef.current = true; setLoadingProjects(true); };
   const stopLoading = () => { loadingRef.current = false; setLoadingProjects(false); };
+
+  const handleInfoOpen = (e, project) => {
+    e.stopPropagation();
+    setInfoDialog({ open: true, project });
+  };
+
+  const handleInfoClose = () => {
+    setInfoDialog({ open: false, project: null });
+  };
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -73,80 +85,135 @@ function ProjectsSidebarView({ macros, fetchMacros, pagination, delMacro, userna
   };
 
   return (
-    <Box style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
-      <Box style={{ padding: '6px 8px', flexShrink: 0 }}>
-        <InputBase
-          fullWidth
-          placeholder="Buscar projetos…"
-          value={searchString}
-          onChange={(e) => setSearchString(e.target.value)}
-          startAdornment={<SearchIcon style={{ color: 'var(--wb-text-dim)', marginRight: 4, fontSize: 18 }} />}
-          inputProps={{ 'aria-label': 'buscar projetos' }}
-          style={{
-            color: 'var(--wb-text)',
-            fontSize: 13,
-            background: 'rgba(255,255,255,0.06)',
-            borderRadius: 4,
-            padding: '2px 8px',
-            width: '100%'
-          }}
-        />
-      </Box>
-      <Divider style={{ background: 'var(--wb-border)', flexShrink: 0 }} />
-      <Box ref={scrollRef} style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
-        <List dense disablePadding>
-          {macros.length === 0 && !loadingProjects && (
-            <ListItem>
-              <ListItemText
-                primary="Nenhum projeto encontrado."
-                primaryTypographyProps={{ style: { color: 'var(--wb-text-dim)', fontSize: 12 } }}
-              />
-            </ListItem>
-          )}
-          {macros.map((project) => {
-            const name = (project.macro && project.macro.name) ? project.macro.name : (project.name || `Projeto ${project.id}`);
-            const dev = project.dev || '';
-            const canDelete = isUserSuper || dev === username;
-            return (
-              <ListItem
-                key={project.id}
-                button
-                onClick={() => onOpenProject(project)}
-                style={{ paddingRight: 44 }}
-              >
+    <>
+      <Box style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
+        <Box style={{ padding: '6px 8px', flexShrink: 0 }}>
+          <InputBase
+            fullWidth
+            placeholder="Buscar projetos…"
+            value={searchString}
+            onChange={(e) => setSearchString(e.target.value)}
+            startAdornment={<SearchIcon style={{ color: 'var(--wb-text-dim)', marginRight: 4, fontSize: 18 }} />}
+            inputProps={{ 'aria-label': 'buscar projetos' }}
+            style={{
+              color: 'var(--wb-text)',
+              fontSize: 13,
+              background: 'rgba(255,255,255,0.06)',
+              borderRadius: 4,
+              padding: '2px 8px',
+              width: '100%'
+            }}
+          />
+        </Box>
+        <Divider style={{ background: 'var(--wb-border)', flexShrink: 0 }} />
+        <Box ref={scrollRef} style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
+          <List dense disablePadding>
+            {macros.length === 0 && !loadingProjects && (
+              <ListItem>
                 <ListItemText
-                  primary={name}
-                  secondary={dev || undefined}
-                  primaryTypographyProps={{ style: { color: 'var(--wb-text)', fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }}
-                  secondaryTypographyProps={{ style: { color: 'var(--wb-text-dim)', fontSize: 11 } }}
+                  primary="Nenhum projeto encontrado."
+                  primaryTypographyProps={{ style: { color: 'var(--wb-text-dim)', fontSize: 12 } }}
                 />
-                <ListItemSecondaryAction>
-                  {canDelete ? (
-                    <DeleteButton
-                      type="trigger"
-                      callback={() => handleDelete(project.id)}
-                    />
-                  ) : (
-                    <Tooltip title="Sem permissão para apagar" placement="left">
-                      <span>
-                        <IconButton edge="end" aria-label="sem permissão" disabled>
-                          <DeleteOutlineIcon style={{ opacity: 0.3 }} />
-                        </IconButton>
-                      </span>
-                    </Tooltip>
-                  )}
-                </ListItemSecondaryAction>
               </ListItem>
-            );
-          })}
-          {loadingProjects && (
-            <ListItem style={{ display: 'flex', justifyContent: 'center' }}>
-              <CircularProgress size={18} style={{ color: 'var(--wb-text-dim)' }} />
-            </ListItem>
-          )}
-        </List>
+            )}
+            {macros.map((project) => {
+              const name = (project.macro && project.macro.name) ? project.macro.name : (project.name || `Projeto ${project.id}`);
+              const dev = project.dev || '';
+              const canDelete = isUserSuper || dev === username;
+              const showActions = hoveredProjectId === project.id;
+              return (
+                <ListItem
+                  key={project.id}
+                  button
+                  onClick={() => onOpenProject(project)}
+                  onMouseEnter={() => setHoveredProjectId(project.id)}
+                  onMouseLeave={() => setHoveredProjectId(null)}
+                  style={{ paddingRight: 44 }}
+                >
+                  <ListItemText
+                    primary={name}
+                    secondary={dev || undefined}
+                    primaryTypographyProps={{ style: { color: 'var(--wb-text)', fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }}
+                    secondaryTypographyProps={{ style: { color: 'var(--wb-text-dim)', fontSize: 11 } }}
+                  />
+                  {showActions && (
+                    <ListItemSecondaryAction
+                      onMouseEnter={() => setHoveredProjectId(project.id)}
+                      onMouseLeave={() => setHoveredProjectId(null)}
+                    >
+                      <Tooltip title="Informações do projeto" placement="left">
+                        <IconButton
+                          edge="end"
+                          aria-label="informações"
+                          onClick={(e) => handleInfoOpen(e, project)}
+                          style={{ marginRight: 4 }}
+                        >
+                          <InfoOutlinedIcon style={{ color: 'var(--wb-text-dim)', fontSize: 20 }} />
+                        </IconButton>
+                      </Tooltip>
+                      {canDelete ? (
+                        <DeleteButton
+                          type="trigger"
+                          callback={() => handleDelete(project.id)}
+                        />
+                      ) : (
+                        <Tooltip title="Sem permissão para apagar" placement="left">
+                          <span>
+                            <IconButton edge="end" aria-label="sem permissão" disabled>
+                              <DeleteOutlineIcon style={{ opacity: 0.3 }} />
+                            </IconButton>
+                          </span>
+                        </Tooltip>
+                      )}
+                    </ListItemSecondaryAction>
+                  )}
+                </ListItem>
+              );
+            })}
+            {loadingProjects && (
+              <ListItem style={{ display: 'flex', justifyContent: 'center' }}>
+                <CircularProgress size={18} style={{ color: 'var(--wb-text-dim)' }} />
+              </ListItem>
+            )}
+          </List>
+        </Box>
       </Box>
-    </Box>
+
+      <Dialog open={infoDialog.open} onClose={handleInfoClose} maxWidth="sm" fullWidth>
+        <DialogTitle>Informações do Projeto</DialogTitle>
+        <DialogContent dividers>
+          {infoDialog.project && (
+            <Box>
+              <Typography variant="body2" style={{ marginBottom: 12, fontWeight: 600 }}>
+                {(infoDialog.project.macro && infoDialog.project.macro.name) ? infoDialog.project.macro.name : (infoDialog.project.name || `Projeto ${infoDialog.project.id}`)}
+              </Typography>
+              <Typography variant="caption" color="textSecondary" style={{ display: 'block', marginBottom: 16 }}>
+                Desenvolvedor: {infoDialog.project.dev || 'N/A'}
+              </Typography>
+              <Divider style={{ marginBottom: 12 }} />
+              <Typography variant="body2" style={{ fontWeight: 600, marginBottom: 6 }}>
+                Descrição
+              </Typography>
+              <Typography variant="body2" style={{ whiteSpace: 'pre-wrap', marginBottom: 16 }}>
+                {(infoDialog.project.macro && infoDialog.project.macro.description) || 'Sem descrição.'}
+              </Typography>
+              <Divider style={{ marginBottom: 12 }} />
+              <Typography variant="caption" color="textSecondary" style={{ display: 'block' }}>
+                Criado em: {infoDialog.project.created ? new Date(infoDialog.project.created).toLocaleString('pt-BR') : 'N/A'}
+              </Typography>
+              <Typography variant="caption" color="textSecondary" style={{ display: 'block' }}>
+                Última modificação: {infoDialog.project.last_modified ? new Date(infoDialog.project.last_modified).toLocaleString('pt-BR') : 'N/A'}
+              </Typography>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleInfoClose} color="primary">
+            Fechar
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 
@@ -301,12 +368,31 @@ export default function WorkbenchShell({ context, editorMode }) {
   const [sidebarOpen, setSidebarOpen] = useState(() => localStorage.getItem(SIDEBAR_KEY) !== 'false');
   const [activity, setActivity] = useState(() => localStorage.getItem(ACTIVITY_KEY) || 'projects');
   const [closeDialog, setCloseDialog] = useState({ open: false, tab: null });
+  const sidebarStateBeforeFlat = useRef(null);
 
   const activityItems = useMemo(() => [
     { id: 'open', label: 'Projeto Aberto', icon: <FolderOpenIcon fontSize="small" />, path: '/projects' },
     { id: 'projects', label: 'Projetos', icon: <ListAltIcon fontSize="small" />, path: '/projects' },
     { id: 'libraries', label: 'Bibliotecas', icon: <LibraryBooksIcon fontSize="small" />, path: '/libs' }
   ], []);
+
+  useEffect(() => {
+    const isFlat = location.pathname.startsWith('/project/flat/');
+    
+    if (isFlat) {
+      if (sidebarStateBeforeFlat.current === null) {
+        sidebarStateBeforeFlat.current = sidebarOpen;
+      }
+      if (sidebarOpen) {
+        setSidebarOpen(false);
+      }
+    } else {
+      if (sidebarStateBeforeFlat.current !== null) {
+        setSidebarOpen(sidebarStateBeforeFlat.current);
+        sidebarStateBeforeFlat.current = null;
+      }
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     const selected = resolveActivityByPath(location.pathname, activity);
@@ -472,20 +558,30 @@ export default function WorkbenchShell({ context, editorMode }) {
     ? context.workbenchTabs
     : [{ key: getTabFromPath(location.pathname), path: location.pathname, label: currentTabLabel(), closable: false }];
 
+  const isFlat = location.pathname.startsWith('/project/flat/');
+
   return (
     <Box className={classes.root}>
       <Box className={classes.activityBar}>
-        {activityItems.map((item) => (
-          <Tooltip title={item.label} key={item.id} placement="right">
-            <IconButton
-              className={`${classes.activityButton} ${activity === item.id ? classes.activityButtonActive : ''}`}
-              onClick={() => handleActivityClick(item)}
-              aria-label={item.label}
-            >
-              {item.icon}
-            </IconButton>
-          </Tooltip>
-        ))}
+        {activityItems.map((item) => {
+          const isDisabled = item.id === 'open' && isFlat;
+          const tooltipTitle = isDisabled ? 'Não disponível em projetos flat' : item.label;
+          return (
+            <Tooltip title={tooltipTitle} key={item.id} placement="right">
+              <span>
+                <IconButton
+                  className={`${classes.activityButton} ${activity === item.id ? classes.activityButtonActive : ''}`}
+                  onClick={() => !isDisabled && handleActivityClick(item)}
+                  aria-label={item.label}
+                  disabled={isDisabled}
+                  style={isDisabled ? { opacity: 0.3, cursor: 'not-allowed' } : undefined}
+                >
+                  {item.icon}
+                </IconButton>
+              </span>
+            </Tooltip>
+          );
+        })}
       </Box>
 
       <Box className={`${classes.sidebar} ${!sidebarOpen ? classes.sidebarClosed : ''}`}>
@@ -529,6 +625,7 @@ export default function WorkbenchShell({ context, editorMode }) {
                 (project) ? (
                   ((project.macro) && (project.macro.type)) ?
                     <PlainMacro
+                      key={`flat-${project.id}`}
                       {...props}
                       project={project}
                       saveMacro={context.saveMacro}
@@ -556,6 +653,7 @@ export default function WorkbenchShell({ context, editorMode }) {
                 (project) ? (
                   ((project.macro) && (project.macro.tasks)) ?
                     <Macro
+                      key={`ctrl-${project.id}`}
                       {...props}
                       project={project}
                       saveMacro={context.saveMacro}
