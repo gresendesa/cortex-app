@@ -134,22 +134,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPublicTemplates, getDoc, alert, editorMode, addCollaborator, removeCollaborator, updateCollaborators, tabKey, setTabDirty, registerTabSaveHandler, unregisterTabSaveHandler }) {
+export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPublicTemplates, getDoc, alert, editorMode, addCollaborator, removeCollaborator, updateCollaborators, tabKey, setTabDirty, registerTabSaveHandler, unregisterTabSaveHandler, getProjectDraft, setProjectDraft, clearProjectDraft }) {
   const classes = useStyles();
   
   const [backline, setBackline] = useState(null);//Para o botão de voltar
 
   const [openConfig, setOpenConfig] = useState(false);
 
-  const [name, setName] = useState(project.macro.name);
-  const [code, setCode] = useState(project.macro.code);
-  const [csid, setCsid] = useState(project.macro.csid);
+  const [initialDraft] = useState(() => getProjectDraft ? getProjectDraft(project.id) : null);
+  const [name, setName] = useState(initialDraft && initialDraft.name !== undefined ? initialDraft.name : project.macro.name);
+  const [code, setCode] = useState(initialDraft && initialDraft.code !== undefined ? initialDraft.code : project.macro.code);
+  const [csid, setCsid] = useState(initialDraft && initialDraft.csid !== undefined ? initialDraft.csid : project.macro.csid);
   const [isOnChat, setIsOnChat] = useState(project.macro.type == 'onChat');
-  const [description, setDescription] = useState(project.macro.description); 
+  const [description, setDescription] = useState(initialDraft && initialDraft.description !== undefined ? initialDraft.description : project.macro.description); 
   const [processing, setProcessing] = useState(false);
   const [indentSwitch, setIndentSwitch] = useState(false);
-  const [isPublic, setIsPublic] = useState(project.macro.public ? true : false);
-  const [type, setType] = useState(project.macro.type)
+  const [isPublic, setIsPublic] = useState(initialDraft && initialDraft.isPublic !== undefined ? initialDraft.isPublic : (project.macro.public ? true : false));
+  const [type, setType] = useState(initialDraft && initialDraft.type !== undefined ? initialDraft.type : project.macro.type)
   const baselineRef = useRef(null);
   const snapshotRef = useRef({});
 
@@ -326,6 +327,9 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
         if (setTabDirty && tabKey) {
           setTabDirty(tabKey, false);
         }
+        if (clearProjectDraft) {
+          clearProjectDraft(project.id);
+        }
       }
 
       const error = (message) => {
@@ -364,10 +368,14 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
       return;
     }
 
-    baselineRef.current = buildSnapshot();
-    if (setTabDirty) {
-      setTabDirty(tabKey, false);
-    }
+    baselineRef.current = JSON.stringify({
+      name: project.macro.name,
+      code: project.macro.code,
+      csid: project.macro.csid,
+      description: project.macro.description,
+      type: project.macro.type,
+      isPublic: project.macro.public ? true : false
+    });
 
     if (registerTabSaveHandler) {
       registerTabSaveHandler(tabKey, () => {
@@ -384,6 +392,9 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
             baselineRef.current = JSON.stringify(snapshotRef.current);
             if (setTabDirty) {
               setTabDirty(tabKey, false);
+            }
+            if (clearProjectDraft) {
+              clearProjectDraft(project.id);
             }
             resolve(true);
           };
@@ -407,6 +418,11 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
     }
     const isDirty = baselineRef.current !== buildSnapshot();
     setTabDirty(tabKey, isDirty);
+    if (isDirty && setProjectDraft) {
+      setProjectDraft(project.id, { name, code, csid, description, type, isPublic });
+    } else if (!isDirty && clearProjectDraft) {
+      clearProjectDraft(project.id);
+    }
   }, [name, code, csid, description, type, isPublic, tabKey]);
 
   const saveButtonRef = useRef(null);
@@ -684,6 +700,9 @@ class PlainMacro extends React.Component {
           setTabDirty={this.props.setTabDirty}
           registerTabSaveHandler={this.props.registerTabSaveHandler}
           unregisterTabSaveHandler={this.props.unregisterTabSaveHandler}
+          getProjectDraft={this.props.getProjectDraft}
+          setProjectDraft={this.props.setProjectDraft}
+          clearProjectDraft={this.props.clearProjectDraft}
 				/>
 				<Snackbar open={this.state.alert.popUp} autoHideDuration={4000} onClose={alertHook().close} >
 					<MuiAlert elevation={6} variant="filled" severity={this.state.alert.severity}>

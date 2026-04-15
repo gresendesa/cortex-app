@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Switch, Route, Redirect, useHistory, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, InputBase, List, ListItem, ListItemSecondaryAction, ListItemText, Tooltip, Typography } from '@material-ui/core';
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, InputBase, List, ListItem, ListItemSecondaryAction, ListItemText, TextField, Tooltip, Typography } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import CloseIcon from '@material-ui/icons/Close';
@@ -18,7 +18,6 @@ import Loader from '../Loader';
 import Projects from '../Projects';
 import Templates from '../Templates';
 import CSKeyGenerator from '../uis/CSKeyGenerator';
-import DeleteButton from '../uis/DeleteButton';
 
 const ACTIVITY_KEY = 'cortex-workbench-activity';
 const SIDEBAR_KEY = 'cortex-workbench-sidebar-open';
@@ -28,6 +27,9 @@ function ProjectsSidebarView({ macros, fetchMacros, pagination, delMacro, userna
   const [loadingProjects, setLoadingProjects] = useState(false);
   const [hoveredProjectId, setHoveredProjectId] = useState(null);
   const [infoDialog, setInfoDialog] = useState({ open: false, project: null });
+  const [deleteDialog, setDeleteDialog] = useState({ open: false, project: null, inputValue: '' });
+  const [armedDeleteId, setArmedDeleteId] = useState(null);
+  const armedTimerRef = useRef(null);
   const scrollRef = useRef(null);
   const loadingRef = useRef(false);
 
@@ -82,6 +84,18 @@ function ProjectsSidebarView({ macros, fetchMacros, pagination, delMacro, userna
 
   const handleDelete = (id) => {
     delMacro({ id });
+  };
+
+  const handleDeleteButtonClick = (e, project) => {
+    e.stopPropagation();
+    if (armedDeleteId === project.id) {
+      clearTimeout(armedTimerRef.current);
+      setArmedDeleteId(null);
+      setDeleteDialog({ open: true, project, inputValue: '' });
+    } else {
+      setArmedDeleteId(project.id);
+      armedTimerRef.current = setTimeout(() => setArmedDeleteId(null), 1000);
+    }
   };
 
   return (
@@ -152,15 +166,22 @@ function ProjectsSidebarView({ macros, fetchMacros, pagination, delMacro, userna
                         </IconButton>
                       </Tooltip>
                       {canDelete ? (
-                        <DeleteButton
-                          type="trigger"
-                          callback={() => handleDelete(project.id)}
-                        />
+                        <Tooltip title="Apagar projeto" placement="left">
+                          <IconButton
+                            edge="end"
+                            aria-label="apagar"
+                            size="small"
+                            onClick={(e) => handleDeleteButtonClick(e, project)}
+                            style={{ padding: 4 }}
+                          >
+                            <DeleteOutlineIcon style={{ fontSize: 16, color: armedDeleteId === project.id ? '#f44336' : undefined }} />
+                          </IconButton>
+                        </Tooltip>
                       ) : (
                         <Tooltip title="Sem permissão para apagar" placement="left">
                           <span>
-                            <IconButton edge="end" aria-label="sem permissão" disabled>
-                              <DeleteOutlineIcon style={{ opacity: 0.3 }} />
+                            <IconButton edge="end" aria-label="sem permissão" disabled size="small" style={{ padding: 4 }}>
+                              <DeleteOutlineIcon style={{ opacity: 0.3, fontSize: 16 }} />
                             </IconButton>
                           </span>
                         </Tooltip>
@@ -210,6 +231,56 @@ function ProjectsSidebarView({ macros, fetchMacros, pagination, delMacro, userna
         <DialogActions>
           <Button onClick={handleInfoClose} color="primary">
             Fechar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={deleteDialog.open} onClose={() => setDeleteDialog({ open: false, project: null, inputValue: '' })} maxWidth="xs" fullWidth>
+        <DialogTitle>Confirmar exclusão</DialogTitle>
+        <DialogContent>
+          {deleteDialog.project && (
+            <>
+              <Typography variant="body2" style={{ marginBottom: 12 }}>
+                Digite o nome do projeto{' '}
+                <strong>
+                  {(deleteDialog.project.macro && deleteDialog.project.macro.name)
+                    ? deleteDialog.project.macro.name
+                    : (deleteDialog.project.name || `Projeto ${deleteDialog.project.id}`)}
+                </strong>{' '}
+                para confirmar a exclusão:
+              </Typography>
+              <TextField
+                fullWidth
+                variant="outlined"
+                size="small"
+                value={deleteDialog.inputValue}
+                onChange={(e) => { const val = e.target.value; setDeleteDialog((prev) => ({ ...prev, inputValue: val })); }}
+                placeholder="Nome do projeto"
+                autoFocus
+              />
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialog({ open: false, project: null, inputValue: '' })}>
+            Cancelar
+          </Button>
+          <Button
+            onClick={() => {
+              if (deleteDialog.project) {
+                handleDelete(deleteDialog.project.id);
+              }
+              setDeleteDialog({ open: false, project: null, inputValue: '' });
+            }}
+            color="secondary"
+            variant="contained"
+            disabled={!deleteDialog.project || deleteDialog.inputValue.trim().toLowerCase() !== (
+              (deleteDialog.project && deleteDialog.project.macro && deleteDialog.project.macro.name)
+                ? deleteDialog.project.macro.name
+                : (deleteDialog.project ? (deleteDialog.project.name || `Projeto ${deleteDialog.project.id}`) : '')
+            ).toLowerCase()}
+          >
+            Excluir
           </Button>
         </DialogActions>
       </Dialog>
@@ -519,6 +590,12 @@ export default function WorkbenchShell({ context, editorMode }) {
     if (!tab || !context.closeWorkbenchTab) {
       return;
     }
+    if (context.clearProjectDraft) {
+      const projectMatch = tab.key && tab.key.match(/^\/project\/(?:flat\/)?([\w]+)$/);
+      if (projectMatch) {
+        context.clearProjectDraft(projectMatch[1]);
+      }
+    }
     context.setWorkbenchTabDirty(tab.key, false);
     context.closeWorkbenchTab({
       tabKey: tab.key,
@@ -640,6 +717,9 @@ export default function WorkbenchShell({ context, editorMode }) {
                       setTabDirty={context.setWorkbenchTabDirty}
                       registerTabSaveHandler={context.registerWorkbenchTabSaveHandler}
                       unregisterTabSaveHandler={context.unregisterWorkbenchTabSaveHandler}
+                      getProjectDraft={context.getProjectDraft}
+                      setProjectDraft={context.setProjectDraft}
+                      clearProjectDraft={context.clearProjectDraft}
                     />
                     :
                     <Loader {...props} getMacro={context.getMacro} />

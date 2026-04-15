@@ -27,7 +27,8 @@ class DataContextProvider extends Component {
 			'q': ''
 		},
 		'workbenchTabs': [],
-		'activeWorkbenchTabKey': null
+		'activeWorkbenchTabKey': null,
+		'projectDrafts': {}
 	}
 
 	version = {
@@ -326,13 +327,28 @@ class DataContextProvider extends Component {
 					previous_page: page > 1 ? page - 1 : null
 				};
 
-				this.setState({
-					'macros': uniqueProjects,
-					'totalRecords': response.total_records || pagination.total_records || uniqueProjects.length,
-					'pagination': {
-						...pagination,
-						'q': (response.query && response.query.q !== undefined) ? response.query.q : q
-					}
+				this.setState((prevState) => {
+					const refreshedTabs = prevState.workbenchTabs.map((tab) => {
+						if (tab.key.startsWith('/project/')) {
+							const id = tab.key.split('/').pop();
+							const project = uniqueProjects.find((m) => String(m.id) === String(id));
+							if (project && project.macro && project.macro.name) {
+								return { ...tab, label: project.macro.name };
+							}
+						}
+						return tab;
+					});
+					return {
+						'macros': uniqueProjects,
+						'totalRecords': response.total_records || pagination.total_records || uniqueProjects.length,
+						'pagination': {
+							...pagination,
+							'q': (response.query && response.query.q !== undefined) ? response.query.q : q
+						},
+						'workbenchTabs': refreshedTabs
+					};
+				}, () => {
+					this.persistWorkbenchTabs(this.state.workbenchTabs, this.state.activeWorkbenchTabKey);
 				});
 				success(response);
 				this.setIsUserSuper(response.super);
@@ -618,6 +634,44 @@ class DataContextProvider extends Component {
 		}
 	}
 
+	setProjectDraft = (projectId, draftData) => {
+		const draft = { ...draftData, timestamp: Date.now() };
+		this.setState((prevState) => ({
+			projectDrafts: { ...prevState.projectDrafts, [String(projectId)]: draft }
+		}));
+		try {
+			localStorage.setItem(`cortex-draft-${projectId}`, JSON.stringify(draft));
+		} catch (e) { /* ignore */ }
+	}
+
+	getProjectDraft = (projectId) => {
+		const memDraft = this.state.projectDrafts[String(projectId)];
+		if (memDraft) return memDraft;
+		try {
+			const raw = localStorage.getItem(`cortex-draft-${projectId}`);
+			if (!raw) return null;
+			const draft = JSON.parse(raw);
+			if (!draft || !draft.timestamp || (Date.now() - draft.timestamp) > 86400000) {
+				localStorage.removeItem(`cortex-draft-${projectId}`);
+				return null;
+			}
+			return draft;
+		} catch (e) {
+			return null;
+		}
+	}
+
+	clearProjectDraft = (projectId) => {
+		this.setState((prevState) => {
+			const drafts = { ...prevState.projectDrafts };
+			delete drafts[String(projectId)];
+			return { projectDrafts: drafts };
+		});
+		try {
+			localStorage.removeItem(`cortex-draft-${projectId}`);
+		} catch (e) { /* ignore */ }
+	}
+
 	getCollaborators = ({ project_id, success=()=>{}, error=()=>{} }) => {
 		if(this.state.token!==null){
 			const server = new Server({ token: this.state.token });
@@ -672,7 +726,10 @@ class DataContextProvider extends Component {
 											setWorkbenchTabDirty: this.setWorkbenchTabDirty,
 											registerWorkbenchTabSaveHandler: this.registerWorkbenchTabSaveHandler,
 											unregisterWorkbenchTabSaveHandler: this.unregisterWorkbenchTabSaveHandler,
-											invokeWorkbenchTabSave: this.invokeWorkbenchTabSave
+										invokeWorkbenchTabSave: this.invokeWorkbenchTabSave,
+										setProjectDraft: this.setProjectDraft,
+										getProjectDraft: this.getProjectDraft,
+										clearProjectDraft: this.clearProjectDraft
 
 										}}>
 				{this.props.children}

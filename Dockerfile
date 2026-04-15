@@ -1,5 +1,5 @@
 # base image 
-FROM node:20
+FROM node:18
 
 # Build tooling required by legacy native dependencies (e.g., node-sass).
 RUN apt-get update && apt-get install -y --no-install-recommends \
