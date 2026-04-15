@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Box, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItem from '@material-ui/core/ListItem';
 import List from '@material-ui/core/List';
@@ -12,7 +11,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -136,16 +134,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
 export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPublicTemplates, getDoc, alert, editorMode, addCollaborator, removeCollaborator, updateCollaborators, tabKey, setTabDirty, registerTabSaveHandler, unregisterTabSaveHandler }) {
   const classes = useStyles();
   
   const [backline, setBackline] = useState(null);//Para o botão de voltar
-
-  const [open, setOpen] = React.useState(true);
 
   const [openConfig, setOpenConfig] = useState(false);
 
@@ -222,10 +214,6 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
       history.push("/projects");
   }
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleIndent = (e) => {
     const lg = new LinesGetter(code);
     const lines = lg.getLines();
@@ -256,10 +244,6 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
     setCode(result);
     setIndentSwitch(!indentSwitch);
   }
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
    const onConfigClose = () => {
     setOpenConfig(false);
@@ -431,9 +415,8 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
   const editButtonRef = useRef(null);
 
   return (
-    <div>
-      <Dialog fullScreen open={open} TransitionComponent={Transition} disableBackdropClick>
-        <AppBar className={classes.appBar}>
+    <Box style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+      <AppBar className={classes.appBar} style={{ flexShrink: 0 }}>
           <Toolbar>
             <IconButton edge="start" color="inherit" onClick={backProjects} aria-label="close">
               <ArrowBackIcon />
@@ -462,7 +445,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
         </AppBar>
         
 
-        <Grid container>
+        <Grid container style={{ flexShrink: 0 }}>
           <Grid 
             item container
             direction="row"
@@ -496,15 +479,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
           </Grid>
         </Grid>
 
-        <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="stretch"
-            className={classes.containerEditor}
-          >
-
-          <Grid item xs={12} className={classes.editor}>
+        <Box style={{ flex: 1, minHeight: 0, position: 'relative', backgroundColor: '#2f3129' }}>
             <AceEditor 
               onLoad={ onLoadAce({ editorMode, setInfoButtonSubject, completer: CortexCompleter, setBackline }) }
               mode="javascript"
@@ -518,6 +493,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
               tabSize={2}
               width="100%"
               height="100%"
+              style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
               showPrintMargin={false}
               commands={[
                 {   
@@ -641,17 +617,11 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
 
             </Drawer>
 
-          </Grid>
-
-        </Grid>
-
-
-      </Dialog>
+        </Box>
 
       <BuildPanel editorMode={editorMode} open={build.open} setOpen={setBuildOpen} code={build.code} projectName={name} theme={theme} />
 
-      
-    </div>
+    </Box>
   );
 }
 
@@ -696,7 +666,7 @@ class PlainMacro extends React.Component {
 		}
 
 		return (
-			<div>
+			<div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
 				<Editor 
 					project={this.state.project} 
 					saveMacro={this.props.saveMacro} 

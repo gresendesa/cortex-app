@@ -80,8 +80,9 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper,
 	const classes = useStyles();
 
 	const [searchResultProjects, setsearchResultProjects] = useState(projects);
-	const [searchString, setSearchString] = useState('')
-	const [loadingProjects, setLoadingProjects] = useState(false)
+	const [searchString, setSearchString] = useState((pagination && pagination.q !== undefined) ? pagination.q : '');
+	const [loadingProjects, setLoadingProjects] = useState(false);
+	const skipNextFetch = React.useRef(true);
 
 
 	const handleSearch = (e) => {
@@ -93,6 +94,10 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper,
 	},[projects]);
 
 	useEffect(() => {
+		if (skipNextFetch.current) {
+			skipNextFetch.current = false;
+			return;
+		}
 		const handler = setTimeout(() => {
 			setLoadingProjects(true);
 			fetchMacros({

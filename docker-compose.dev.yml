@@ -1,0 +1,30 @@
+services:
+
+  rocket-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: cortex-app:dev
+    container_name: rocket-dev
+    volumes:
+      # Codigo-fonte montado em tempo real — toda alteracao e refletida imediatamente.
+      - .:/home/app
+      # node_modules em named volume: nao e sobrescrito pelo bind mount acima.
+      # Primeira execucao faz yarn install (~13min). Subsequentes: ~30s.
+      - node_modules_dev:/home/app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      # Necessario para que o webpack detect alteracoes em bind mounts Docker.
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    networks:
+      - macrosoft-dev-net
+
+volumes:
+  node_modules_dev:
+
+networks:
+  macrosoft-dev-net:
+    external: true

@@ -1,0 +1,17 @@
+# Imagem de desenvolvimento com hot reload.
+# Nao copia codigo nem instala dependencias — isso e feito via volume no compose.
+# node:18 — node-sass 7.0.1 tem binario pre-compilado oficial para Node 18.
+# node:20 nao tem binario e falha ao compilar do fonte.
+FROM node:18
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+		python3 \
+		make \
+		g++ \
+	&& rm -rf /var/lib/apt/lists/*
+
+WORKDIR /home/app
+
+# yarn install e react-scripts start sao executados pelo CMD do compose,
+# usando o codigo-fonte montado via bind mount e node_modules via named volume.
+CMD ["sh", "-c", "yarn install --network-timeout 600000 && yarn local"]

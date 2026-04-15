@@ -9,6 +9,7 @@ import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import SearchIcon from '@material-ui/icons/Search';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 
 import Macro from '../Macro';
 import PlainMacro from '../PlainMacro';
@@ -111,7 +112,7 @@ function ProjectsSidebarView({ macros, fetchMacros, pagination, delMacro, userna
                 key={project.id}
                 button
                 onClick={() => onOpenProject(project)}
-                style={{ paddingRight: canDelete ? 44 : 8 }}
+                style={{ paddingRight: 44 }}
               >
                 <ListItemText
                   primary={name}
@@ -119,14 +120,22 @@ function ProjectsSidebarView({ macros, fetchMacros, pagination, delMacro, userna
                   primaryTypographyProps={{ style: { color: 'var(--wb-text)', fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }}
                   secondaryTypographyProps={{ style: { color: 'var(--wb-text-dim)', fontSize: 11 } }}
                 />
-                {canDelete && (
-                  <ListItemSecondaryAction>
+                <ListItemSecondaryAction>
+                  {canDelete ? (
                     <DeleteButton
                       type="trigger"
                       callback={() => handleDelete(project.id)}
                     />
-                  </ListItemSecondaryAction>
-                )}
+                  ) : (
+                    <Tooltip title="Sem permissão para apagar" placement="left">
+                      <span>
+                        <IconButton edge="end" aria-label="sem permissão" disabled>
+                          <DeleteOutlineIcon style={{ opacity: 0.3 }} />
+                        </IconButton>
+                      </span>
+                    </Tooltip>
+                  )}
+                </ListItemSecondaryAction>
               </ListItem>
             );
           })}
@@ -144,7 +153,8 @@ function ProjectsSidebarView({ macros, fetchMacros, pagination, delMacro, userna
 const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
-    minHeight: 'calc(100vh - 64px - 48px)',
+    height: 'calc(100vh - 64px)',
+    overflow: 'hidden',
     background: 'var(--wb-bg)'
   },
   activityBar: {
@@ -172,7 +182,8 @@ const useStyles = makeStyles(() => ({
     background: 'var(--wb-panel-2)',
     borderRight: '1px solid var(--wb-border)',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    overflow: 'hidden'
   },
   sidebarClosed: {
     width: 0,
@@ -206,7 +217,8 @@ const useStyles = makeStyles(() => ({
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    minWidth: 0
+    minWidth: 0,
+    overflow: 'hidden'
   },
   tabs: {
     height: 36,
@@ -244,6 +256,7 @@ const useStyles = makeStyles(() => ({
   content: {
     flex: 1,
     overflow: 'auto',
+    minHeight: 0,
     padding: 16,
     color: 'var(--wb-text)'
   },
@@ -508,7 +521,7 @@ export default function WorkbenchShell({ context, editorMode }) {
             );
           })}
         </Box>
-        <Box className={classes.content}>
+        <Box className={classes.content} style={location.pathname.startsWith('/project/flat/') ? { padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' } : undefined}>
           <Switch>
             <Route path="/project/flat/:id" render={(props) => {
               const project = context.macros.find((m) => String(m.id) === String(props.match.params.id));

@@ -2,11 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import history from './history';
 import ButtonAppBar from './components/NavBar';
-import { Container } from '@material-ui/core';
 import Login from './components/Login';
 import PublicEditor from './PublicEditor';
 import WorkbenchShell from './components/WorkbenchShell';
-import Footer from './uis/Footer';
 import CSKeyGenerator from './uis/CSKeyGenerator';
 import { DataContext } from './contexts/DataContext';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -27,13 +25,11 @@ export default function Routes({ context }) {
 			return(
 				<Router history={history}>
 					<ButtonAppBar logged={context.token !== null} setToken={context.setToken} username={context.username} version={context.version} />
-					<Container maxWidth={context.token !== null ? false : "sm"}>
-
-						{context.processing && <LinearProgress color="secondary" />}
-						{
-							context.token !== null ?
-							<WorkbenchShell context={context} editorMode={editorMode} />
-							:
+					{context.processing && <LinearProgress color="secondary" />}
+					{
+						context.token !== null ?
+						<WorkbenchShell context={context} editorMode={editorMode} />
+						:
 							<Switch>
 								<Route 
 									exact path="/cskey" 
@@ -80,9 +76,7 @@ export default function Routes({ context }) {
 							</Switch>
 								
 						}
-						
-					</Container>
-					<Footer version={context.version} />
+					
 				</Router>
 			)
 		}}
