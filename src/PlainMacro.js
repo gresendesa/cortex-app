@@ -134,7 +134,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPublicTemplates, getDoc, alert, editorMode, addCollaborator, removeCollaborator, updateCollaborators, tabKey, setTabDirty, registerTabSaveHandler, unregisterTabSaveHandler, getProjectDraft, setProjectDraft, clearProjectDraft }) {
+export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPublicTemplates, getDoc, alert, editorMode, addCollaborator, removeCollaborator, updateCollaborators, tabKey, setTabDirty, setTabLabel, registerTabSaveHandler, unregisterTabSaveHandler, getProjectDraft, setProjectDraft, clearProjectDraft }) {
   const classes = useStyles();
   
   const [backline, setBackline] = useState(null);//Para o botão de voltar
@@ -327,6 +327,9 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
         if (setTabDirty && tabKey) {
           setTabDirty(tabKey, false);
         }
+        if (setTabLabel && tabKey) {
+          setTabLabel(tabKey, name);
+        }
         if (clearProjectDraft) {
           clearProjectDraft(project.id);
         }
@@ -393,6 +396,9 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
             if (setTabDirty) {
               setTabDirty(tabKey, false);
             }
+            if (setTabLabel) {
+              setTabLabel(tabKey, snapshotRef.current.name);
+            }
             if (clearProjectDraft) {
               clearProjectDraft(project.id);
             }
@@ -434,9 +440,11 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
     <Box style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
       <AppBar className={classes.appBar} style={{ flexShrink: 0 }}>
           <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={backProjects} aria-label="close">
-              <ArrowBackIcon />
-            </IconButton>
+            {!tabKey && (
+              <IconButton edge="start" color="inherit" onClick={backProjects} aria-label="close">
+                <ArrowBackIcon />
+              </IconButton>
+            )}
             <Typography variant="h6" className={classes.title}>
               {name}
             </Typography>
@@ -698,6 +706,7 @@ class PlainMacro extends React.Component {
           updateCollaborators={updateCollaborators}
           tabKey={this.props.tabKey}
           setTabDirty={this.props.setTabDirty}
+          setTabLabel={this.props.setTabLabel}
           registerTabSaveHandler={this.props.registerTabSaveHandler}
           unregisterTabSaveHandler={this.props.unregisterTabSaveHandler}
           getProjectDraft={this.props.getProjectDraft}

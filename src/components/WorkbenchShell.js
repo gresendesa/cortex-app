@@ -1,16 +1,26 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Switch, Route, Redirect, useHistory, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, InputBase, List, ListItem, ListItemSecondaryAction, ListItemText, TextField, Tooltip, Typography } from '@material-ui/core';
+import { Box, Button, Collapse, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, InputBase, LinearProgress, List, ListItem, ListItemSecondaryAction, ListItemText, Menu, MenuItem, TextField, Tooltip, Typography } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import BlockIcon from '@material-ui/icons/Block';
+import CheckIcon from '@material-ui/icons/Check';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import CloseIcon from '@material-ui/icons/Close';
-import FolderOpenIcon from '@material-ui/icons/FolderOpen';
-import ListAltIcon from '@material-ui/icons/ListAlt';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import SearchIcon from '@material-ui/icons/Search';
+import CodeIcon from '@material-ui/icons/Code';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import ListAltIcon from '@material-ui/icons/ListAlt';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import SaveIcon from '@material-ui/icons/Save';
+import SearchIcon from '@material-ui/icons/Search';
+import SettingsIcon from '@material-ui/icons/Settings';
+import { Icon } from 'semantic-ui-react';
 
 import Macro from '../Macro';
 import PlainMacro from '../PlainMacro';
@@ -18,6 +28,315 @@ import Loader from '../Loader';
 import Projects from '../Projects';
 import Templates from '../Templates';
 import CSKeyGenerator from '../uis/CSKeyGenerator';
+
+const GROUP_LABELS = { opening: 'Before', main: 'Loop', ending: 'After' };
+
+function MacroSidebarView({ project, selectedTrigger, onSelectTrigger, macroActions }) {
+  const [expandedTasks, setExpandedTasks] = useState({});
+  const [expandedGroups, setExpandedGroups] = useState({});
+  const [hoveredTaskId, setHoveredTaskId] = useState(null);
+  const [taskMenuAnchor, setTaskMenuAnchor] = useState(null);
+  const [taskMenuTargetId, setTaskMenuTargetId] = useState(null);
+  const [armedTaskDeleteId, setArmedTaskDeleteId] = useState(null);
+  const [hoveredTriggerId, setHoveredTriggerId] = useState(null);
+  const [armedTriggerDeleteId, setArmedTriggerDeleteId] = useState(null);
+  const [addTriggerDialog, setAddTriggerDialog] = useState(null); // { taskId, group } | null
+  const [addTriggerName, setAddTriggerName] = useState('');
+  const armedTimerRef = useRef(null);
+
+  const armDelete = (id, setter) => {
+    if (armedTimerRef.current) clearTimeout(armedTimerRef.current);
+    setter(id);
+    armedTimerRef.current = setTimeout(() => setter(null), 2000);
+  };
+
+  useEffect(() => () => { if (armedTimerRef.current) clearTimeout(armedTimerRef.current); }, []);
+
+  if (!project || !project.macro || !project.macro.tasks) {
+    return <Box style={{ padding: 12, color: 'var(--wb-text-dim)', fontSize: 13 }}>Projeto não carregado.</Box>;
+  }
+
+  const tasks = (macroActions && macroActions.tasks) || project.macro.tasks;
+  const disabledTasks = (macroActions && macroActions.disabledTasks) || (project.macro && project.macro.disabled_tasks) || [];
+
+  const toggleTask = (taskId) => {
+    setExpandedTasks((prev) => ({ ...prev, [taskId]: !prev[taskId] }));
+  };
+
+  const toggleGroup = (taskId, group) => {
+    const key = `${taskId}_${group}`;
+    setExpandedGroups((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const openTaskMenu = (e, taskId) => {
+    e.stopPropagation();
+    setTaskMenuAnchor(e.currentTarget);
+    setTaskMenuTargetId(taskId);
+  };
+
+  const closeTaskMenu = () => {
+    setTaskMenuAnchor(null);
+    setTaskMenuTargetId(null);
+  };
+
+  const openAddTrigger = (e, taskId, group) => {
+    e.stopPropagation();
+    setAddTriggerName('');
+    setAddTriggerDialog({ taskId, group });
+  };
+
+  const closeAddTrigger = () => setAddTriggerDialog(null);
+
+  const confirmAddTrigger = () => {
+    if (!addTriggerDialog || !macroActions) return;
+    const { taskId, group } = addTriggerDialog;
+    const name = addTriggerName.trim();
+    if (!name || name.match(/"/)) return;
+    if (macroActions.onHasTrigger(taskId, group, name)) return;
+    macroActions.onAddTrigger(taskId, group, name);
+    closeAddTrigger();
+  };
+
+  return (
+    <>
+    <Box style={{ flex: 1, overflowY: 'auto' }}>
+      {tasks.map((task, taskIndex) => {
+        const isDisabled = disabledTasks.includes(task.name);
+        const showTaskActions = hoveredTaskId === task.id && macroActions;
+        return (
+          <Box key={task.id}>
+            <ListItem
+              button
+              dense
+              onClick={() => toggleTask(task.id)}
+              onMouseEnter={() => setHoveredTaskId(task.id)}
+              onMouseLeave={() => setHoveredTaskId(null)}
+              style={{ paddingLeft: 8, paddingRight: 32 }}
+            >
+              <ExpandMoreIcon
+                style={{
+                  fontSize: 16,
+                  color: isDisabled ? 'var(--wb-text-disabled, #555)' : 'var(--wb-text-dim)',
+                  transform: expandedTasks[task.id] ? 'rotate(0deg)' : 'rotate(-90deg)',
+                  transition: 'transform 0.15s',
+                  marginRight: 4,
+                  flexShrink: 0
+                }}
+              />
+              <FolderOpenIcon style={{ fontSize: 16, color: isDisabled ? 'var(--wb-text-disabled, #555)' : 'var(--wb-text-dim)', marginRight: 6, flexShrink: 0 }} />
+              <ListItemText
+                primary={task.name}
+                primaryTypographyProps={{
+                  style: {
+                    color: isDisabled ? 'var(--wb-text-disabled, #666)' : 'var(--wb-text)',
+                    fontSize: 13,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    textDecoration: isDisabled ? 'line-through' : 'none'
+                  }
+                }}
+              />
+              <ListItemSecondaryAction
+                onMouseEnter={() => setHoveredTaskId(task.id)}
+                onMouseLeave={() => setHoveredTaskId(null)}
+                style={{ visibility: showTaskActions ? 'visible' : 'hidden' }}
+              >
+                <IconButton size="small" onClick={(e) => openTaskMenu(e, task.id)} style={{ color: 'var(--wb-text-dim)', padding: 2 }}>
+                  <MoreVertIcon style={{ fontSize: 16 }} />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+
+            <Menu
+              anchorEl={taskMenuAnchor}
+              open={taskMenuTargetId === task.id && Boolean(taskMenuAnchor)}
+              onClose={closeTaskMenu}
+              PaperProps={{ style: { minWidth: 160, backgroundColor: 'var(--wb-sidebar-bg, #252526)', color: 'var(--wb-text, #ccc)' } }}
+            >
+              {taskIndex > 0 && (
+                <MenuItem dense onClick={() => { macroActions.onMoveTaskUp(task); closeTaskMenu(); }}
+                  style={{ fontSize: 13 }}>Mover acima</MenuItem>
+              )}
+              <MenuItem dense onClick={() => { macroActions.onEditTask(task); closeTaskMenu(); }}
+                style={{ fontSize: 13 }}>Editar</MenuItem>
+              <MenuItem dense onClick={() => { macroActions.onToggleTask(task); closeTaskMenu(); }}
+                style={{ fontSize: 13 }}>{isDisabled ? 'Habilitar' : 'Desabilitar'}</MenuItem>
+              <MenuItem
+                dense
+                onClick={() => {
+                  if (armedTaskDeleteId === task.id) {
+                    macroActions.onDeleteTask(task.id);
+                    setArmedTaskDeleteId(null);
+                    closeTaskMenu();
+                  } else {
+                    armDelete(task.id, setArmedTaskDeleteId);
+                  }
+                }}
+                style={{ fontSize: 13, color: armedTaskDeleteId === task.id ? '#f44336' : undefined }}
+              >
+                {armedTaskDeleteId === task.id ? 'Confirmar apagar' : 'Apagar'}
+              </MenuItem>
+            </Menu>
+
+            <Collapse in={!!expandedTasks[task.id]}>
+              {['opening', 'main', 'ending'].map((group) => {
+                const groupKey = `${task.id}_${group}`;
+                const triggers = (task.triggers && task.triggers[group]) || [];
+                return (
+                  <Box key={group}>
+                    <ListItem button dense onClick={() => toggleGroup(task.id, group)} style={{ paddingLeft: 24, paddingRight: macroActions ? 28 : 8 }}>
+                      <ExpandMoreIcon
+                        style={{
+                          fontSize: 14,
+                          color: 'var(--wb-text-dim)',
+                          transform: expandedGroups[groupKey] ? 'rotate(0deg)' : 'rotate(-90deg)',
+                          transition: 'transform 0.15s',
+                          marginRight: 4,
+                          flexShrink: 0
+                        }}
+                      />
+                      <FolderOpenIcon style={{ fontSize: 14, color: 'var(--wb-text-dim)', marginRight: 6, flexShrink: 0 }} />
+                      <ListItemText
+                        primary={GROUP_LABELS[group]}
+                        primaryTypographyProps={{ style: { color: 'var(--wb-text-dim)', fontSize: 12 } }}
+                      />
+                      {macroActions && (
+                        <ListItemSecondaryAction>
+                          <Tooltip title="Nova action" placement="top">
+                            <IconButton size="small" onClick={(e) => openAddTrigger(e, task.id, group)} style={{ color: 'var(--wb-text-dim)', padding: 2 }}>
+                              <AddIcon style={{ fontSize: 14 }} />
+                            </IconButton>
+                          </Tooltip>
+                        </ListItemSecondaryAction>
+                      )}
+                    </ListItem>
+                    <Collapse in={!!expandedGroups[groupKey]}>
+                      {triggers.map((trigger, triggerIndex) => {
+                        const isSelected = selectedTrigger && String(selectedTrigger.trigger.id) === String(trigger.id);
+                        const triggerKey = `${task.id}_${group}_${trigger.id}`;
+                        const showTriggerActions = hoveredTriggerId === triggerKey && macroActions;
+                        const isArmedDelete = armedTriggerDeleteId === triggerKey;
+                        return (
+                          <ListItem
+                            button
+                            dense
+                            key={trigger.id}
+                            selected={isSelected}
+                            onClick={() => onSelectTrigger({ task, group, trigger })}
+                            onMouseEnter={() => setHoveredTriggerId(triggerKey)}
+                            onMouseLeave={() => setHoveredTriggerId(null)}
+                            style={{ paddingLeft: 44, paddingRight: 72 }}
+                          >
+                            <ListItemText
+                              primary={trigger.name}
+                              primaryTypographyProps={{
+                                style: {
+                                  color: isSelected ? 'var(--wb-text)' : (!trigger.active ? '#555' : (trigger.blocking ? '#ffb74d' : 'var(--wb-text-dim)')),
+                                  fontSize: 12,
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  whiteSpace: 'nowrap',
+                                  textDecoration: !trigger.active ? 'line-through' : (trigger.blocking ? 'underline' : 'none')
+                                }
+                              }}
+                            />
+                            <ListItemSecondaryAction
+                              onMouseEnter={() => setHoveredTriggerId(triggerKey)}
+                              onMouseLeave={() => setHoveredTriggerId(null)}
+                              style={{ visibility: showTriggerActions ? 'visible' : 'hidden', display: 'flex', alignItems: 'center' }}
+                            >
+                              <Tooltip title={trigger.active ? 'Desativar' : 'Ativar'} placement="top">
+                                <IconButton
+                                  size="small"
+                                  onClick={(e) => { e.stopPropagation(); macroActions.onToggleTrigger(task.id, group, trigger.id); }}
+                                  style={{ color: trigger.active ? '#81c784' : '#666', padding: 2 }}
+                                >
+                                  {trigger.active ? <CheckIcon style={{ fontSize: 14 }} /> : <BlockIcon style={{ fontSize: 14 }} />}
+                                </IconButton>
+                              </Tooltip>
+                              {triggerIndex > 0 && (
+                                <Tooltip title="Mover acima" placement="top">
+                                  <IconButton
+                                    size="small"
+                                    onClick={(e) => { e.stopPropagation(); macroActions.onMoveTriggerUp(task.id, group, trigger.id); }}
+                                    style={{ color: 'var(--wb-text-dim)', padding: 2 }}
+                                  >
+                                    <ArrowUpwardIcon style={{ fontSize: 14 }} />
+                                  </IconButton>
+                                </Tooltip>
+                              )}
+                              <Tooltip title={isArmedDelete ? 'Confirmar' : 'Apagar'} placement="top">
+                                <IconButton
+                                  size="small"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (isArmedDelete) {
+                                      macroActions.onDeleteTrigger(task.id, group, trigger.id);
+                                      setArmedTriggerDeleteId(null);
+                                    } else {
+                                      armDelete(triggerKey, setArmedTriggerDeleteId);
+                                    }
+                                  }}
+                                  style={{ color: isArmedDelete ? '#f44336' : '#666', padding: 2 }}
+                                >
+                                  <DeleteOutlineIcon style={{ fontSize: 14 }} />
+                                </IconButton>
+                              </Tooltip>
+                            </ListItemSecondaryAction>
+                          </ListItem>
+                        );
+                      })}
+                      {triggers.length === 0 && (
+                        <ListItem dense style={{ paddingLeft: 44 }}>
+                          <ListItemText
+                            primary="Sem triggers"
+                            primaryTypographyProps={{ style: { color: 'var(--wb-text-dim)', fontSize: 11, fontStyle: 'italic' } }}
+                          />
+                        </ListItem>
+                      )}
+                    </Collapse>
+                  </Box>
+                );
+              })}
+            </Collapse>
+          </Box>
+        );
+      })}
+      {tasks.length === 0 && (
+        <Box style={{ padding: 12, color: 'var(--wb-text-dim)', fontSize: 13 }}>Nenhuma task encontrada.</Box>
+      )}
+    </Box>
+
+    <Dialog open={Boolean(addTriggerDialog)} onClose={closeAddTrigger} maxWidth="xs" fullWidth
+      PaperProps={{ style: { backgroundColor: 'var(--wb-panel-1, #252526)', color: 'var(--wb-text, #ccc)' } }}>
+      <DialogTitle style={{ color: 'var(--wb-text, #ccc)', fontSize: 14 }}>
+        Nova action — {addTriggerDialog ? GROUP_LABELS[addTriggerDialog.group] : ''}
+      </DialogTitle>
+      <DialogContent>
+        <TextField
+          autoFocus
+          fullWidth
+          margin="dense"
+          label="Nome da action"
+          value={addTriggerName}
+          onChange={(e) => setAddTriggerName(e.target.value)}
+          onKeyPress={(e) => { if (e.key === 'Enter') confirmAddTrigger(); }}
+          InputProps={{ style: { color: 'var(--wb-text, #ccc)', fontSize: 13 } }}
+          InputLabelProps={{ style: { color: 'var(--wb-text-dim, #999)', fontSize: 13 } }}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={closeAddTrigger} size="small" style={{ color: 'var(--wb-text-dim, #999)' }}>Cancelar</Button>
+        <Button onClick={confirmAddTrigger} size="small" color="primary"
+          disabled={!addTriggerName.trim() || (addTriggerDialog && macroActions && macroActions.onHasTrigger(addTriggerDialog.taskId, addTriggerDialog.group, addTriggerName.trim()))}>
+          Criar
+        </Button>
+      </DialogActions>
+    </Dialog>
+    </>
+  );
+}
 
 const ACTIVITY_KEY = 'cortex-workbench-activity';
 const SIDEBAR_KEY = 'cortex-workbench-sidebar-open';
@@ -439,6 +758,8 @@ export default function WorkbenchShell({ context, editorMode }) {
   const [sidebarOpen, setSidebarOpen] = useState(() => localStorage.getItem(SIDEBAR_KEY) !== 'false');
   const [activity, setActivity] = useState(() => localStorage.getItem(ACTIVITY_KEY) || 'projects');
   const [closeDialog, setCloseDialog] = useState({ open: false, tab: null });
+  const [selectedTrigger, setSelectedTrigger] = useState(null);
+  const [macroActions, setMacroActions] = useState(null);
   const sidebarStateBeforeFlat = useRef(null);
 
   const activityItems = useMemo(() => [
@@ -473,6 +794,11 @@ export default function WorkbenchShell({ context, editorMode }) {
     if (context.ensureWorkbenchTab) {
       context.ensureWorkbenchTab(location.pathname);
     }
+    setSelectedTrigger(null);
+    const isNonFlatPath = location.pathname.startsWith('/project/') && !location.pathname.startsWith('/project/flat/');
+    if (!isNonFlatPath) {
+      setMacroActions(null);
+    }
   }, [location.pathname]);
 
   const handleActivityClick = (item) => {
@@ -493,11 +819,13 @@ export default function WorkbenchShell({ context, editorMode }) {
 
   const openProjectFromSidebar = (project) => {
     const projectMacro = project.macro || { protocol: project.protocol || 'NONE' };
-    if (projectMacro.protocol === 'CTRL') {
-      history.push(`/project/${project.id}`);
+    const targetPath = projectMacro.protocol === 'CTRL'
+      ? `/project/${project.id}`
+      : `/project/flat/${project.id}`;
+    if (location.pathname === targetPath) {
       return;
     }
-    history.push(`/project/flat/${project.id}`);
+    history.push(targetPath);
   };
 
   const renderSidebarContent = () => {
@@ -512,6 +840,12 @@ export default function WorkbenchShell({ context, editorMode }) {
     }
 
     if (activity === 'open') {
+      const isNonFlat = location.pathname.startsWith('/project/') && !location.pathname.startsWith('/project/flat/');
+      if (isNonFlat) {
+        const projectId = location.pathname.split('/').pop();
+        const openProject = (context.macros || []).find((m) => String(m.id) === String(projectId));
+        return <MacroSidebarView project={openProject} selectedTrigger={selectedTrigger} onSelectTrigger={setSelectedTrigger} macroActions={macroActions} />;
+      }
       const recent = (context.macros || []).slice(0, 20);
       if (!recent.length) {
         return <Box className={classes.emptyBlock}>Nenhum projeto carregado ainda.</Box>;
@@ -664,9 +998,18 @@ export default function WorkbenchShell({ context, editorMode }) {
       <Box className={`${classes.sidebar} ${!sidebarOpen ? classes.sidebarClosed : ''}`}>
         <Box className={classes.sidebarHeader}>
           <Typography className={classes.sidebarTitle}>{activityItems.find((item) => item.id === activity)?.label || 'Projetos'}</Typography>
-          <IconButton size="small" onClick={toggleSidebar} aria-label="toggle sidebar">
-            <ChevronLeftIcon style={{ color: 'var(--wb-text-dim)' }} fontSize="small" />
-          </IconButton>
+          <Box style={{ display: 'flex', alignItems: 'center' }}>
+            {activity === 'open' && !isFlat && macroActions && (
+              <Tooltip title="Nova task" placement="bottom">
+                <IconButton size="small" onClick={macroActions.onAddTask} aria-label="adicionar task">
+                  <AddIcon style={{ color: 'var(--wb-text-dim)', fontSize: 18 }} />
+                </IconButton>
+              </Tooltip>
+            )}
+            <IconButton size="small" onClick={toggleSidebar} aria-label="toggle sidebar">
+              <ChevronLeftIcon style={{ color: 'var(--wb-text-dim)' }} fontSize="small" />
+            </IconButton>
+          </Box>
         </Box>
         <Divider style={{ background: 'var(--wb-border)' }} />
         {renderSidebarContent()}
@@ -694,7 +1037,56 @@ export default function WorkbenchShell({ context, editorMode }) {
             );
           })}
         </Box>
-        <Box className={classes.content} style={location.pathname.startsWith('/project/flat/') ? { padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' } : undefined}>
+
+        {/* Barra de ações do projeto não-flat */}
+        {macroActions && !isFlat && location.pathname.startsWith('/project/') && (
+          <Box style={{
+            display: 'flex',
+            alignItems: 'center',
+            background: 'var(--wb-panel-1)',
+            borderBottom: '1px solid var(--wb-border)',
+            padding: '2px 8px',
+            flexShrink: 0,
+            gap: 2,
+            position: 'relative',
+          }}>
+            {macroActions.loading && (
+              <LinearProgress color="secondary" style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2 }} />
+            )}
+            <Tooltip title="Configurações" placement="bottom">
+              <IconButton size="small" onClick={macroActions.onConfig} style={{ color: 'var(--wb-text-dim)' }}>
+                <SettingsIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+            {!selectedTrigger && (
+              <>
+                <Tooltip title="Salvar" placement="bottom">
+                  <span>
+                    <IconButton size="small" disabled={macroActions.loading} onClick={macroActions.onSave} style={{ color: 'var(--wb-text-dim)' }}>
+                      <SaveIcon fontSize="small" />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+                <Tooltip title="Launch" placement="bottom">
+                  <span>
+                    <IconButton size="small" disabled={macroActions.loading} onClick={macroActions.onLaunch} style={{ color: '#357a38' }}>
+                      <Icon name="rocket" size="small" />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              </>
+            )}
+            <Tooltip title="Ver código compilado" placement="bottom">
+              <span>
+                <IconButton size="small" disabled={macroActions.loading} onClick={macroActions.onCode} style={{ color: 'var(--wb-text-dim)' }}>
+                  <CodeIcon fontSize="small" />
+                </IconButton>
+              </span>
+            </Tooltip>
+          </Box>
+        )}
+
+        <Box className={classes.content} style={(isFlat || (selectedTrigger && !isFlat && location.pathname.startsWith('/project/'))) ? { padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' } : undefined}>
           <Switch>
             <Route path="/project/flat/:id" render={(props) => {
               const project = context.macros.find((m) => String(m.id) === String(props.match.params.id));
@@ -715,6 +1107,7 @@ export default function WorkbenchShell({ context, editorMode }) {
                       removeCollaborator={context.removeCollaborator}
                       tabKey={location.pathname}
                       setTabDirty={context.setWorkbenchTabDirty}
+                      setTabLabel={context.setWorkbenchTabLabel}
                       registerTabSaveHandler={context.registerWorkbenchTabSaveHandler}
                       unregisterTabSaveHandler={context.unregisterWorkbenchTabSaveHandler}
                       getProjectDraft={context.getProjectDraft}
@@ -748,6 +1141,9 @@ export default function WorkbenchShell({ context, editorMode }) {
                       addCollaborator={context.addCollaborator}
                       removeCollaborator={context.removeCollaborator}
                       getPublicTemplates={context.getPublicTemplates}
+                      selectedTrigger={selectedTrigger}
+                      onClearSelectedTrigger={() => setSelectedTrigger(null)}
+                      onRegisterActions={setMacroActions}
                       tabKey={location.pathname}
                       setTabDirty={context.setWorkbenchTabDirty}
                       registerTabSaveHandler={context.registerWorkbenchTabSaveHandler}

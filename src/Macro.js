@@ -8,7 +8,7 @@ import { Typography, Box, Grid, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import SaveIcon from '@material-ui/icons/Save';
 import { foo } from './mock/processes';
-import { macroModel } from './mock/models';
+import { macroModel, triggerModel } from './mock/models';
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -19,6 +19,10 @@ import CodeIcon from '@material-ui/icons/Code';
 import BuildPanel from './uis/BuildPanel';
 import translateTriggerGroup from './uis/utils';
 import { editorThemer } from './uis/utils';
+import AceEditor from 'react-ace';
+import 'ace-builds/src-noconflict/mode-javascript';
+import 'ace-builds/src-noconflict/ext-language_tools';
+import InlineTriggerEditor from './uis/InlineTriggerEditor';
 
 
 class Macro extends React.Component {
@@ -35,6 +39,7 @@ class Macro extends React.Component {
 		'buildName': null,
 		'build': '',
 		'isUserSuper': false,
+		'editingTask': null,
 	}
 
 	componentWillMount(){
@@ -57,15 +62,26 @@ class Macro extends React.Component {
 				});
 			});
 		}
+		this.syncActions();
 	}
 
 	componentWillUnmount() {
 		if (this.props.tabKey && this.props.unregisterTabSaveHandler) {
 			this.props.unregisterTabSaveHandler(this.props.tabKey);
 		}
+		if (this.props.onRegisterActions) {
+			this.props.onRegisterActions(null);
+		}
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate(prevProps, prevState) {
+		if (
+			prevState.deployLoading !== this.state.deployLoading ||
+			prevState.tasks !== this.state.tasks ||
+			prevState.disabled_tasks !== this.state.disabled_tasks
+		) {
+			this.syncActions();
+		}
 		if (!this.props.tabKey || !this.props.setTabDirty) {
 			return;
 		}
@@ -197,6 +213,128 @@ class Macro extends React.Component {
 		});
 		copyTasks[indice]=task;
 		this.setState({'tasks': copyTasks});
+	}
+
+	syncActions = () => {
+		if (!this.props.onRegisterActions) return;
+		this.props.onRegisterActions({
+			onConfig:       () => this.setOpenConfig(true),
+			onSave:         () => this.deployMacro({ launch: false }),
+			onCode:         () => this.getBuildCode(this.props.project.id),
+			onLaunch:       () => this.deployMacro({ launch: true }),
+			onAddTask:      () => this.setState({ openCreateDialog: true }),
+			onMoveTaskUp:   (task) => this.moveTaskUp(task),
+			onToggleTask:   (task) => this.toggleTaskStatus(task),
+			onDeleteTask:   (id)   => this.deleteTask(id),
+			onEditTask:     (task) => this.openTaskEdit(task),
+			onToggleTrigger:  (taskId, group, triggerId) => this.toggleTriggerInState(taskId, group, triggerId),
+			onDeleteTrigger:  (taskId, group, triggerId) => this.deleteTriggerInState(taskId, group, triggerId),
+			onMoveTriggerUp:  (taskId, group, triggerId) => this.moveTriggerUpInState(taskId, group, triggerId),
+			onAddTrigger:     (taskId, group, name)      => this.addTriggerToTask(taskId, group, name),
+			onHasTrigger:     (taskId, group, name)      => this.hasTriggerInTask(taskId, group, name),
+			loading:        this.state.deployLoading,
+			tasks:          this.state.tasks,
+			disabledTasks:  this.state.disabled_tasks || [],
+		});
+	}
+
+	openTaskEdit = (task) => {
+		this.setState({ editingTask: task });
+	}
+
+	closeTaskEdit = () => {
+		this.setState({ editingTask: null });
+	}
+
+	saveTriggerAndDeploy = (task, group, newTrigger, { publish }, callback = () => {}) => {
+		const copyTask = { ...task };
+		const triggers = [...(copyTask.triggers[group] || [])];
+		const idx = triggers.findIndex((t) => String(t.id) === String(newTrigger.id));
+		if (idx >= 0) {
+			triggers[idx] = newTrigger;
+			copyTask.triggers = { ...copyTask.triggers, [group]: triggers };
+			const copyTasks = [...this.state.tasks];
+			const taskIdx = copyTasks.findIndex((t) => String(t.id) === String(copyTask.id));
+			if (taskIdx >= 0) copyTasks[taskIdx] = copyTask;
+			this.setState({ tasks: copyTasks }, () => {
+				this.deployMacro({ launch: publish, callback });
+			});
+		} else {
+			this.deployMacro({ launch: publish, callback });
+		}
+	}
+
+	toggleTriggerInState = (taskId, group, triggerId) => {
+		const copyTasks = [...this.state.tasks];
+		const taskIdx = copyTasks.findIndex((t) => String(t.id) === String(taskId));
+		if (taskIdx < 0) return;
+		const copyTask = { ...copyTasks[taskIdx] };
+		const triggers = [...(copyTask.triggers[group] || [])];
+		const tIdx = triggers.findIndex((t) => String(t.id) === String(triggerId));
+		if (tIdx < 0) return;
+		triggers[tIdx] = { ...triggers[tIdx], active: !triggers[tIdx].active };
+		copyTask.triggers = { ...copyTask.triggers, [group]: triggers };
+		copyTasks[taskIdx] = copyTask;
+		this.setState({ tasks: copyTasks });
+	}
+
+	deleteTriggerInState = (taskId, group, triggerId) => {
+		const copyTasks = [...this.state.tasks];
+		const taskIdx = copyTasks.findIndex((t) => String(t.id) === String(taskId));
+		if (taskIdx < 0) return;
+		const copyTask = { ...copyTasks[taskIdx] };
+		const triggers = (copyTask.triggers[group] || []).filter((t) => String(t.id) !== String(triggerId));
+		copyTask.triggers = { ...copyTask.triggers, [group]: triggers };
+		copyTasks[taskIdx] = copyTask;
+		this.setState({ tasks: copyTasks });
+	}
+
+	moveTriggerUpInState = (taskId, group, triggerId) => {
+		const copyTasks = [...this.state.tasks];
+		const taskIdx = copyTasks.findIndex((t) => String(t.id) === String(taskId));
+		if (taskIdx < 0) return;
+		const copyTask = { ...copyTasks[taskIdx] };
+		const triggers = [...(copyTask.triggers[group] || [])];
+		const tIdx = triggers.findIndex((t) => String(t.id) === String(triggerId));
+		if (tIdx <= 0) return;
+		const above = triggers[tIdx - 1];
+		triggers[tIdx - 1] = triggers[tIdx];
+		triggers[tIdx] = above;
+		copyTask.triggers = { ...copyTask.triggers, [group]: triggers };
+		copyTasks[taskIdx] = copyTask;
+		this.setState({ tasks: copyTasks });
+	}
+
+	addTriggerToTask = (taskId, group, name) => {
+		const copyTasks = [...this.state.tasks];
+		const taskIdx = copyTasks.findIndex((t) => String(t.id) === String(taskId));
+		if (taskIdx < 0) return;
+		const copyTask = { ...copyTasks[taskIdx] };
+		const triggers = [...(copyTask.triggers[group] || [])];
+		triggers.push(triggerModel({ name }));
+		copyTask.triggers = { ...copyTask.triggers, [group]: triggers };
+		copyTasks[taskIdx] = copyTask;
+		this.setState({ tasks: copyTasks });
+	}
+
+	hasTriggerInTask = (taskId, group, name) => {
+		const task = this.state.tasks.find((t) => String(t.id) === String(taskId));
+		if (!task) return false;
+		return (task.triggers[group] || []).some((t) => t.name === name);
+	}
+
+	editTriggerCode = (taskId, group, triggerId, newCode) => {
+		const copyTasks = [...this.state.tasks];
+		const taskIdx = copyTasks.findIndex((t) => String(t.id) === String(taskId));
+		if (taskIdx < 0) return;
+		const copyTask = { ...copyTasks[taskIdx] };
+		const triggers = [...(copyTask.triggers[group] || [])];
+		const triggerIdx = triggers.findIndex((t) => String(t.id) === String(triggerId));
+		if (triggerIdx < 0) return;
+		triggers[triggerIdx] = { ...triggers[triggerIdx], action: newCode };
+		copyTask.triggers = { ...copyTask.triggers, [group]: triggers };
+		copyTasks[taskIdx] = copyTask;
+		this.setState({ tasks: copyTasks });
 	}
 
 	showAlert = (message, severity) => {
@@ -350,6 +488,41 @@ class Macro extends React.Component {
 		this.props.getActionCode({ id, name, project_id:this.state.project.id, task_name, section, success, error });
 	}
 
+	renderTriggerEditor = () => {
+		const { selectedTrigger } = this.props;
+		if (!selectedTrigger) return null;
+
+		const liveTask = this.state.tasks.find((t) => String(t.id) === String(selectedTrigger.task.id));
+		if (!liveTask) return null;
+		const liveTriggers = (liveTask.triggers && liveTask.triggers[selectedTrigger.group]) || [];
+		const liveTrigger = liveTriggers.find((t) => String(t.id) === String(selectedTrigger.trigger.id));
+		if (!liveTrigger) return null;
+
+		return (
+			<InlineTriggerEditor
+				key={`${liveTrigger.id}-${selectedTrigger.group}`}
+				project={this.state.project}
+				task={liveTask}
+				trigger={liveTrigger}
+				group={selectedTrigger.group}
+				onClose={this.props.onClearSelectedTrigger || (() => {})}
+				onSave={(newTrigger, options, cb) => this.saveTriggerAndDeploy(liveTask, selectedTrigger.group, newTrigger, options, cb)}
+				onCodeChange={() => {
+					if (this.props.tabKey && this.props.setTabDirty) {
+						this.props.setTabDirty(this.props.tabKey, true);
+					}
+				}}
+				loading={this.state.deployLoading}
+				getActionCode={this.getActionCode}
+				getTemplateInfo={this.props.getTemplateInfo}
+				getDoc={this.props.getDoc}
+				editorMode={this.props.editorMode}
+				getPublicTemplates={this.props.getPublicTemplates}
+				alert={(msg, sev) => this.showAlert(msg, sev || 'warning')}
+			/>
+		);
+	}
+
 	render(){
 
 		var { open, toggleCreateDialog, togglePopUpAlert, toggleEditDialog, pushTask, hasTask, deleteTask, popUpAlert} = this.hookTask();
@@ -373,66 +546,37 @@ class Macro extends React.Component {
 		return (
 			<React.Fragment>
 
-				
-				{this.state.deployLoading && <LinearProgress color="secondary" />}
+				{this.props.selectedTrigger ? (
+					this.renderTriggerEditor()
+				) : (
+					<React.Fragment>
+						{this.state.deployLoading && <LinearProgress color="secondary" />}
 
-				<Grid
-					container
-					direction="column"
-					justify="center"
-					alignItems="stretch"
-				>
-					<Grid item>
-						<Box mt={2} fontWeight="fontWeightMedium" fontFamily="Monospace" fontSize={18} color={'#f50052'}>
+						<Box mt={2} mb={1} fontWeight="fontWeightMedium" fontFamily="Monospace" fontSize={18} color={'#f50052'}>
 							{this.props.project.dev + ' • ' + this.state.name}
 						</Box>
-					</Grid>
-					<Grid item>
-						<IconButton aria-label="add task" onClick={() => {this.setOpenConfig(true)}}>
-							<SettingsIcon fontSize="small" />
-						</IconButton>
-						<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.deployMacro({ launch:false })}}>
-							<SaveIcon fontSize="small" />
-						</IconButton>
-							<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.getBuildCode(this.props.project.id)}}>
-							<CodeIcon name='rocket' size='small' />
-						</IconButton>
-						<IconButton aria-label="add task" disabled={this.state.deployLoading} onClick={() => {this.deployMacro({ launch:true })}}>
-							<Icon name='rocket' style={{color:'#357a38'}} size='small' />
-						</IconButton>
-					</Grid>
-					
 
-					<Grid item
-						container
-						direction="row"
-						justify="space-between"
-						alignItems="center"
-					>
+						<TasksSection project={this.state.project} disabledTasks={this.state.disabled_tasks} tasks={this.state.tasks} hasDependencies={this.state.dependencies.length} hookTask={this.hookTask} editorMode={this.props.editorMode}/>
 
-						<Grid item>
-							<Typography variant="h5" style={{color: '#357a38'}}>
-								Tasks
-							</Typography>
-						</Grid>
-						<Grid item>
-							<Typography>
-								<IconButton aria-label="add task" onClick={toggleCreateDialog}>
-									<AddIcon fontSize="large" />
-								</IconButton>
-							</Typography>
-						</Grid>
+						{this.state.editingTask && (
+							<TaskEditDialog
+								task={this.state.editingTask}
+								editTask={this.editTask}
+								edit={true}
+								setEdit={(val) => { if (!val) this.closeTaskEdit(); }}
+								hasTask={this.hasTask}
+								alert={(msg, sev) => this.showAlert(msg, sev || 'warning')}
+								hasMacroUnsaved={() => this.state.unsafe != null}
+							/>
+						)}
 
-					</Grid>
+						<DependenciesSection dependencies={this.state.dependencies} hookTask={this.hookTask} />
+					</React.Fragment>
+				)}
 
-				</Grid>
-
-				<TasksSection project={this.state.project} disabledTasks={this.state.disabled_tasks} tasks={this.state.tasks} hasDependencies={this.state.dependencies.length} hookTask={this.hookTask} editorMode={this.props.editorMode}/>
 				<TaskCreateDialog hookTask={this.hookTask}/>
 
-				<DependenciesSection dependencies={this.state.dependencies} hookTask={this.hookTask} />
-
-				<Snackbar open={popUpAlert} autoHideDuration={4000} onClose={togglePopUpAlert} >
+				<Snackbar open={popUpAlert} autoHideDuration={4000} onClose={togglePopUpAlert}>
 					<MuiAlert elevation={6} variant="filled" severity={this.state.alertSeverity}>
 						{this.state.alertMessage}
 					</MuiAlert>
@@ -443,7 +587,6 @@ class Macro extends React.Component {
 				<MacroSettings openConfig={this.state.openConfig} settings={settings} hookTask={this.hookTask} devName={this.state.devName} project={this.state.project} addCollaborator={this.props.addCollaborator} removeCollaborator={this.props.removeCollaborator} updateCollaborators={this.updateCollaborators} />
 
 			</React.Fragment>
-
 		);
 
 	}

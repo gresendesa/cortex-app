@@ -76,6 +76,31 @@ class DataContextProvider extends Component {
 		localStorage.setItem(this.WORKBENCH_ACTIVE_TAB_KEY, activeKey || 'projects');
 	}
 
+	setWorkbenchTabLabel = (tabKey, label) => {
+		if (!tabKey) {
+			return;
+		}
+		this.setState((prevState) => {
+			let changed = false;
+			const tabs = prevState.workbenchTabs.map((tab) => {
+				if (tab.key !== tabKey) {
+					return tab;
+				}
+				if (tab.label === label) {
+					return tab;
+				}
+				changed = true;
+				return { ...tab, label };
+			});
+			if (!changed) {
+				return null;
+			}
+			return { workbenchTabs: tabs };
+		}, () => {
+			this.persistWorkbenchTabs(this.state.workbenchTabs, this.state.activeWorkbenchTabKey);
+		});
+	}
+
 	setWorkbenchTabDirty = (tabKey, isDirty=true) => {
 		if (!tabKey) {
 			return;
@@ -723,8 +748,7 @@ class DataContextProvider extends Component {
 											ensureWorkbenchTab: this.ensureWorkbenchTab,
 											focusWorkbenchTab: this.focusWorkbenchTab,
 											closeWorkbenchTab: this.closeWorkbenchTab,
-											setWorkbenchTabDirty: this.setWorkbenchTabDirty,
-											registerWorkbenchTabSaveHandler: this.registerWorkbenchTabSaveHandler,
+											setWorkbenchTabDirty: this.setWorkbenchTabDirty,										setWorkbenchTabLabel: this.setWorkbenchTabLabel,											registerWorkbenchTabSaveHandler: this.registerWorkbenchTabSaveHandler,
 											unregisterWorkbenchTabSaveHandler: this.unregisterWorkbenchTabSaveHandler,
 										invokeWorkbenchTabSave: this.invokeWorkbenchTabSave,
 										setProjectDraft: this.setProjectDraft,
