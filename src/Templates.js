@@ -40,7 +40,7 @@ class Templates extends React.Component {
 		}
 	}
 
-	componentWillMount(){
+	UNSAFE_componentWillMount(){
 		const success = (response) => {
 			this.setState({'namespaces': response.templates});
 		}

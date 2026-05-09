@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Typography, Grid, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TriggersSection from './TriggersSection';
 
@@ -110,9 +110,9 @@ export default function TasksPanel({ project, disabledTasks, task, hookTask, ind
 	return (
 
 		<Box>
-			<ExpansionPanel expanded={expand} square={true}>
+			<Accordion expanded={expand} square={true}>
 
-				<ExpansionPanelSummary 
+				<AccordionSummary 
 					onClick={handleExpandClick}
 					expandIcon={<ExpandMoreIcon />}
 					aria-controls="panel1a-content"
@@ -130,13 +130,13 @@ export default function TasksPanel({ project, disabledTasks, task, hookTask, ind
 							</TypographyCustom>
 					}
 
-				</ExpansionPanelSummary>
-				<ExpansionPanelDetails>
+				</AccordionSummary>
+				<AccordionDetails>
 					
 					<Grid
 						container
 						direction="column"
-						justify="center"
+						justifyContent="center"
 						alignItems="stretch"
 					>
 						<Grid item>
@@ -162,8 +162,8 @@ export default function TasksPanel({ project, disabledTasks, task, hookTask, ind
 							</BottomNavigation>
 						</Grid>
 					</Grid>
-				</ExpansionPanelDetails>
-			</ExpansionPanel>
+				</AccordionDetails>
+			</Accordion>
 			<TaskEditDialog task={task} editTask={editTask} edit={edit} setEdit={setEdit} hasTask={hasTask} alert={alert} hasMacroUnsafe={hasMacroUnsafe} />
 		</Box>
 	);

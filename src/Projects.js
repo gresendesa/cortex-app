@@ -20,7 +20,7 @@ import ProjectCreateDialog from './uis/ProjectCreateDialog';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { useHistory } from 'react-router-dom';
 import DeleteButton from './uis/DeleteButton';
-import { fade, makeStyles } from '@material-ui/core/styles';
+import { alpha, makeStyles } from '@material-ui/core/styles';
 import { deepOrange, green, indigo, blue } from '@material-ui/core/colors';
 import Tooltip from '@material-ui/core/Tooltip';
 import SearchIcon from '@material-ui/icons/Search';
@@ -39,9 +39,9 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper,
 	  search: {
 	    position: 'relative',
 	    borderRadius: theme.shape.borderRadius,
-	    backgroundColor: fade(theme.palette.common.white, 0.15),
+	    backgroundColor: alpha(theme.palette.common.white, 0.15),
 	    '&:hover': {
-	      backgroundColor: fade(theme.palette.common.white, 0.25),
+	      backgroundColor: alpha(theme.palette.common.white, 0.25),
 	    },
 	    marginRight: theme.spacing(0),
 	    marginLeft: 0,
@@ -239,6 +239,8 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 			<Tooltip title={"Saved " + lastSave + " before"}>
 				<ListItemText
 					className={classes.projectItem}
+					primaryTypographyProps={{ component: 'div' }}
+					secondaryTypographyProps={{ component: 'div' }}
 					primary={
 						<Typography variant="h6">
 							{p.macro.name}
@@ -272,7 +274,7 @@ class Projects extends React.Component {
 		'openCreateDialog': false,
 	}
 
-	componentWillMount(){
+	UNSAFE_componentWillMount(){
 
 		const success = (response) => {
 			this.props.setIsUserSuper(response.super);
@@ -322,7 +324,7 @@ class Projects extends React.Component {
 
 				<Grid container
 				  direction="row"
-				  justify="space-between"
+				  justifyContent="space-between"
 				  alignItems="center">
 					
 					<Grid item>
@@ -350,7 +352,7 @@ class Projects extends React.Component {
 				<Grid 
 					container
 					direction="column"
-					justify="space-evenly"
+					justifyContent="space-evenly"
 					alignItems="stretch"
 				>
 				

@@ -37,7 +37,7 @@ class Macro extends React.Component {
 		'isUserSuper': false,
 	}
 
-	componentWillMount(){
+	UNSAFE_componentWillMount(){
 		this.setState({ 'project': this.props.project, ...this.props.project.macro });
 	}
 
@@ -324,7 +324,7 @@ class Macro extends React.Component {
 				<Grid
 					container
 					direction="column"
-					justify="center"
+					justifyContent="center"
 					alignItems="stretch"
 				>
 					<Grid item>
@@ -351,7 +351,7 @@ class Macro extends React.Component {
 					<Grid item
 						container
 						direction="row"
-						justify="space-between"
+						justifyContent="space-between"
 						alignItems="center"
 					>
 

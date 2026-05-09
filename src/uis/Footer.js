@@ -12,7 +12,7 @@ export default function Footer({ version }) {
 	return(
 		<Grid container
 				  direction="column"
-					justify="center"
+					justifyContent="center"
 					alignItems="center">
 			<Grid item>
 

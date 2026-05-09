@@ -59,7 +59,7 @@ export default function Event({ event, deleteEvent, updateEvent }) {
 					<Grid
 						container
 						direction="row"
-						justify="space-between"
+						justifyContent="space-between"
 						alignItems="center">
 
 						<Grid item>

@@ -105,7 +105,7 @@ export default function GorlemCommandInfo({ open, setOpen, doc }) {
           <Grid
             container
             direction="row"
-            justify="flex-start"
+            justifyContent="flex-start"
             alignItems="center"
             spacing={1}
           >

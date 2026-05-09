@@ -74,7 +74,7 @@ export default function DependencieInfoDialog({ open, setOpen, dependencie, task
           <Grid
             container
             direction="row"
-            justify="flex-start"
+            justifyContent="flex-start"
             alignItems="center"
             spacing={1}
           >

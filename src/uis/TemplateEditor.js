@@ -28,6 +28,7 @@ import AceEditor from "react-ace";
 
 import BackButton from './BackButton';
 
+import "ace-builds/webpack-resolver";
 import "ace-builds/src-noconflict/mode-javascript";
 
 import "ace-builds/src-noconflict/theme-ambiance";
@@ -313,7 +314,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
           <Grid 
             item container
             direction="row"
-            justify="space-between"
+            justifyContent="space-between"
             alignItems="center"
             sm={12}> 
             
@@ -345,7 +346,7 @@ export default function TemplateEditor({ open, setOpen, template, namespace, sav
         <Grid
             container
             direction="row"
-            justify="center"
+            justifyContent="center"
             alignItems="stretch"
             className={classes.containerEditor}
           >

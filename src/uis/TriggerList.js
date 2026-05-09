@@ -125,7 +125,7 @@ export default function TriggerList({ project, task, group, hookTask, editorMode
     <Grid
         container
         direction="column"
-        justify="flex-start"
+        justifyContent="flex-start"
         alignItems="stretch"
       >
       <Grid item>

@@ -103,7 +103,7 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
           <Grid
             container
             direction="row"
-            justify="flex-end"
+            justifyContent="flex-end"
             alignItems="center"
             spacing={3}
           >
@@ -138,7 +138,7 @@ export default function TaskEditDialog({ task, edit, setEdit, editTask, hasTask,
           <Grid
             container
             direction="row"
-            justify="flex-end"
+            justifyContent="flex-end"
             alignItems="center"
             spacing={3}
           >

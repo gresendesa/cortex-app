@@ -49,6 +49,7 @@ import ChangeThemeButton from './uis/ChangeThemeButton';
 import { onLoadAce, editorThemer } from './uis/utils';
 
 import AceEditor from "react-ace";
+import "ace-builds/webpack-resolver";
 import "ace-builds/src-noconflict/ext-searchbox";
 import "ace-builds/src-noconflict/mode-javascript";
 
@@ -361,7 +362,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
 
   return (
     <div>
-      <Dialog fullScreen open={open} TransitionComponent={Transition} disableBackdropClick>
+      <Dialog fullScreen open={open} TransitionComponent={Transition} onClose={(_, reason) => { if (reason === 'backdropClick') return; }}>
         <AppBar className={classes.appBar}>
           <Toolbar>
             <IconButton edge="start" color="inherit" onClick={backProjects} aria-label="close">
@@ -395,7 +396,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
           <Grid 
             item container
             direction="row"
-            justify="space-between"
+            justifyContent="space-between"
             alignItems="center"
             sm={12}> 
             
@@ -428,7 +429,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
         <Grid
             container
             direction="row"
-            justify="center"
+            justifyContent="center"
             alignItems="stretch"
             className={classes.containerEditor}
           >

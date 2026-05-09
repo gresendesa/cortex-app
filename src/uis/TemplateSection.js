@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
-import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import MuiAccordion from '@material-ui/core/Accordion';
+import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
+import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -43,7 +43,7 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 
 import AssignmentIcon from '@material-ui/icons/Assignment';
 
-const ExpansionPanel = withStyles({
+const Accordion = withStyles({
   root: {
     border: '1px solid rgba(0, 0, 0, .125)',
     boxShadow: 'none',
@@ -58,9 +58,9 @@ const ExpansionPanel = withStyles({
     },
   },
   expanded: {},
-})(MuiExpansionPanel);
+})(MuiAccordion);
 
-const ExpansionPanelSummary = withStyles({
+const AccordionSummary = withStyles({
   root: {
     backgroundColor: 'rgba(0, 0, 0, .03)',
     borderBottom: '1px solid rgba(0, 0, 0, .125)',
@@ -76,7 +76,7 @@ const ExpansionPanelSummary = withStyles({
     },
   },
   expanded: {},
-})(MuiExpansionPanelSummary);
+})(MuiAccordionSummary);
 
 const TemplateList = withStyles((theme) => {
   return {
@@ -110,11 +110,11 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const ExpansionPanelDetails = withStyles((theme) => ({
+const AccordionDetails = withStyles((theme) => ({
   root: {
     padding: theme.spacing(1),
   },
-}))(MuiExpansionPanelDetails);
+}))(MuiAccordionDetails);
 
 const TemplateItem = ({ index, template, namespace, moveUp, deleteTemplate, updateTemplate, showAlert, getTemplateInfo, editorMode, getDoc, getPublicTemplates }) => {
 
@@ -252,13 +252,13 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
 
   return (
 
-    <ExpansionPanel square expanded={expanded == index}>
-      <ExpansionPanelSummary aria-controls="panel1d-content" id="panel1d-header" onClick={toggleExpanded}>
+    <Accordion square expanded={expanded == index}>
+      <AccordionSummary aria-controls="panel1d-content" id="panel1d-header" onClick={toggleExpanded}>
         
         <Grid
           container
           direction="row"
-          justify="flex-start"
+          justifyContent="flex-start"
           alignItems="center"
           spacing={1}
         >
@@ -274,14 +274,14 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
         </Grid>
             
         
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
+      </AccordionSummary>
+      <AccordionDetails>
         
 
         <Grid
             container
             direction="column"
-            justify="center"
+            justifyContent="center"
             alignItems="stretch"
           >
           <Grid item>
@@ -339,8 +339,8 @@ const TemplatePanel = ({ index, namespace, expanded, setExpanded, handleChange, 
           </Grid>
         </Grid>
 
-      </ExpansionPanelDetails>
-    </ExpansionPanel>
+      </AccordionDetails>
+    </Accordion>
 
   )
 }
@@ -498,7 +498,7 @@ export default function TemplateSection({ namespaces, templatesHook, getTemplate
       {processing && <LinearProgress color="secondary" />}
       <Grid container
           direction="row"
-          justify="space-between"
+          justifyContent="space-between"
           alignItems="center">
           
           <Grid item>

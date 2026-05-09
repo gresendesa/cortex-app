@@ -25,6 +25,7 @@ import TextField from '@material-ui/core/TextField';
 import translateTriggerGroup from './utils';
 import { triggerModel } from '../mock/models'
 import AceEditor from "react-ace";
+import "ace-builds/webpack-resolver";
 import "ace-builds/src-noconflict/ext-searchbox";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/ext-language_tools";
@@ -360,7 +361,7 @@ export default function TriggerForm({ project, task, trigger, open, toggleEditor
           <Grid 
             item container
             direction="row"
-            justify="space-between"
+            justifyContent="space-between"
             alignItems="center"
             sm={12}> 
             
@@ -394,7 +395,7 @@ export default function TriggerForm({ project, task, trigger, open, toggleEditor
         <Grid
             container
             direction="row"
-            justify="center"
+            justifyContent="center"
             alignItems="stretch"
             className={classes.containerEditor}
           >

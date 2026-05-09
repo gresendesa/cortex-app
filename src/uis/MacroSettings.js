@@ -135,7 +135,7 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask,
 					<Grid
 						container
 						direction="row"
-						justify="flex-end"
+						justifyContent="flex-end"
 						alignItems="center"
 						spacing={3}>
 
@@ -196,7 +196,7 @@ export default function MacroSettings({ openConfig, devName, settings, hookTask,
 					<Grid
 						container
 						direction="row"
-						justify="flex-end"
+						justifyContent="flex-end"
 						alignItems="center"
 						spacing={3}>
 

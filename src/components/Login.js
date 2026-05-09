@@ -126,7 +126,7 @@ export default function SignIn({ setToken, setUsername, setIsUserSuper }) {
 						</Button>
 						<Grid container
 						direction="column"
-						justify="center"
+					justifyContent="center"
 						alignItems="center">
 							<Grid item>
 								<Link href="https://cloudscript.bezouro.com.br/login" target="_blank" variant="body2">

@@ -45,9 +45,9 @@ export default function AddTemplateButton({ getPublicTemplates, addLine, success
 	}
 
 	return (
-		<IconTipButton tip={'Import public resource'}>
+		<IconTipButton tip={'Import public resource'} onClick={popUp ? handleClick : undefined}>
 
-			{popUp && <LibraryAdd onClick={handleClick}/>}
+			{popUp && <LibraryAdd />}
 
 			{!popUp && <CircularProgress size={30} />}
 

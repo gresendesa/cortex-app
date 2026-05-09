@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function ProjectCreateDialog({ open, setOpen, createProject, alert }) {
 
-  const classes = makeStyles();
+  const classes = useStyles();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -95,7 +95,7 @@ export default function ProjectCreateDialog({ open, setOpen, createProject, aler
 
             <Grid container
               direction="row"
-              justify="flex-end"
+              justifyContent="flex-end"
               alignItems="center"
               spacing={3}>
 

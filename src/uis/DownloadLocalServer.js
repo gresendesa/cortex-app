@@ -95,7 +95,7 @@ export default function DownloadLocalServer({ open, setOpen }) {
           <Grid
             container
             direction="row"
-            justify="flex-start"
+            justifyContent="flex-start"
             alignItems="center"
             spacing={1}
           >

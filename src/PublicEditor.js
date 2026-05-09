@@ -50,6 +50,7 @@ import ChangeThemeButton from './uis/ChangeThemeButton';
 import { onLoadAce, editorThemer } from './uis/utils';
 
 import AceEditor from "react-ace";
+import "ace-builds/webpack-resolver";
 import "ace-builds/src-noconflict/ext-searchbox";
 import "ace-builds/src-noconflict/mode-javascript";
 
@@ -468,7 +469,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
         open={downloadOpen}
         setOpen={setDownloadOpen}
       />
-      <Dialog fullScreen open={open} TransitionComponent={Transition} disableBackdropClick>
+      <Dialog fullScreen open={open} TransitionComponent={Transition} onClose={(_, reason) => { if (reason === 'backdropClick') return; }}>
         <AppBar className={classes.appBar}>
           <Toolbar>
           <Button variant="contained" color="primary" className={classes.buttonLogin} onClick={goToLogin}>
@@ -499,7 +500,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
           <Grid 
             item container
             direction="row"
-            justify="space-between"
+            justifyContent="space-between"
             alignItems="center"
             sm={12}> 
             
@@ -532,7 +533,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
         <Grid
             container
             direction="row"
-            justify="center"
+            justifyContent="center"
             alignItems="stretch"
             className={classes.containerEditor}
           >
@@ -643,7 +644,7 @@ class PublicEditor extends React.Component {
 
   pingInterval = null;
 
-  componentWillMount(){
+  UNSAFE_componentWillMount(){
     this.pingInterval = setInterval(() => {
 
       this.localConnection.get('/ping')

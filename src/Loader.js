@@ -34,7 +34,7 @@ function SimpleBackdrop() {
 
 class Loader extends React.Component {
 
-	componentWillMount() {
+	UNSAFE_componentWillMount() {
 		const success = res => {
 			//console.log('ok', res)
 		}

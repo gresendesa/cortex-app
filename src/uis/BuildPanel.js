@@ -25,6 +25,7 @@ import TextField from '@material-ui/core/TextField';
 import translateTriggerGroup from './utils';
 import { triggerModel } from '../mock/models'
 import AceEditor from "react-ace";
+import "ace-builds/webpack-resolver";
 import "ace-builds/src-noconflict/ext-searchbox";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
@@ -113,7 +114,7 @@ export default function BuildPanel({ open, setOpen, code, projectName, editorMod
         <Grid
             container
             direction="row"
-            justify="center"
+            justifyContent="center"
             alignItems="stretch"
             className={classes.containerEditor}
           >

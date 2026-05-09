@@ -350,7 +350,7 @@ class DataContextProvider extends Component {
 		}
 	}
 
-	componentWillMount(){
+	UNSAFE_componentWillMount(){
 		this.setToken(localStorage.getItem('cortex-token'));
 		this.setUsername(localStorage.getItem('cortex-username'));	
 		//this.setIsUserSuper(localStorage.getItem('cortex-is-user-super'));
