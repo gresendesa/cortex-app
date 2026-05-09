@@ -14,11 +14,13 @@ WORKDIR $APPHOME
 COPY . $APPHOME
 
 # run this command to install all dependencies  
-RUN yarn install
+RUN yarn install --network-timeout 600000
 
-# port where the Django app runs  
+# build otimizado de producao (baked na imagem)
+RUN yarn run build
+
+# port where the app runs  
 EXPOSE 80
 
-# start server  
-#CMD python webapp/manage.py migrate && cd webapp/ && gunicorn webapp.wsgi --log-file -
-CMD yarn run build && yarn run start
+# start server (serve o build/ via node server.js)
+CMD yarn run start

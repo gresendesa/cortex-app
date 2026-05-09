@@ -23,8 +23,11 @@ Use este modo apenas quando o PO sinalizar que está pronto para ir a produção
 docker compose up --build
 ```
 
-- Executa `yarn build` (bundle otimizado, sem HMR)
-- Serve os estáticos via `node server.js` na porta 80
+- `yarn build` executado em **build time** (baked na imagem, não no startup)
+- Serve os estáticos via `node server.js` na porta 80 (sem `react-scripts start`, sem HMR)
+- Startup rápido: a imagem já contém o bundle compilado
+
+> **Fluxo de trabalho:** desenvolva com `docker-compose.dev.yml` (HMR, porta 3000). Quando pronto para produção, use `docker-compose.yml` (bundle otimizado, porta 80).
 
 ---
 
