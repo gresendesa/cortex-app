@@ -1,0 +1,20 @@
+# Dockerfile.dev
+# Imagem de desenvolvimento para o frontend (cortex-app).
+# Usa react-scripts start com HMR. NAO usar em producao.
+#
+# Producao: usar o Dockerfile padrao (yarn build + node server.js)
+
+FROM node:20
+
+ENV APPHOME=/home/app
+
+RUN mkdir -p $APPHOME
+WORKDIR $APPHOME
+
+# Instala dependencias primeiro (camada cacheavel)
+COPY package.json yarn.lock* package-lock.json* ./
+RUN yarn install --network-timeout 600000
+
+EXPOSE 3000
+
+CMD ["yarn", "local"]

@@ -1,3 +1,33 @@
+## Ambiente de Desenvolvimento Rápido (HMR)
+
+Use este modo durante o desenvolvimento. Alterações no código React refletem no navegador sem reload manual.
+
+```sh
+docker compose -f docker-compose.dev.yml up --build
+```
+
+- Frontend disponível em: http://localhost:3000
+- Hot Module Replacement (HMR) ativo via `react-scripts start`
+- Código-fonte montado como volume: sem necessidade de rebuild da imagem a cada alteração
+
+Para parar:
+```sh
+docker compose -f docker-compose.dev.yml down
+```
+
+## Build de Produção
+
+Use este modo apenas quando o PO sinalizar que está pronto para ir a produção.
+
+```sh
+docker compose up --build
+```
+
+- Executa `yarn build` (bundle otimizado, sem HMR)
+- Serve os estáticos via `node server.js` na porta 80
+
+---
+
 ##need 
 
 react-beautiful-dnd : for drag and drop lists

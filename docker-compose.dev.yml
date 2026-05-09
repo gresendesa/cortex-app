@@ -1,0 +1,39 @@
+# docker-compose.dev.yml
+# Ambiente de desenvolvimento rapido para o frontend (cortex-app).
+#
+# Uso:
+#   docker compose -f docker-compose.dev.yml up --build
+#
+# Caracteristicas:
+# - Codigo-fonte montado como volume: alteracoes refletem no navegador sem reload manual (HMR ativo).
+# - React rodando com react-scripts start (Create React App dev server, porta 3000).
+# - node_modules isolado em volume anonimo para nao ser sobrescrito pelo volume do host.
+#
+# Para parar: docker compose -f docker-compose.dev.yml down
+#
+# DIFERENCA em relacao ao modo de producao (Dockerfile / docker-compose.yml):
+# - Producao: yarn build + node server.js (bundle otimizado, sem HMR, porta 80)
+# - Dev:      react-scripts start (HMR, porta 3000, sem build)
+
+services:
+
+  rocket_dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: rocket_dev
+    restart: unless-stopped
+    volumes:
+      - .:/home/app              # monta o codigo-fonte para HMR
+      - /home/app/node_modules   # preserva node_modules instalado na imagem
+    ports:
+      - "3000:3000"
+    environment:
+      - CHOKIDAR_USEPOLLING=true   # necessario em alguns ambientes Docker/Linux para HMR funcionar
+      - WDS_SOCKET_PORT=3000
+    networks:
+      - macrosoft_dev
+
+networks:
+  macrosoft_dev:
+    driver: bridge
