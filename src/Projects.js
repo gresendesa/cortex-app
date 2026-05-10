@@ -329,8 +329,8 @@ class Projects extends React.Component {
 					
 					<Grid item>
 						<Box component="span" m={1}>
-							<Typography variant="h5" color="secondary">
-								{this.props.isUserSuper ? 'Rocket Projects' : 'My Projects'}
+							<Typography variant="h5" style={{ color: '#1976d2' }}>
+								{this.props.isUserSuper ? 'Rocket Projects' : 'My Projects ❤️'}
 							</Typography>
 						</Box>
 					</Grid>
