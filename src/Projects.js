@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useRef } from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
@@ -12,7 +12,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import PlayArrowRoundedIcon from '@material-ui/icons/PlayArrowRounded';
 import CodeIcon from '@material-ui/icons/Code';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import { Box } from '@material-ui/core';
+import { Box, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { DataContext } from './contexts/DataContext';
 import Server from './server';
@@ -34,7 +34,7 @@ import PublicIcon from '@material-ui/icons/Public';
 
 import { timeDifference } from './uis/utils';
 
-function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper, username, totalRecords, fetchMacros }) {
+function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper, username, pagination, fetchMacros, searchQuery }) {
 	const useStyles = makeStyles((theme) => ({
 	  search: {
 	    position: 'relative',
@@ -73,46 +73,62 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper,
 	      width: '20ch',
 	    },
 	  },
+	  paginationContainer: {
+	    display: 'flex',
+	    alignItems: 'center',
+	    justifyContent: 'center',
+	    gap: theme.spacing(0.5),
+	    padding: theme.spacing(1, 0),
+	    flexWrap: 'wrap',
+	  },
+	  pageButton: {
+	    minWidth: 36,
+	    height: 36,
+	    padding: theme.spacing(0, 1),
+	  },
 	}));
 
-
-	//console.log('totalRecords', totalRecords)
 	const classes = useStyles();
 
-	const [searchResultProjects, setsearchResultProjects] = useState(projects);
-	const [searchString, setSearchString] = useState('')
-	const [loadingProjects, setLoadingProjects] = useState(false)
+	const [localSearch, setLocalSearch] = useState(searchQuery || '');
+	const [loading, setLoading] = useState(false);
+	const debounceRef = useRef(null);
 
+	// Sincroniza campo de busca quando searchQuery muda externamente
+	useEffect(() => {
+		setLocalSearch(searchQuery || '');
+	}, [searchQuery]);
+
+	const triggerFetch = (q, page) => {
+		setLoading(true);
+		fetchMacros({
+			q,
+			page,
+			page_size: pagination ? pagination.page_size : 10,
+			success: () => setLoading(false),
+			error: () => setLoading(false),
+		});
+	};
 
 	const handleSearch = (e) => {
-		setSearchString(e.target.value)
-	}
+		const val = e.target.value;
+		setLocalSearch(val);
+		clearTimeout(debounceRef.current);
+		debounceRef.current = setTimeout(() => {
+			triggerFetch(val, 1);
+		}, 400);
+	};
 
-	useEffect(() => {
-		setsearchResultProjects(projects);
-	},[projects]);
+	const handlePageChange = (page) => {
+		triggerFetch(localSearch, page);
+	};
 
-	useEffect(() => {
-		if(searchString!=''){
-			setsearchResultProjects(projects.filter((p) => {
-				return (p.macro.name.toLowerCase().includes(searchString.toLowerCase()) || p.dev.toLowerCase().includes(searchString.toLowerCase()) || p.macro.description.toLowerCase().includes(searchString.toLowerCase()));
-			}));
-		} else {
-			setsearchResultProjects(projects);
-		}
-	},[searchString])
+	const currentPage = pagination ? pagination.page : 1;
+	const totalPages = pagination ? pagination.total_pages : 1;
 
-	const onLoadOlderProjects = () => {
-		if(!loadingProjects){
-			let limit = 0
-			const succs = () => {
-				setLoadingProjects(false)
-			}
-			const err = succs
-			setLoadingProjects(true)
-			fetchMacros({ limit, success: succs, error:err })
-		}
-			
+	const pageNumbers = [];
+	for (let i = 1; i <= totalPages; i++) {
+		pageNumbers.push(i);
 	}
 
 	return (
@@ -123,7 +139,7 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper,
 				</div>
 				<InputBase
 					placeholder="Search…"
-					value={searchString}
+					value={localSearch}
 					onChange={handleSearch}
 					classes={{
 						root: classes.inputRoot,
@@ -134,40 +150,61 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper,
 			</div>
 			<div>
 				<List>
-								
-					{
-						searchResultProjects.length > 0 ? 
-						searchResultProjects.map(p => {
-							return (
-								<ProjectItem key={p.id} p={p} redirectToProject={redirectToProject} removeProject={removeProject} isUserSuper={isUserSuper} username={username} />
-							)
-						}) : 
-						<Alert severity="info">
-							<AlertTitle>No projects</AlertTitle>
-						</Alert>
-					}
-
-					{
-						!loadingProjects &&	totalRecords > projects.length && 
-						<ListItem button onClick={onLoadOlderProjects} style={{display:'flex', justifyContent:'center'}}>
-							<Typography variant="overline" color="primary" align="center">
-								Load older projects
-							</Typography>
-						</ListItem>
-						
-					}
-
-					{
-						loadingProjects && totalRecords > projects.length && 
+					{loading && (
 						<ListItem style={{display:'flex', justifyContent:'center'}}>
 							<CircularProgress color="secondary" size={30} />
 						</ListItem>
-						
-					}
+					)}
 
-
+					{!loading && (
+						projects.length > 0 ?
+						projects.map(p => (
+							<ProjectItem key={p.id} p={p} redirectToProject={redirectToProject} removeProject={removeProject} isUserSuper={isUserSuper} username={username} />
+						)) :
+						<Alert severity="info">
+							<AlertTitle>No projects</AlertTitle>
+						</Alert>
+					)}
 				</List>
 			</div>
+
+			{totalPages > 1 && (
+				<div className={classes.paginationContainer}>
+					<Button
+						className={classes.pageButton}
+						size="small"
+						variant="outlined"
+						disabled={!pagination.has_previous || loading}
+						onClick={() => handlePageChange(currentPage - 1)}
+					>
+						‹
+					</Button>
+
+					{pageNumbers.map(n => (
+						<Button
+							key={n}
+							className={classes.pageButton}
+							size="small"
+							variant={n === currentPage ? 'contained' : 'outlined'}
+							color={n === currentPage ? 'primary' : 'default'}
+							disabled={loading}
+							onClick={() => handlePageChange(n)}
+						>
+							{n}
+						</Button>
+					))}
+
+					<Button
+						className={classes.pageButton}
+						size="small"
+						variant="outlined"
+						disabled={!pagination.has_next || loading}
+						onClick={() => handlePageChange(currentPage + 1)}
+					>
+						›
+					</Button>
+				</div>
+			)}
 		</div>
 	)
 }
@@ -357,7 +394,7 @@ class Projects extends React.Component {
 				>
 				
 					<Grid item>
-						<SearchWidget projects={this.props.macros} redirectToProject={this.redirectToProject} removeProject={this.removeProject} isUserSuper={this.props.isUserSuper} username={this.props.username} totalRecords={this.props.totalRecords} fetchMacros={this.props.fetchMacros} />
+						<SearchWidget projects={this.props.macros} redirectToProject={this.redirectToProject} removeProject={this.removeProject} isUserSuper={this.props.isUserSuper} username={this.props.username} pagination={this.props.pagination} fetchMacros={this.props.fetchMacros} searchQuery={this.props.searchQuery} />
 					</Grid>
 				</Grid>
 

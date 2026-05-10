@@ -63,11 +63,14 @@ class Server {
 
 	}
 
-	getMacros({ success, error, limit }) {
+	getMacros({ success, error, page=1, page_size=10, q='' }) {
 
 		const conn = this.getConnection();
 
-		conn.get(`/projects/${limit}`).then(r => {
+		const params = { page, page_size };
+		if (q) params.q = q;
+
+		conn.get('/projects', { params }).then(r => {
 			success(r.data)
 		}).catch(function(e) {
 			error(e.response);

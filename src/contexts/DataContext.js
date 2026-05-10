@@ -11,7 +11,9 @@ class DataContextProvider extends Component {
 		'username': null,
 		'processing': false,
 		'isUserSuper': false,
-		'totalRecords': 0
+		'totalRecords': 0,
+		'pagination': { page: 1, page_size: 10, total: 0, total_pages: 1, has_previous: false, has_next: false },
+		'searchQuery': ''
 	}
 
 	version = {
@@ -51,12 +53,17 @@ class DataContextProvider extends Component {
 		}
 	}
 
-	fetchMacros = ({ limit=7, success=()=>{}, error=()=>{} }) => {
+	fetchMacros = ({ page=1, page_size=10, q='', success=()=>{}, error=()=>{} }) => {
 		if(this.state.token!==null){
 			const server = new Server({ token: this.state.token });
 			this.setState({'processing': true});
 			const onOk = (response) => {
-				this.setState({'macros': response.projects, 'totalRecords': response.total_records});
+				this.setState({
+					'macros': response.projects,
+					'totalRecords': response.pagination ? response.pagination.total : 0,
+					'pagination': response.pagination || this.state.pagination,
+					'searchQuery': q
+				});
 				success(response);
 				this.setIsUserSuper(response.super);
 				this.setState({'processing': false});
@@ -65,7 +72,7 @@ class DataContextProvider extends Component {
 				error(response);
 				this.setState({'processing': false});
 			}
-			server.getMacros({ success:onOk, error, limit })
+			server.getMacros({ success: onOk, error: onIssue, page, page_size, q })
 		} else {
 			error("sem token");
 		}
