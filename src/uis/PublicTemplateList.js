@@ -35,7 +35,7 @@ import PublicIcon from '@material-ui/icons/Public';
 function Library(props) {
 
   const [open, setOpen] = useState(false);
-  const { key, lib, devname, addLine, successAlert } = props; 
+  const { key, lib, devname, addLine, successAlert, onPickClose } = props; 
 
   const handleClick = () => {
     setOpen(!open);
@@ -52,6 +52,7 @@ function Library(props) {
   const handlePick = e => {
     successAlert(`'${devname}.${lib.name}.${e}' imported sucessfully`)
     addLine(`\n{* import '${devname}.${lib.name}.${e}' as ${e.toUpperCase()} *}`)
+    if (onPickClose) onPickClose();
   }
 
   const classes = useStyles();
@@ -92,7 +93,7 @@ function Library(props) {
 function PublicProjects(props) {
 
   const [open, setOpen] = useState(false);
-  const { key, projects, devname, addLine, successAlert } = props; 
+  const { key, projects, devname, addLine, successAlert, onPickClose } = props; 
 
   const handleClick = () => {
     setOpen(!open);
@@ -109,6 +110,7 @@ function PublicProjects(props) {
   const handlePick = e => {
     successAlert(`'${devname}.@.${e}' imported sucessfully`)
     addLine(`\n{* import '${devname}.@.${e}' as ${e.toUpperCase()} *}`)
+    if (onPickClose) onPickClose();
   }
 
   const classes = useStyles();
@@ -202,7 +204,8 @@ export default function SimpleDialog(props) {
 
   const [open, setOpen] = useState(false);
 
-  const handleClose = () => {
+  const handleClose = (e) => {
+    if (e && e.stopPropagation) e.stopPropagation();
     setOpen(false)
     setLibraries([])
   };
@@ -245,7 +248,7 @@ export default function SimpleDialog(props) {
                       dense
                     >
 
-                      <PublicProjects projects={libs.projects} devname={libs.devname} addLine={addLine} successAlert={successAlert} isProject={true} />
+                      <PublicProjects projects={libs.projects} devname={libs.devname} addLine={addLine} successAlert={successAlert} isProject={true} onPickClose={handleClose} />
 
                     </List>
                   </Grid>
@@ -265,7 +268,7 @@ export default function SimpleDialog(props) {
                           dense
                         >
 
-                          <Library lib={lib} devname={libs.devname} addLine={addLine} successAlert={successAlert} />
+                          <Library lib={lib} devname={libs.devname} addLine={addLine} successAlert={successAlert} onPickClose={handleClose} />
 
                         </List>
                       </Grid>

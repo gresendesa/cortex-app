@@ -45,15 +45,17 @@ export default function AddTemplateButton({ getPublicTemplates, addLine, success
 	}
 
 	return (
-		<IconTipButton tip={'Import public resource'} onClick={popUp ? handleClick : undefined}>
+		<React.Fragment>
+			<IconTipButton tip={'Import public resource'} onClick={popUp ? handleClick : undefined}>
 
-			{popUp && <LibraryAdd />}
+				{popUp && <LibraryAdd />}
 
-			{!popUp && <CircularProgress size={30} />}
+				{!popUp && <CircularProgress size={30} />}
+
+			</IconTipButton>
 
 			<PublicTemplateList onClose={handleDialogClose} libraries={libraries} addLine={addLine} setLibraries={setLibraries} successAlert={successAlert}/>
-
-		</IconTipButton>
+		</React.Fragment>
 	);
 
 }
