@@ -109,7 +109,8 @@ export default function ThemeDialog(props) {
     setOpen(props.open)
   },[props.open])
 
-  const handleClose = () => {
+  const handleClose = (e) => {
+    if (e && e.stopPropagation) e.stopPropagation();
     props.setOpen(false)
   };
 

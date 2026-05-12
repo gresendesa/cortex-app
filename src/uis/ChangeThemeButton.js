@@ -30,13 +30,13 @@ export default function ChangeThemeButton(props) {
 	}
 
 	return (
-		<IconTipButton tip={'Tony\'s themes'} onClick={handleClick}>
+		<>
+			<IconTipButton tip={'Tony\'s themes'} onClick={handleClick}>
+				<PaletteIcon />
+			</IconTipButton>
 
-			<PaletteIcon />
-			
 			<EditorThemeList setOpen={setPopUp} open={popUp} theme={props.theme} setTheme={props.setTheme} context={props.context} />
-
-		</IconTipButton>
+		</>
 	);
 
 }

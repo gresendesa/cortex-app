@@ -117,9 +117,12 @@ const useStyles = makeStyles((theme) => ({
   containerEditor: {
     backgroundColor: '#2f3129',
     height:'100vh',
+    display: 'flex',
+    flexDirection: 'column',
   },
   editor: {
-    height:'80vh',
+    flex: 1,
+    overflow: 'hidden',
   },
   events: {
     backgroundColor: 'inherit',
