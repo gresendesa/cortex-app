@@ -130,7 +130,7 @@ class DataContextProvider extends Component {
 		}
 	}
 
-	saveMacro = ({ id, macro, launch=false, success=()=>{}, error=()=>{} }) => {
+	saveMacro = ({ id, macro, genjin=null, launch=false, success=()=>{}, error=()=>{} }) => {
 		if(this.state.token!==null){
 			const server = new Server({ token: this.state.token });
 			const onOk = (response) => {
@@ -156,7 +156,7 @@ class DataContextProvider extends Component {
 			macros.unshift(current_proj)
 			this.setState({'macros': macros})
 
-			server.updateMacro({ id, macro, launch, success:onOk, error })
+			server.updateMacro({ id, macro, genjin, launch, success:onOk, error })
 		} else {
 			error("sem token");
 		}

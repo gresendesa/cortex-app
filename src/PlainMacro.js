@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Box, Grid } from '@material-ui/core';
+import { Box, Chip, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -162,6 +162,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
   const [indentSwitch, setIndentSwitch] = useState(false);
   const [isPublic, setIsPublic] = useState(project.macro.public ? true : false);
   const [type, setType] = useState(project.macro.type)
+  const [genjin, setGenjin] = useState(project.genjin === true);
 
   useEffect(() => {
     if(!project) return;
@@ -332,7 +333,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
         setProcessing(false);
       }
 
-      saveMacro({ id: project.id, macro: copyMacro, launch:launch, success, error });
+      saveMacro({ id: project.id, macro: copyMacro, genjin, launch:launch, success, error });
 
     }
 
@@ -438,6 +439,11 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
           >
 
           <Grid item xs={12} className={classes.editor}>
+            {genjin && (
+              <Box px={1} py={0.5} style={{ background: 'rgba(0,0,0,0.15)' }}>
+                <Chip size="small" label="Modo Genjin — o código será compilado antes do build" style={{ fontSize: '0.72rem', height: 20 }} />
+              </Box>
+            )}
             <AceEditor 
               onLoad={ onLoadAce({ editorMode, setInfoButtonSubject, completer: CortexCompleter, setBackline }) }
               mode="javascript"
@@ -567,6 +573,20 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
                     }
                     fullWidth
                     label="Public"
+                  />
+                </ListItem>
+
+                <ListItem>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={genjin}
+                        onChange={() => {setGenjin(!genjin)}}
+                        color="primary"
+                      />
+                    }
+                    fullWidth
+                    label="Genjin"
                   />
                 </ListItem>
 

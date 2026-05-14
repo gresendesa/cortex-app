@@ -12,7 +12,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import PlayArrowRoundedIcon from '@material-ui/icons/PlayArrowRounded';
 import CodeIcon from '@material-ui/icons/Code';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import { Box, Button } from '@material-ui/core';
+import { Box, Button, Chip } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { DataContext } from './contexts/DataContext';
 import Server from './server';
@@ -289,6 +289,9 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 						<React.Fragment>
 							<Typography variant="subtitle2">{username != p.dev ? p.dev : ''}</Typography>
 							<React.Fragment>{(ReactHtmlParser(p.markdown_description))}</React.Fragment>
+							{p.genjin && p.macro.protocol === 'NONE' && (
+								<Chip size="small" label="Genjin" style={{ marginTop: 4, fontSize: '0.7rem', height: 18 }} />
+							)}
 						</React.Fragment>
 
 						}

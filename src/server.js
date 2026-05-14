@@ -163,11 +163,14 @@ class Server {
 	
 	}
 
-	updateMacro({ id, macro, launch, success, error }) {
+	updateMacro({ id, macro, genjin=null, launch, success, error }) {
 
 		const conn = this.getConnection();
 
-		conn.put(`/project/save/${id}`, { launch, macro }).then(r => {
+		const body = { launch, macro };
+		if (genjin !== null) body.genjin = genjin;
+
+		conn.put(`/project/save/${id}`, body).then(r => {
 			success(r.data)
 		}).catch(function(e) {
 			try {
