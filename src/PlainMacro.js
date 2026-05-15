@@ -414,7 +414,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
                 <CodeIcon />
               </IconTipButton>
               {genjin && (
-                <IconTipButton edge="end" tip="Flow CTRL+F" disabled={processing} color="inherit" reference={flowButtonRef} onClick={handleFlow}>
+                <IconTipButton edge="end" tip="Flow CTRL+M" disabled={processing} color="inherit" reference={flowButtonRef} onClick={handleFlow}>
                   <AccountTreeIcon />
                 </IconTipButton>
               )}
@@ -503,7 +503,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
                 },
                 {   
                   name: 'flow', 
-                  bindKey: {win: 'Ctrl-F', mac: 'Command-F'}, 
+                  bindKey: {win: 'Ctrl-M', mac: 'Command-M'}, 
                   exec: () => {if (genjin && flowButtonRef.current) flowButtonRef.current.click()}
                 },
                 {   
