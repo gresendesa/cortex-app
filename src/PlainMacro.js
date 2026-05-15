@@ -45,6 +45,7 @@ import BackButton from './uis/BackButton';
 import BuildPanel from './uis/BuildPanel';
 import AddTemplateButton from './uis/AddTemplateButton';
 import ChangeThemeButton from './uis/ChangeThemeButton';
+import GenjinDocsButton from './uis/GenjinDocsButton';
 
 
 import { onLoadAce, editorThemer } from './uis/utils';
@@ -454,6 +455,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
               <AddTemplateButton getPublicTemplates={getPublicTemplates} addLine={addLineAtCurrentPosition} successAlert={(message) =>  alert().show({message, severity: "success"})}/>
 
               <ChangeThemeButton context={themeContext} theme={theme} setTheme={updateTheme} />
+              {genjin && <GenjinDocsButton />}
 
               <BackButton backline={backline} setBackline={setBackline} aceEditor={aceEditor} />
 
