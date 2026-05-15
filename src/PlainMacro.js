@@ -48,6 +48,7 @@ import ChangeThemeButton from './uis/ChangeThemeButton';
 
 
 import { onLoadAce, editorThemer } from './uis/utils';
+import GenjinMode from './acemode/GenjinMode';
 
 import AceEditor from "react-ace";
 import "ace-builds/webpack-resolver";
@@ -384,6 +385,16 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
     //console.log(aceEditor)
   }, [aceEditor])
 
+  const effectiveEditorMode = genjin ? new GenjinMode() : editorMode;
+
+  useEffect(() => {
+    if (aceEditor.current !== undefined) {
+      const mode = genjin ? new GenjinMode() : editorMode;
+      aceEditor.current.editor.getSession().setMode(mode);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [genjin])
+
   const saveButtonRef = useRef(null);
   const kodeButtonRef = useRef(null);
   const launchButtonRef = useRef(null);
@@ -472,7 +483,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
           <Grid item xs={12} className={classes.editor}>
 
             <AceEditor 
-              onLoad={ onLoadAce({ editorMode, setInfoButtonSubject, completer: CortexCompleter, setBackline }) }
+              onLoad={ onLoadAce({ editorMode: effectiveEditorMode, setInfoButtonSubject, completer: CortexCompleter, setBackline }) }
               mode="javascript"
               theme={theme}
               value={code}

@@ -45,6 +45,16 @@ export default function InfoButton({ subject, sourcesHook, editorMode, project=n
 				type: 'template'
 			},
 			{
+				// Genjin: from "biblioteca.template" import ...
+				pattern: /^\s*from\s+"([^"]+)"\s+import\b/,
+				type: 'template'
+			},
+			{
+				// Genjin: proc_name(args) from "biblioteca.template"
+				pattern: /^\s*\w[\w\d_]*\s*\([^)]*\)\s+from\s+"([^"]+)"/,
+				type: 'template'
+			},
+			{
 
 				pattern: new RegExp("^(arraysize|bind|bindgui|break|calcyawto|camera|chatfilter|chatheight|"+
 						 "chatheightfocused|chatopacity|chatscale|chatvisible|chatwidth|clearchat|"      	+
