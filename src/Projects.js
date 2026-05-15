@@ -12,7 +12,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import PlayArrowRoundedIcon from '@material-ui/icons/PlayArrowRounded';
 import CodeIcon from '@material-ui/icons/Code';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import { Badge, Box, Button, Chip } from '@material-ui/core';
+import { Box, Button, Chip } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { DataContext } from './contexts/DataContext';
 import Server from './server';
@@ -247,9 +247,8 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 					<ViewListIcon />
 				</Avatar>}
 				{p.macro.protocol == 'NONE' && <Avatar className={classes.avatarNoneProject}>
-					<Badge color="secondary" variant="dot" invisible={!p.genjin}>
-						{p.macro.public ? <PublicIcon /> : <CodeIcon />}
-					</Badge>
+					{p.macro.public && <PublicIcon />}
+					{!p.macro.public && <CodeIcon />}
 				</Avatar>}
 			</div>
 		)
@@ -265,10 +264,10 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 								<ViewListIcon />
 						}
 						{
-							p.macro.protocol == 'NONE' &&
-								<Badge color="secondary" variant="dot" invisible={!p.genjin}>
-									{p.macro.public ? <PublicIcon /> : <CodeIcon />}
-								</Badge>
+							p.macro.protocol == 'NONE' && <React.Fragment>
+								{p.macro.public && <PublicIcon />}
+								{!p.macro.public && <CodeIcon />}
+							</React.Fragment>
 						}
 					</Avatar>
 				:
