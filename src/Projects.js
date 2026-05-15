@@ -12,7 +12,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import PlayArrowRoundedIcon from '@material-ui/icons/PlayArrowRounded';
 import CodeIcon from '@material-ui/icons/Code';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import { Box, Button, Chip } from '@material-ui/core';
+import { Badge, Box, Button, Chip } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { DataContext } from './contexts/DataContext';
 import Server from './server';
@@ -27,7 +27,6 @@ import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import GroupIcon from '@material-ui/icons/Group';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
-import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ReactHtmlParser from 'react-html-parser';
 import ViewListIcon from '@material-ui/icons/ViewList';
@@ -248,8 +247,9 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 					<ViewListIcon />
 				</Avatar>}
 				{p.macro.protocol == 'NONE' && <Avatar className={classes.avatarNoneProject}>
-					{p.macro.public && <PublicIcon />}
-					{!p.macro.public && <CodeIcon />}
+					<Badge color="secondary" variant="dot" invisible={!p.genjin}>
+						{p.macro.public ? <PublicIcon /> : <CodeIcon />}
+					</Badge>
 				</Avatar>}
 			</div>
 		)
@@ -265,10 +265,10 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 								<ViewListIcon />
 						}
 						{
-							p.macro.protocol == 'NONE' && <React.Fragment>
-								{p.macro.public && <PublicIcon />}
-								{!p.macro.public && <CodeIcon />}
-							</React.Fragment>
+							p.macro.protocol == 'NONE' &&
+								<Badge color="secondary" variant="dot" invisible={!p.genjin}>
+									{p.macro.public ? <PublicIcon /> : <CodeIcon />}
+								</Badge>
 						}
 					</Avatar>
 				:
@@ -290,9 +290,6 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 						<React.Fragment>
 							<Typography variant="subtitle2">{username != p.dev ? p.dev : ''}</Typography>
 							<React.Fragment>{(ReactHtmlParser(p.markdown_description))}</React.Fragment>
-							{p.genjin && p.macro.protocol === 'NONE' && (
-								<AccountTreeIcon style={{ fontSize: 16, marginTop: 4, verticalAlign: 'middle' }} />
-							)}
 						</React.Fragment>
 
 						}
