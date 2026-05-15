@@ -246,7 +246,7 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 				{p.macro.protocol == 'CTRL' && <Avatar className={classes.avatarProject}>
 					<ViewListIcon />
 				</Avatar>}
-				{p.macro.protocol == 'NONE' && <Avatar className={classes.avatarNoneProject}>
+				{p.macro.protocol == 'NONE' && <Avatar className={classes.avatarNoneProject} style={p.genjin ? { outline: '2px solid rgba(255,255,255,0.8)', outlineOffset: '2px' } : undefined}>
 					{p.macro.public && <PublicIcon />}
 					{!p.macro.public && <CodeIcon />}
 				</Avatar>}
@@ -258,7 +258,7 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 		<ListItem button onClick={() => {redirectToProject(p)}}>
 			<ListItemAvatar>
 				{username != p.dev ? 
-					<Avatar className={classes.sharedProject}>
+					<Avatar className={classes.sharedProject} style={p.genjin ? { outline: '2px solid rgba(255,255,255,0.8)', outlineOffset: '2px' } : undefined}>
 						{
 							p.macro.protocol == 'CTRL' &&
 								<ViewListIcon />
