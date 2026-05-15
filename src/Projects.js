@@ -27,6 +27,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import GroupIcon from '@material-ui/icons/Group';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ReactHtmlParser from 'react-html-parser';
 import ViewListIcon from '@material-ui/icons/ViewList';
@@ -290,7 +291,7 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 							<Typography variant="subtitle2">{username != p.dev ? p.dev : ''}</Typography>
 							<React.Fragment>{(ReactHtmlParser(p.markdown_description))}</React.Fragment>
 							{p.genjin && p.macro.protocol === 'NONE' && (
-								<Chip size="small" label="Genjin" style={{ marginTop: 4, fontSize: '0.7rem', height: 18 }} />
+								<AccountTreeIcon style={{ fontSize: 16, marginTop: 4, verticalAlign: 'middle' }} />
 							)}
 						</React.Fragment>
 

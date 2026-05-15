@@ -220,10 +220,10 @@ class DataContextProvider extends Component {
 		}
 	}
 
-	getBuild = ({ id, success=()=>{}, error=()=>{} }) => {
+	getBuild = ({ id, stage=null, success=()=>{}, error=()=>{} }) => {
 		if(this.state.token!==null){
 			const server = new Server({ token: this.state.token });
-			server.getBuild({ id, success, error })
+			server.getBuild({ id, stage, success, error })
 		} else {
 			error("sem token");
 		}

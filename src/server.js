@@ -211,11 +211,12 @@ class Server {
 		})
 	}
 
-	getBuild({ id, success, error }) {
+	getBuild({ id, stage=null, success, error }) {
 
 		const conn = this.getConnection();
 
-		conn.get(`/project/build/get/${id}`).then(r => {
+		const url = stage ? `/project/build/get/${id}?stage=${stage}` : `/project/build/get/${id}`;
+		conn.get(url).then(r => {
 			success(r.data)
 		}).catch(function(e) {
 			try {

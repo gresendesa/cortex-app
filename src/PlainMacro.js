@@ -23,6 +23,7 @@ import IconTipButton from './uis/IconTipButton';
 import SaveIcon from '@material-ui/icons/Save';
 import { Icon } from 'semantic-ui-react';
 import CodeIcon from '@material-ui/icons/Code';
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import Indenter from './Indenter';
 import { LinesGetter } from './Indenter';
 import DrawerHeader from './uis/DrawerHeader';
@@ -103,6 +104,10 @@ const useStyles = makeStyles((theme) => ({
   appBar: {
     position: 'relative',
     background: '#00352c',
+  },
+  appBarGenjin: {
+    position: 'relative',
+    background: '#1a237e',
   },
   title: {
     marginLeft: theme.spacing(2),
@@ -289,6 +294,26 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
 
   }
 
+  const handleFlow = () => {
+  	setProcessing(true);
+
+    const success = (message) => {
+    	setBuild({
+    		open: true,
+    		code: message.build
+    	})
+    	setProcessing(false);
+    }
+
+    const error = (message) => {
+    	alert().show({message, severity: "error"});
+    	setProcessing(false);
+    }
+
+    getBuild({ id: project.id, stage: 'genjin', success, error });
+
+  }
+
   const handleAddTemplate = () => {
     //console.log("opa")
   }
@@ -362,12 +387,13 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
   const saveButtonRef = useRef(null);
   const kodeButtonRef = useRef(null);
   const launchButtonRef = useRef(null);
+  const flowButtonRef = useRef(null);
   const editButtonRef = useRef(null);
 
   return (
     <div>
       <Dialog fullScreen open={open} TransitionComponent={Transition} onClose={(_, reason) => { if (reason === 'backdropClick') return; }}>
-        <AppBar className={classes.appBar}>
+        <AppBar className={genjin ? classes.appBarGenjin : classes.appBar}>
           <Toolbar>
             <IconButton edge="start" color="inherit" onClick={backProjects} aria-label="close">
               <ArrowBackIcon />
@@ -387,6 +413,11 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
               <IconTipButton edge="end" tip="See Kode CTRL+K" disabled={processing} color="inherit" reference={kodeButtonRef} onClick={() => {handleBuild()}}>
                 <CodeIcon />
               </IconTipButton>
+              {genjin && (
+                <IconTipButton edge="end" tip="Flow CTRL+F" disabled={processing} color="inherit" reference={flowButtonRef} onClick={handleFlow}>
+                  <AccountTreeIcon />
+                </IconTipButton>
+              )}
               <IconTipButton edge="end" tip="Launch CTRL+L" disabled={processing} color="inherit" reference={launchButtonRef}  onClick={() => handleSave(true)}>
                 <Icon name='rocket' size='small' />
               </IconTipButton>
@@ -439,11 +470,7 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
           >
 
           <Grid item xs={12} className={classes.editor}>
-            {genjin && (
-              <Box px={1} py={0.5} style={{ background: 'rgba(0,0,0,0.15)' }}>
-                <Chip size="small" label="Modo Genjin — o código será compilado antes do build" style={{ fontSize: '0.72rem', height: 20 }} />
-              </Box>
-            )}
+
             <AceEditor 
               onLoad={ onLoadAce({ editorMode, setInfoButtonSubject, completer: CortexCompleter, setBackline }) }
               mode="javascript"
@@ -473,6 +500,11 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
                   name: 'kode', 
                   bindKey: {win: 'Ctrl-K', mac: 'Command-K'}, 
                   exec: () => {kodeButtonRef.current.click()}
+                },
+                {   
+                  name: 'flow', 
+                  bindKey: {win: 'Ctrl-F', mac: 'Command-F'}, 
+                  exec: () => {if (genjin && flowButtonRef.current) flowButtonRef.current.click()}
                 },
                 {   
                   name: 'props', 
