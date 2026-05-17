@@ -26,6 +26,7 @@ import CodeIcon from '@material-ui/icons/Code';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import Indenter from './Indenter';
 import { LinesGetter } from './Indenter';
+import GenjinIndenter from './GenjinIndenter';
 import DrawerHeader from './uis/DrawerHeader';
 import TextField from '@material-ui/core/TextField';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -222,6 +223,11 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
   };
 
   const handleIndent = (e) => {
+    if (genjin) {
+      const indenter = new GenjinIndenter();
+      setCode(indenter.indent(code));
+      return;
+    }
     const lg = new LinesGetter(code);
     const lines = lg.getLines();
     const indenter = new Indenter(lines);
