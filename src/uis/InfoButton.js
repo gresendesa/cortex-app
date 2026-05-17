@@ -134,8 +134,14 @@ export default function InfoButton({ subject, sourcesHook, editorMode, project=n
 	      }
 
 	      if(parts.length >= 2){
-	        template_name = parts[parts.length - 1];
-	        library_name  = parts.slice(0, parts.length - 1).join('.');
+	        if(parts.length >= 3 && parts[1] === '@'){
+	          // Genjin: dev.@.project[.proc] → sempre resolve ao nível do projeto
+	          library_name = `${parts[0]}.${parts[1]}`;
+	          template_name = parts[2];
+	        } else {
+	          template_name = parts[parts.length - 1];
+	          library_name  = parts.slice(0, parts.length - 1).join('.');
+	        }
 			if((project)&&(project.id)){
 	        	getTemplateInfo({library: library_name, name: template_name, project_id:project.id, success, error });
 	        } else {
