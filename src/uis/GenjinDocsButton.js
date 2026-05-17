@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import MermaidBlock from './MermaidBlock';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -87,6 +88,7 @@ export default function GenjinDocsButton() {
             <Typography variant="body2">Carregando...</Typography>
           ) : (
             <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
               components={{
                 code({ node, inline, className, children, ...props }) {
                   if (!inline && className === 'language-mermaid') {

@@ -11,14 +11,14 @@ export default function MermaidBlock({ source }) {
 
   useEffect(() => {
     if (!containerRef.current) return;
-    const id = `mermaid-diagram-${mermaidIdCounter++}`;
+    const id = `mermaid-${mermaidIdCounter++}`;
     setError(null);
     try {
-      mermaid.render(id, source, (svgCode) => {
-        if (containerRef.current) {
-          containerRef.current.innerHTML = svgCode;
-        }
-      });
+      // mermaid@8: render(id, source) retorna o SVG como string
+      const svg = mermaid.render(id, source);
+      if (containerRef.current) {
+        containerRef.current.innerHTML = svg;
+      }
     } catch (e) {
       setError('Erro ao renderizar diagrama Mermaid.');
     }
