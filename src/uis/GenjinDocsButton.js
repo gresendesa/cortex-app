@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
+import MermaidBlock from './MermaidBlock';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -85,7 +86,18 @@ export default function GenjinDocsButton() {
           {content === null ? (
             <Typography variant="body2">Carregando...</Typography>
           ) : (
-            <ReactMarkdown>{content}</ReactMarkdown>
+            <ReactMarkdown
+              components={{
+                code({ node, inline, className, children, ...props }) {
+                  if (!inline && className === 'language-mermaid') {
+                    return <MermaidBlock source={String(children).replace(/\n$/, '')} />;
+                  }
+                  return <code className={className} {...props}>{children}</code>;
+                }
+              }}
+            >
+              {content}
+            </ReactMarkdown>
           )}
         </DialogContent>
       </Dialog>
