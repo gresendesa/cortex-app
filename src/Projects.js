@@ -12,8 +12,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import PlayArrowRoundedIcon from '@material-ui/icons/PlayArrowRounded';
 import CodeIcon from '@material-ui/icons/Code';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import { Box, Button, Chip } from '@material-ui/core';
+import { Box, Button, Chip, Menu, MenuItem } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import { DataContext } from './contexts/DataContext';
 import Server from './server';
 import ProjectCreateDialog from './uis/ProjectCreateDialog';
@@ -34,7 +36,7 @@ import PublicIcon from '@material-ui/icons/Public';
 
 import { timeDifference } from './uis/utils';
 
-function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper, username, pagination, fetchMacros, searchQuery }) {
+function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper, username, pagination, fetchMacros, searchQuery, duplicateMacro }) {
 	const useStyles = makeStyles((theme) => ({
 	  search: {
 	    position: 'relative',
@@ -159,7 +161,7 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper,
 					{!loading && (
 						projects.length > 0 ?
 						projects.map(p => (
-							<ProjectItem key={p.id} p={p} redirectToProject={redirectToProject} removeProject={removeProject} isUserSuper={isUserSuper} username={username} />
+							<ProjectItem key={p.id} p={p} redirectToProject={redirectToProject} removeProject={removeProject} isUserSuper={isUserSuper} username={username} duplicateMacro={duplicateMacro} />
 						)) :
 						<Alert severity="info">
 							<AlertTitle>No projects</AlertTitle>
@@ -210,7 +212,7 @@ function SearchWidget({ projects, redirectToProject, removeProject, isUserSuper,
 }
 
 
-function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, username }) {
+function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, username, duplicateMacro }) {
 
 	const useStyles = makeStyles((theme) => ({
 	  avatarProject: {
@@ -240,6 +242,31 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 
 	const [lastSave, setLastSave] = useState(timeDifference(p.date));
 
+	const [contextMenu, setContextMenu] = useState(null);
+
+	const handleContextMenu = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setContextMenu({ x: e.clientX, y: e.clientY });
+	};
+
+	const handleCloseMenu = () => {
+		setContextMenu(null);
+	};
+
+	const handleOpenInNewTab = () => {
+		const url = p.macro.protocol === 'CTRL'
+			? `/project/${p.id}`
+			: `/project/flat/${p.id}`;
+		window.open(url, '_blank', 'noopener,noreferrer');
+		handleCloseMenu();
+	};
+
+	const handleDuplicate = () => {
+		handleCloseMenu();
+		if (duplicateMacro) duplicateMacro({ id: p.id });
+	};
+
 	const DefaultIcon = ({ p, classes }) => {
 		return (
 			<div>
@@ -255,7 +282,8 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 	}
 
 	return (
-		<ListItem button onClick={() => {redirectToProject(p)}}>
+		<React.Fragment>
+		<ListItem button onClick={() => {redirectToProject(p)}} onContextMenu={handleContextMenu}>
 			<ListItemAvatar>
 				{username != p.dev ? 
 					<Avatar className={classes.sharedProject} style={p.genjin ? { outline: '2px solid rgba(255,255,255,0.8)', outlineOffset: '2px' } : undefined}>
@@ -299,6 +327,22 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 				<DeleteButton type='project' confirmString={p.macro.name} callback={() => {removeProject(p.id)}} />
 			</ListItemSecondaryAction>
 		</ListItem>
+		<Menu
+			open={Boolean(contextMenu)}
+			onClose={handleCloseMenu}
+			anchorReference="anchorPosition"
+			anchorPosition={contextMenu !== null ? { top: contextMenu.y, left: contextMenu.x } : undefined}
+		>
+			<MenuItem onClick={handleOpenInNewTab}>
+				<OpenInNewIcon fontSize="small" style={{marginRight: 8}} />
+				Abrir em nova aba
+			</MenuItem>
+			<MenuItem onClick={handleDuplicate}>
+				<FileCopyIcon fontSize="small" style={{marginRight: 8}} />
+				Duplicar projeto
+			</MenuItem>
+		</Menu>
+		</React.Fragment>
 	)
 
 }
@@ -394,7 +438,7 @@ class Projects extends React.Component {
 				>
 				
 					<Grid item>
-						<SearchWidget projects={this.props.macros} redirectToProject={this.redirectToProject} removeProject={this.removeProject} isUserSuper={this.props.isUserSuper} username={this.props.username} pagination={this.props.pagination} fetchMacros={this.props.fetchMacros} searchQuery={this.props.searchQuery} />
+						<SearchWidget projects={this.props.macros} redirectToProject={this.redirectToProject} removeProject={this.removeProject} isUserSuper={this.props.isUserSuper} username={this.props.username} pagination={this.props.pagination} fetchMacros={this.props.fetchMacros} searchQuery={this.props.searchQuery} duplicateMacro={this.props.duplicateMacro} />
 					</Grid>
 				</Grid>
 

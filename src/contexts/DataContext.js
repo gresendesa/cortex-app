@@ -357,6 +357,19 @@ class DataContextProvider extends Component {
 		}
 	}
 
+	duplicateMacro = ({ id, success=()=>{}, error=()=>{} }) => {
+		if(this.state.token!==null){
+			const server = new Server({ token: this.state.token });
+			const onOk = (response) => {
+				this.fetchMacros({});
+				success(response);
+			}
+			server.duplicateMacro({ id, success: onOk, error })
+		} else {
+			error("sem token");
+		}
+	}
+
 	UNSAFE_componentWillMount(){
 		this.setToken(localStorage.getItem('cortex-token'));
 		this.setUsername(localStorage.getItem('cortex-username'));	
@@ -391,7 +404,8 @@ class DataContextProvider extends Component {
 											version: this.version,
 											addCollaborator: this.addCollaborator,
 											removeCollaborator: this.removeCollaborator,
-											getCollaborators: this.getCollaborators
+											getCollaborators: this.getCollaborators,
+											duplicateMacro: this.duplicateMacro
 
 										}}>
 				{this.props.children}

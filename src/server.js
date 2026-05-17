@@ -163,6 +163,22 @@ class Server {
 	
 	}
 
+	duplicateMacro({ id, success, error }) {
+
+		const conn = this.getConnection();
+
+		conn.post(`/project/${id}/duplicate`).then(r => {
+			success(r.data);
+		}).catch(function(e) {
+			try {
+				error(e.response.data.detail);
+			} catch {
+				error(e.message);
+			}
+		});
+
+	}
+
 	updateMacro({ id, macro, genjin=null, launch, success, error }) {
 
 		const conn = this.getConnection();

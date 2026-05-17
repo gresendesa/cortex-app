@@ -138,6 +138,7 @@ export default function Routes({ context }) {
 										delMacro={context.delMacro}
 										macros={context.macros} 
 										fetchMacros={context.fetchMacros}
+										duplicateMacro={context.duplicateMacro}
 										totalRecords={context.totalRecords}
 										pagination={context.pagination}
 										searchQuery={context.searchQuery}
