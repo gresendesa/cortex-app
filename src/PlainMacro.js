@@ -225,7 +225,8 @@ export function Editor({ project, saveMacro, getBuild, getTemplateInfo, getPubli
   const handleIndent = (e) => {
     if (genjin) {
       const indenter = new GenjinIndenter();
-      setCode(indenter.indent(code));
+      setCode(indenter.indent(code, indentSwitch ? '    ' : '  '));
+      setIndentSwitch(!indentSwitch);
       return;
     }
     const lg = new LinesGetter(code);

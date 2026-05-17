@@ -3,18 +3,20 @@
  *
  * Regras:
  *  - program "nome"              → col 0
- *  - vars { }                    → conteúdo em 4 espaços
- *  - procs { }                   → defs em 4 espaços, corpo em 8 espaços
- *  - exec Proc(...) { }          → conteúdo em 4 espaços
- *    - case CODE: @proc()        → 4 espaços; @ define anchor_col para a sequência
+ *  - vars { }                    → conteúdo em `space`
+ *  - procs { }                   → defs em `space`, corpo em `space x2`
+ *  - exec Proc(...) { }          → conteúdo em `space`
+ *    - case CODE: @proc()        → `space`; @ define anchor_col para a sequência
  *    - átomos @proc() seguintes  → padding até anchor_col
- *    - pass CODE                 → 4 espaços
+ *    - pass CODE                 → `space`
  *  - sequência inline raiz       → primeiro @ em col 0; átomos seguintes em anchor_col
+ *
+ * @param {string} space — string de recuo por nível (padrão: '  ', 2 espaços)
  */
 
 class GenjinIndenter {
 
-  indent(source) {
+  indent(source, space = '  ') {
     const lines = source.split('\n');
     const output = [];
 
@@ -89,15 +91,15 @@ class GenjinIndenter {
             output.push(s);
             ctx = stack.pop() || { type: 'root' };
           } else if (RE_CASE_LINE.test(s)) {
-            const formatted = '    ' + s;
+            const formatted = space + s;
             output.push(formatted);
             const atIdx = formatted.indexOf('@');
             stack.push(ctx);
             ctx = { type: 'case_seq', anchorCol: atIdx !== -1 ? atIdx : null };
           } else if (RE_PASS_LINE.test(s)) {
-            output.push('    ' + s);
+            output.push(space + s);
           } else {
-            output.push('    ' + s);
+            output.push(space + s);
           }
           break;
         }
@@ -109,25 +111,25 @@ class GenjinIndenter {
             output.push(s);
           } else if (RE_CASE_LINE.test(s)) {
             ctx = stack.pop() || { type: 'root' }; // exec
-            const formatted = '    ' + s;
+            const formatted = space + s;
             output.push(formatted);
             const atIdx = formatted.indexOf('@');
             stack.push(ctx);
             ctx = { type: 'case_seq', anchorCol: atIdx !== -1 ? atIdx : null };
           } else if (RE_PASS_LINE.test(s)) {
             ctx = stack.pop() || { type: 'root' }; // exec
-            output.push('    ' + s);
+            output.push(space + s);
           } else if (RE_AT_CALL.test(s)) {
             if (ctx.anchorCol !== null) {
               output.push(' '.repeat(ctx.anchorCol) + strip(s));
             } else {
               // case line tinha @ ausente — primeiro @ nesta linha define o anchor
-              const formatted = '    ' + strip(s);
+              const formatted = space + strip(s);
               output.push(formatted);
               ctx.anchorCol = formatted.indexOf('@');
             }
           } else {
-            output.push('    ' + s);
+            output.push(space + s);
           }
           break;
         }
@@ -137,7 +139,7 @@ class GenjinIndenter {
             output.push(s);
             ctx = stack.pop() || { type: 'root' };
           } else {
-            output.push('    ' + s);
+            output.push(space + s);
           }
           break;
         }
@@ -147,21 +149,21 @@ class GenjinIndenter {
             output.push(s);
             ctx = stack.pop() || { type: 'root' };
           } else if (RE_BLOCK_OPEN.test(s)) {
-            output.push('    ' + s);
+            output.push(space + s);
             stack.push(ctx);
             ctx = { type: 'proc_def' };
           } else {
-            output.push('    ' + s);
+            output.push(space + s);
           }
           break;
         }
 
         case 'proc_def': {
           if (RE_BRACE_CLOSE.test(s)) {
-            output.push('    ' + s);
+            output.push(space + s);
             ctx = stack.pop() || { type: 'procs' };
           } else {
-            output.push('        ' + s);
+            output.push(space + space + s);
           }
           break;
         }
