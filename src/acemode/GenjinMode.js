@@ -24,19 +24,13 @@ class GenjinHighlightRules extends window.ace.acequire("ace/mode/text_highlight_
 				{
 					token: "comment",
 					regex: /\/\*/,
-					next: [
-						{ token: "comment", regex: /\*\//, next: "start" },
-						{ defaultToken: "comment" }
-					]
+					next: "block_comment"
 				},
 				// Comentário de linha //
 				{
 					token: "comment",
 					regex: /\/\//,
-					next: [
-						{ token: "comment", regex: /$/, next: "start" },
-						{ defaultToken: "comment" }
-					]
+					next: "line_comment"
 				},
 				// String duplas aspas "..."
 				{
@@ -93,6 +87,14 @@ class GenjinHighlightRules extends window.ace.acequire("ace/mode/text_highlight_
 				{
 					defaultToken: "string"
 				}
+			],
+			"block_comment": [
+				{ token: "comment", regex: /\*\//, next: "start" },
+				{ defaultToken: "comment" }
+			],
+			"line_comment": [
+				{ token: "comment", regex: /$/, next: "start" },
+				{ defaultToken: "comment" }
 			]
 		};
 	}
