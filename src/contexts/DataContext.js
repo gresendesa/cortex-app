@@ -97,15 +97,19 @@ class DataContextProvider extends Component {
 			const server = new Server({ token: this.state.token });
 			const onOk = (response) => {
 				//remove a versão antiga da macro
+				let found = false;
 				var macros = this.state.macros.map(m => {
 					//console.log('update', `${m.id} !== ${id}`, String(m.id) !== String(id))
 					if(String(m.id) !== String(id)){
 						return m
 					}
+					found = true;
 					return response.project
 				})
-				//atualiza com a nova versão do servidor
-				//macros.unshift(response.project)
+				//se projeto não estava na lista (fora da 1ª página), adiciona
+				if (!found) {
+					macros = [response.project, ...macros];
+				}
 				this.setState({'macros': macros}, () => {
 					success(response);
 					this.setState({'processing': false});

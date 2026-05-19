@@ -34,25 +34,35 @@ function SimpleBackdrop() {
 
 class Loader extends React.Component {
 
+	constructor(props) {
+		super(props);
+		this.state = { notFound: false };
+	}
+
 	UNSAFE_componentWillMount() {
-		const success = res => {
-			//console.log('ok', res)
-		}
+		const success = res => {}
 		const error = err => {
-			//console.log('error', err)
+			this.setState({ notFound: true });
 		}
 		const id = this.props.match.params.id
 		this.props.getMacro({ id, success, error })
 	}
 
 	render(){
-
+		if (this.state.notFound) {
+			return (
+				<Fragment>
+					<Typography variant="h6" style={{ marginTop: '2rem', textAlign: 'center', color: '#888' }}>
+						Projeto não encontrado.
+					</Typography>
+				</Fragment>
+			);
+		}
 		return (
 			<Fragment>
 				<SimpleBackdrop />
 			</Fragment>
 		)
-
 	}
 
 }

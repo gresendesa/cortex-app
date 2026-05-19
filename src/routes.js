@@ -70,7 +70,7 @@ export default function Routes({ context }) {
 												getMacro={context.getMacro}
 											/>
 										)
-										:''
+										: <Loader {...props} getMacro={context.getMacro} />
 									
 									)
 								}} />
@@ -104,7 +104,7 @@ export default function Routes({ context }) {
 												getMacro={context.getMacro}
 											/>
 										)
-										:''
+										: <Loader {...props} getMacro={context.getMacro} />
 									)
 
 									}}
