@@ -11,7 +11,9 @@ class GenjinHighlightRules extends window.ace.acequire("ace/mode/text_highlight_
 
 		var keywordMapper = this.createKeywordMapper({
 			"keyword":
-				"program|vars|procs|exec|case|pass|while|from|import|as|codes|when",
+				"program|vars|procs|exec|case|pass|while|from|import|as|codes|when|config",
+			"keyword.declaration":
+				"renderer|logger|pre_execution|post_execution",
 			"storage.type":
 				"Number|Text|Logic|Object",
 			"constant.language.boolean":

@@ -55,6 +55,11 @@ export default function InfoButton({ subject, sourcesHook, editorMode, project=n
 				type: 'template'
 			},
 			{
+				// Genjin config block: renderer|logger|pre_execution|post_execution from "..."
+				pattern: /^\s*(?:renderer|logger|pre_execution|post_execution)\s+from\s+"([^"]+)"/,
+				type: 'template'
+			},
+			{
 
 				pattern: new RegExp("^(arraysize|bind|bindgui|break|calcyawto|camera|chatfilter|chatheight|"+
 						 "chatheightfocused|chatopacity|chatscale|chatvisible|chatwidth|clearchat|"      	+
