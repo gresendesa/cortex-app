@@ -63,17 +63,17 @@ Essa estrutura se repete recursivamente em toda a árvore. É a única estrutura
 
 ## Estrutura de um programa
 
-Todo programa `.gnj` tem quatro partes obrigatórias e um bloco opcional de configuração.
+Todo programa `.gnj` tem quatro partes obrigatórias e um bloco opcional de configuração. `program` deve ser a **primeira linha** do arquivo. Os demais blocos podem aparecer em qualquer ordem.
 
 ```gnj
-config {                     // opcional
-    renderer from "biblioteca.Macro"
-}
-
 program "nome do programa"
 
 vars {
     // variáveis de estado
+}
+
+config {                     // opcional, qualquer posição após program
+    renderer from "biblioteca.Macro"
 }
 
 procs {
@@ -87,13 +87,13 @@ exec proc_raiz(...) >> variavel_raiz {
 
 | Seção | Obrigatória | O que declara |
 |---|:---:|---|
-| `config` | **não** | Parâmetros do gerador de código. Pode vir antes ou depois de `program`. |
-| `program` | sim | Nome do programa. |
+| `program` | sim | Nome do programa. **Deve ser a primeira linha.** |
 | `vars` | sim | Variáveis de estado que guardam resultados |
 | `procs` | sim | Procedimentos que o programa pode executar |
 | `exec` (raiz) | sim | O fluxo de execução — exatamente um bloco raiz |
+| `config` | **não** | Parâmetros do gerador de código |
 
-> As seções `vars`, `procs` e `exec` podem aparecer em qualquer ordem após `program`. O bloco `config` pode aparecer antes ou depois de `program`.
+> Os blocos `vars`, `procs`, `exec` e `config` podem aparecer em qualquer ordem após `program`.
 
 ---
 
@@ -110,7 +110,7 @@ exec proc_raiz(...) >> variavel_raiz {
 
 ## Configuração do gerador (`config`)
 
-O bloco `config` é **opcional** e permite trocar os componentes que o motor Genjin usa para gerar código. Útil quando você precisa de um renderer diferente do padrão ou quer injetar hooks de execução.
+O bloco `config` é **opcional** e permite trocar os componentes que o motor Genjin usa para gerar código. Pode aparecer em **qualquer posição após `program`**, junto com os demais blocos.
 
 ```gnj
 config {
