@@ -63,9 +63,13 @@ Essa estrutura se repete recursivamente em toda a árvore. É a única estrutura
 
 ## Estrutura de um programa
 
-Todo programa `.gnj` tem quatro partes. A única restrição é que `program` deve ser a **primeira linha**.
+Todo programa `.gnj` tem quatro partes obrigatórias e um bloco opcional de configuração.
 
 ```gnj
+config {                     // opcional
+    renderer from "biblioteca.Macro"
+}
+
 program "nome do programa"
 
 vars {
@@ -83,12 +87,13 @@ exec proc_raiz(...) >> variavel_raiz {
 
 | Seção | Obrigatória | O que declara |
 |---|:---:|---|
-| `program` | sim | Nome do programa. Deve vir primeiro. |
+| `config` | **não** | Parâmetros do gerador de código. Pode vir antes ou depois de `program`. |
+| `program` | sim | Nome do programa. |
 | `vars` | sim | Variáveis de estado que guardam resultados |
 | `procs` | sim | Procedimentos que o programa pode executar |
 | `exec` (raiz) | sim | O fluxo de execução — exatamente um bloco raiz |
 
-> As seções `vars`, `procs` e `exec` podem aparecer em qualquer ordem após `program`.
+> As seções `vars`, `procs` e `exec` podem aparecer em qualquer ordem após `program`. O bloco `config` pode aparecer antes ou depois de `program`.
 
 ---
 
@@ -100,6 +105,34 @@ exec proc_raiz(...) >> variavel_raiz {
 /* Comentário
    de bloco */
 ```
+
+---
+
+## Configuração do gerador (`config`)
+
+O bloco `config` é **opcional** e permite trocar os componentes que o motor Genjin usa para gerar código. Útil quando você precisa de um renderer diferente do padrão ou quer injetar hooks de execução.
+
+```gnj
+config {
+    renderer      from "minha_lib.MeuRenderer"
+    logger        from "genjin.BLANK_LOGGER"
+    pre_execution  from "hooks.Setup"
+    post_execution from "hooks.Teardown"
+}
+```
+
+Cada chave é independente — declare apenas o que quiser sobrescrever:
+
+| Chave | O que controla | Default |
+|---|---|---|
+| `renderer` | Qual macro gera o código final | `MACROMOD` |
+| `logger` | Macro de logging durante a execução | — (motor decide) |
+| `pre_execution` | Hook executado antes de cada proc | — |
+| `post_execution` | Hook executado após cada proc | — |
+
+O valor sempre segue o formato `"biblioteca.Macro"` — a mesma notação usada em `procs`.
+
+O bloco `config` pode aparecer **antes ou depois** de `program`.
 
 ---
 
