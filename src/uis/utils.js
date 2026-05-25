@@ -23,28 +23,24 @@ export const usePrevious = (value) => {
 }
 
 export const timeDifference = (timestamp) => {
+	let diff = Math.floor((Date.now() - timestamp * 1000) / 1000);
 
-	var date1 = new Date();
-	var date2 = new Date(timestamp * 1000);
+	const years = Math.floor(diff / (365 * 24 * 3600));
+	diff -= years * 365 * 24 * 3600;
+	const months = Math.floor(diff / (30 * 24 * 3600));
+	diff -= months * 30 * 24 * 3600;
+	const days = Math.floor(diff / (24 * 3600));
+	diff -= days * 24 * 3600;
+	const minutes = Math.floor(diff / 60);
 
-		var difference = date1.getTime() - date2.getTime();
+	const parts = [];
+	if (years > 0)   parts.push(`${years} ${years === 1 ? 'year' : 'years'}`);
+	if (months > 0)  parts.push(`${months} ${months === 1 ? 'month' : 'months'}`);
+	if (days > 0)    parts.push(`${days} ${days === 1 ? 'day' : 'days'}`);
+	if (years === 0 && months === 0 && days === 0 && minutes > 0)
+		parts.push(`${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`);
 
-		var daysDifference = Math.floor(difference/1000/60/60/24);
-		difference -= daysDifference*1000*60*60*24
-
-		var hoursDifference = Math.floor(difference/1000/60/60);
-		difference -= hoursDifference*1000*60*60
-
-		var minutesDifference = Math.floor(difference/1000/60);
-		difference -= minutesDifference*1000*60
-
-		var secondsDifference = Math.floor(difference/1000);
-
-		const daysPart = daysDifference > 0 ? `${daysDifference}d `: '';
-		const hoursPart = hoursDifference > 0 ? `${hoursDifference}h `: '';
-		const minutesPart = minutesDifference > 0 ? `${minutesDifference}min `: '';
-
-		return `${daysPart}${hoursPart}${minutesPart}${secondsDifference}sec`;
+	return parts.length > 0 ? parts.join(', ') : 'less than a minute';
 }
 
 function escapeRegExp(string) {

@@ -11,7 +11,7 @@ class GenjinHighlightRules extends window.ace.acequire("ace/mode/text_highlight_
 
 		var keywordMapper = this.createKeywordMapper({
 			"keyword":
-				"program|vars|procs|exec|case|pass|while|from|import|as|codes|when|config",
+				"program|vars|procs|exec|case|pass|while|from|import|as|when|config",
 			"keyword.declaration":
 				"renderer|logger|pre_execution|post_execution",
 			"storage.type":
@@ -65,6 +65,36 @@ class GenjinHighlightRules extends window.ace.acequire("ace/mode/text_highlight_
 					token: "keyword.operator",
 					regex: /[=!<>+\-*\/]/
 				},
+				// Keyword "codes" — entra em estado dedicado para colorir os identificadores
+				{
+					token: "keyword",
+					regex: /\bcodes\b/,
+					next: "codes_list"
+				},
+				// Keyword "case" — identificadores que seguem são códigos de saída
+				{
+					token: "keyword",
+					regex: /\bcase\b/,
+					next: "case_codes"
+				},
+				// Keyword "while" — argumentos são códigos de saída
+				{
+					token: "keyword",
+					regex: /\bwhile\b/,
+					next: "while_codes"
+				},
+				// Keyword "when" — argumentos são códigos de saída
+				{
+					token: "keyword",
+					regex: /\bwhen\b/,
+					next: "when_codes"
+				},
+				// Keyword "pass" — o identificador que segue é um código de saída
+				{
+					token: "keyword",
+					regex: /\bpass\b/,
+					next: "pass_code"
+				},
 				// Identificadores e palavras reservadas
 				{
 					token: keywordMapper,
@@ -75,6 +105,47 @@ class GenjinHighlightRules extends window.ace.acequire("ace/mode/text_highlight_
 					token: "text",
 					regex: /\s+/
 				}
+			],
+			// Estado: lista de códigos de saída após "codes"
+			// Identificadores recebem variable.output (âmbar + itálico via CSS)
+			"codes_list": [
+				{ token: "variable.output", regex: /[a-zA-Z_][a-zA-Z\d_]*/ },
+				{ token: "constant.numeric", regex: /<\d+>/ },
+				{ token: "punctuation.operator", regex: /,/ },
+				{ token: "text", regex: /\s+/ },
+				{ token: "text", regex: /$/, next: "start" }
+			],
+			// Estado: lista de códigos após "case CODE1, CODE2:"
+			"case_codes": [
+				{ token: "variable.output", regex: /[a-zA-Z_][a-zA-Z\d_]*/ },
+				{ token: "punctuation.operator", regex: /,/ },
+				{ token: "keyword.operator", regex: /:/, next: "start" },
+				{ token: "text", regex: /\s+/ },
+				{ token: "text", regex: /$/, next: "start" }
+			],
+			// Estado: lista de códigos em while(CODE1, CODE2)
+			"while_codes": [
+				{ token: "punctuation.operator", regex: /\(/ },
+				{ token: "variable.output", regex: /[a-zA-Z_][a-zA-Z\d_]*/ },
+				{ token: "punctuation.operator", regex: /,/ },
+				{ token: "punctuation.operator", regex: /\)/, next: "start" },
+				{ token: "text", regex: /\s+/ },
+				{ token: "text", regex: /$/, next: "start" }
+			],
+			// Estado: lista de códigos em when(CODE1, CODE2)
+			"when_codes": [
+				{ token: "punctuation.operator", regex: /\(/ },
+				{ token: "variable.output", regex: /[a-zA-Z_][a-zA-Z\d_]*/ },
+				{ token: "punctuation.operator", regex: /,/ },
+				{ token: "punctuation.operator", regex: /\)/, next: "start" },
+				{ token: "text", regex: /\s+/ },
+				{ token: "text", regex: /$/, next: "start" }
+			],
+			// Estado: código de saída único após "pass"
+			"pass_code": [
+				{ token: "text", regex: /\s+/ },
+				{ token: "variable.output", regex: /[a-zA-Z_][a-zA-Z\d_]*/, next: "start" },
+				{ token: "text", regex: /$/, next: "start" }
 			],
 			"qqstring": [
 				{

@@ -5,6 +5,7 @@
  *  root          — nível superior do arquivo
  *  root_seq      — sequência inline de @proc() no raiz
  *  vars          — interior de vars { }
+ *  config        — interior de config { }
  *  procs         — interior de procs { }
  *  procs_import  — linhas de nomes após "from X import"
  *  proc_def      — corpo de um proc-bloco dentro de procs { }
@@ -28,6 +29,7 @@ class GenjinIndenter {
     const output = [];
 
     const RE_VARS_OPEN   = /^\s*vars\s*\{/;
+    const RE_CONFIG_OPEN = /^\s*config\s*\{/;
     const RE_PROCS_OPEN  = /^\s*procs\s*\{/;
     const RE_EXEC_OPEN   = /^\s*exec\b/;
     const RE_CASE_LINE   = /^\s*case\s+/;
@@ -59,6 +61,10 @@ class GenjinIndenter {
             output.push(pad(d) + s);
             stack.push(ctx);
             ctx = { type: 'vars', depth: d + 1 };
+          } else if (RE_CONFIG_OPEN.test(s)) {
+            output.push(pad(d) + s);
+            stack.push(ctx);
+            ctx = { type: 'config', depth: d + 1 };
           } else if (RE_PROCS_OPEN.test(s)) {
             output.push(pad(d) + s);
             stack.push(ctx);
@@ -100,6 +106,18 @@ class GenjinIndenter {
 
         // ── VARS ──────────────────────────────────────────────────────────────
         case 'vars': {
+          const d = ctx.depth;
+          if (RE_BRACE_CLOSE.test(s)) {
+            output.push(pad(d - 1) + s);
+            ctx = stack.pop() || { type: 'root', depth: 0 };
+          } else {
+            output.push(pad(d) + s);
+          }
+          break;
+        }
+
+        // ── CONFIG ────────────────────────────────────────────────────────────
+        case 'config': {
           const d = ctx.depth;
           if (RE_BRACE_CLOSE.test(s)) {
             output.push(pad(d - 1) + s);

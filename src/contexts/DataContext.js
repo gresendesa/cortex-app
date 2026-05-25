@@ -17,9 +17,9 @@ class DataContextProvider extends Component {
 	}
 
 	version = {
-		'number': '1.28',
-		'release_date': '11 August 2023',
-		'short': 'Devs can use imports of shared projects'
+		'number': '1.29',
+		'release_date': '25 May 2026',
+		'short': 'Genjin compiler; search performance enhancements'
 	}
 
 	setToken = (token) => {

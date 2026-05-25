@@ -12,3 +12,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Genjin: códigos de saída (OUTPUT_CODE, OUTPUT_CODES) — cor distinta + itálico */
+.ace_variable.ace_output {
+  color: #e5a50a !important;
+  font-style: italic !important;
+}

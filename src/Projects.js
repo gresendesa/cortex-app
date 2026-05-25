@@ -242,6 +242,24 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 
 	const [lastSave, setLastSave] = useState(timeDifference(p.date));
 
+	const formatDateTime = (ts) => {
+		const d = new Date(ts * 1000);
+		return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' at ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+	};
+
+	const formatDate = (ts) => {
+		if (!ts) return null;
+		return new Date(ts * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+	};
+
+	const tooltipContent = (
+		<span>
+			<span>Saved {lastSave} ago</span><br/>
+			<span>Modified on {formatDateTime(p.date)}</span>
+			{p.created_date && <React.Fragment><br/><span>Created on {formatDateTime(p.created_date)}</span></React.Fragment>}
+		</span>
+	);
+
 	const [contextMenu, setContextMenu] = useState(null);
 
 	const handleContextMenu = (e) => {
@@ -301,7 +319,7 @@ function ProjectItem({ p, redirectToProject, removeProject, isUserSuper, usernam
 				:
 					<DefaultIcon p={p} classes={classes} />}
 			</ListItemAvatar>
-			<Tooltip title={"Saved " + lastSave + " before"}>
+			<Tooltip title={tooltipContent}>
 				<ListItemText
 					className={classes.projectItem}
 					primaryTypographyProps={{ component: 'div' }}
